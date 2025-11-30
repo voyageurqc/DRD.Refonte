@@ -1,0 +1,37 @@
+# =====================================================================
+# GITIGNORE POUR DRD.Refonte
+# =====================================================================
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Build
+bin/
+obj/
+Debug/
+Release/
+
+# ASP.NET / temp / logs
+*.log
+logs/
+
+# NuGet
+*.nupkg
+packages/
+*.snupkg
+
+# EF Migrations snapshot (optionnel)
+*_efmigrationbackup/
+
+# Cache
+*.cache
+*.idx
+*.tmp
+*.temp
+*.dbmdl
+
+# Other
+Thumbs.db
