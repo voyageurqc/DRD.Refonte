@@ -1,4 +1,4 @@
-﻿//2025-11-12- 13:15 -17:00
+﻿//2025-11-30- 16:35 
 📜 Standards et Règles de Codification
 Ce document sert de guide de référence unique pour toutes les conventions, règles et standards de développement à suivre pour le projet.
 
