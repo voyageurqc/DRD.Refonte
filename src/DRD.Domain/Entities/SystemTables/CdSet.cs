@@ -57,12 +57,5 @@ namespace DRD.Domain.Entities.SystemTables
 		public string? DescriptionEn { get; private set; }
 		#endregion
 
-
-		#region Display Order (Optional)
-		/// <summary>
-		/// Ordre d’affichage facultatif dans les listes (0 = non spécifié).
-		/// </summary>
-		public int DisplayOrder { get; private set; }
-		#endregion
 	}
 }

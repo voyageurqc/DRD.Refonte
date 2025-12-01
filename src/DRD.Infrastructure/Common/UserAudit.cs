@@ -53,9 +53,5 @@ namespace DRD.Infrastructure.Common
 		/// </summary>
 		public bool IsActive { get; set; } = true;
 
-		/// <summary>
-		/// Niveau de sécurité associé à l’entité.
-		/// </summary>
-		public int SecurityLevel { get; set; } = 1;
 	}
 }

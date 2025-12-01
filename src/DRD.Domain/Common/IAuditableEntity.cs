@@ -7,5 +7,4 @@ public interface IAuditableEntity
     public DateTime ModificationDate { get; set; }
     public string? UpdatedBy { get; set; }
     public bool IsActive { get; set; }
-    public int SecurityLevel { get; set; }
 }

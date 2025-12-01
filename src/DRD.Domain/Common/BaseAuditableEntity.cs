@@ -29,5 +29,4 @@ public abstract class BaseAuditableEntity : BaseEntity, IAuditableEntity
     public DateTime ModificationDate { get; set; }
     public string? UpdatedBy { get; set; }
     public bool IsActive { get; set; } = true;
-    public int SecurityLevel { get; set; } = 1;
 }

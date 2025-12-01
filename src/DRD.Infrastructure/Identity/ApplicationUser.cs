@@ -83,9 +83,6 @@ namespace DRD.Infrastructure.Identity
 		/// <summary>Indique si le compte est actif.</summary>
 		public bool IsActive { get; set; } = true;
 
-		/// <summary>Niveau de sécurité interne du compte.</summary>
-		public int SecurityLevel { get; set; } = 1;
-
 		#endregion
 	}
 }

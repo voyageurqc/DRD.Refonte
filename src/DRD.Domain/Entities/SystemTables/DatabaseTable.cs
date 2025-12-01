@@ -21,7 +21,6 @@
 //           • ModificationDate (UTC)
 //           • UpdatedBy
 //           • IsActive
-//           • SecurityLevel
 //     - Utilisé uniquement par les administrateurs système.
 //     - Recréé ou rafraîchi automatiquement par un service périodique.
 //
