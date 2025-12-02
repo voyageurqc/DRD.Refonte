@@ -3,7 +3,7 @@
 //     Nom du fichier                 InstitutionConfiguration.cs
 //     Type de fichier                Classe C#
 //     Nature C#                      Configuration EF Core
-//     Emplacement                    Data/Configurations
+//     Emplacement                    Data/Configurations/GrpSystemTables
 //     Auteur                         Michel Gariépy
 //     Créé le                        2025-12-01
 //
@@ -25,7 +25,7 @@ using DRD.Domain.Entities.SystemTables;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DRD.Infrastructure.Data.Configurations
+namespace DRD.Infrastructure.Data.Configurations.GrpSystemTables
 {
 	public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
 	{

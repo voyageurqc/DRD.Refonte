@@ -3,7 +3,7 @@
 // Nom du fichier                 ClientDetailConfiguration.cs
 // Type de fichier                Configuration EF Core
 // Nature C#                      Class
-// Emplacement                    Data/Configurations
+// Emplacement                    Data/Configurations/GrpClient
 // Auteur                         Michel Gariépy
 // Créé le                        2025-12-01
 //
@@ -26,7 +26,7 @@ using DRD.Domain.Entities.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DRD.Infrastructure.Data.Configurations
+namespace DRD.Infrastructure.Data.Configurations.GrpClient
 {
 	/// <summary>
 	/// Configuration EF Core pour l'entité ClientDetail.
