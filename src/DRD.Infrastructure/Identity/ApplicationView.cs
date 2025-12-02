@@ -20,6 +20,7 @@
 // Modifications
 //     2025-11-30    Nettoyage complet ; déplacement from Domain → Infrastructure.
 //     2025-07-14    Ajustements initiaux.
+//     2025-12-02    Setters publics pour compatibilité EF Core (DRDv10).
 // ============================================================================
 
 using DRD.Infrastructure.Common;
@@ -38,7 +39,7 @@ namespace DRD.Infrastructure.Identity
 		/// Code unique représentant cette vue/action.
 		/// (Clé naturelle configurée via EF)
 		/// </summary>
-		public string ViewCode { get; private set; } = string.Empty;
+		public string ViewCode { get; set; } = string.Empty;
 
 		#endregion
 
@@ -48,12 +49,12 @@ namespace DRD.Infrastructure.Identity
 		/// <summary>
 		/// Nom du contrôleur associé (ex.: Client, Institution).
 		/// </summary>
-		public string Controller { get; private set; } = string.Empty;
+		public string Controller { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Nom de l’action associée (ex.: Index, Edit, Create).
 		/// </summary>
-		public string Action { get; private set; } = string.Empty;
+		public string Action { get; set; } = string.Empty;
 
 		#endregion
 
@@ -63,12 +64,12 @@ namespace DRD.Infrastructure.Identity
 		/// <summary>
 		/// Description française affichée dans les outils admin.
 		/// </summary>
-		public string DescriptionFr { get; private set; } = string.Empty;
+		public string DescriptionFr { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Description anglaise affichée dans les outils admin.
 		/// </summary>
-		public string? DescriptionEn { get; private set; }
+		public string? DescriptionEn { get; set; }
 
 		#endregion
 

@@ -23,6 +23,7 @@
 // Modifications
 //     2025-11-30    ApplicationUser mis à jour pour respecter UserAudit
 //                   tout en tenant compte de l’impossibilité d’héritage multiple.
+//     2025-12-02    Ajustement AccessType (setter public) pour compatibilité EF.
 // ============================================================================
 
 using Microsoft.AspNetCore.Identity;
@@ -57,32 +58,34 @@ namespace DRD.Infrastructure.Identity
 		#region Access & Role Customization
 
 		public string SectorCode { get; set; } = string.Empty;
+
 		public string? AccessTypeCode { get; set; }
+
 		public string? MenuCode { get; set; }
 
 		public ICollection<UserViewAccess> ViewAccesses { get; private set; }
 			= new List<UserViewAccess>();
+
+		/// <summary>
+		/// Navigation vers AccessType liée à AccessTypeCode.
+		/// EF nécessite un setter public pour créer le lien.
+		/// </summary>
+		public AccessType? AccessType { get; set; }
 
 		#endregion
 
 
 		#region Audit Fields (Alignés sur UserAudit)
 
-		/// <summary>Date de création du compte utilisateur (UTC).</summary>
 		public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
-		/// <summary>Identifiant de l’usager ayant créé ce compte.</summary>
 		public string? CreatedBy { get; set; }
 
-		/// <summary>Date de la dernière modification du compte (UTC).</summary>
 		public DateTime ModificationDate { get; set; } = DateTime.UtcNow;
 
-		/// <summary>Identifiant de l’usager ayant effectué la dernière modification.</summary>
 		public string? UpdatedBy { get; set; }
 
-		/// <summary>Indique si le compte est actif.</summary>
 		public bool IsActive { get; set; } = true;
-		public AccessType AccessType { get; private set; }
 
 		#endregion
 	}

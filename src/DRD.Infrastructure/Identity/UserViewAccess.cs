@@ -21,6 +21,7 @@
 // Modifications
 //     2025-11-30    Version propre DRD (suppression EF, audit UserAudit).
 //     2025-07-14    Ajustements initiaux.
+//     2025-12-02    Setters publics pour compatibilité EF Core (DRDv10).
 // ============================================================================
 
 using DRD.Infrastructure.Common;
@@ -35,16 +36,14 @@ namespace DRD.Infrastructure.Identity
 		#region Identification
 
 		/// <summary>
-		/// Identifiant de l’utilisateur.
-		/// (Partie 1 de la clé composite)
+		/// Identifiant de l’utilisateur (clé composite part 1).
 		/// </summary>
-		public string UserId { get; private set; } = string.Empty;
+		public string UserId { get; set; } = string.Empty;
 
 		/// <summary>
-		/// Code de la vue (Controller + Action).
-		/// (Partie 2 de la clé composite)
+		/// Code de la vue (clé composite part 2).
 		/// </summary>
-		public string ViewCode { get; private set; } = string.Empty;
+		public string ViewCode { get; set; } = string.Empty;
 
 		#endregion
 
@@ -54,7 +53,7 @@ namespace DRD.Infrastructure.Identity
 		/// <summary>
 		/// Code du privilège accordé (ex.: READ, WRITE, ADMIN).
 		/// </summary>
-		public string PrivilegeCode { get; private set; } = string.Empty;
+		public string PrivilegeCode { get; set; } = string.Empty;
 
 		#endregion
 
@@ -64,12 +63,12 @@ namespace DRD.Infrastructure.Identity
 		/// <summary>
 		/// Utilisateur auquel ce droit d’accès appartient.
 		/// </summary>
-		public ApplicationUser User { get; private set; } = null!;
+		public ApplicationUser User { get; set; } = null!;
 
 		/// <summary>
 		/// Vue à laquelle l’utilisateur a accès.
 		/// </summary>
-		public ApplicationView ApplicationView { get; private set; } = null!;
+		public ApplicationView ApplicationView { get; set; } = null!;
 
 		#endregion
 	}

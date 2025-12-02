@@ -14,12 +14,13 @@
 //
 // Fonctionnalité
 //     - Définir la clé composite (UserId + ViewCode).
-//     - Ignorer la propriété Id héritée de UserAudit.
+//     - Conserver le champ Id hérité (audit), sans l'utiliser en clé.
 //     - Configurer les contraintes essentielles (required, max length).
 //     - Configurer les relations vers ApplicationUser et ApplicationView.
 //
 // Modifications
 //     2025-12-01    Création initiale conforme au standard DRD (Option B).
+//     2025-12-02    Suppression de Ignore(Id) — nécessaire pour UserAudit.
 // ============================================================================
 
 using DRD.Infrastructure.Identity;
@@ -28,38 +29,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DRD.Infrastructure.Data.Configurations.GrpIdentity
 {
-	/// <summary>
-	/// Configuration EF Core pour l'entité UserViewAccess.
-	/// </summary>
 	public class UserViewAccessConfiguration : IEntityTypeConfiguration<UserViewAccess>
 	{
-		#region DRD – Configuration
-		/// <summary>
-		/// Configure le mapping EF Core pour l'entité UserViewAccess.
-		/// </summary>
 		public void Configure(EntityTypeBuilder<UserViewAccess> builder)
 		{
-			#region DRD – Table
-			/// <summary>Définition du nom de la table physique.</summary>
+			// Table
 			builder.ToTable("UserViewAccess");
-			#endregion
 
-			#region DRD – Clé primaire composite
-			/// <summary>
-			/// Un droit d'accès est identifié par :
-			/// - l'utilisateur (UserId)
-			/// - la vue (ViewCode)
-			/// </summary>
+			// Clé composite
 			builder.HasKey(e => new { e.UserId, e.ViewCode });
 
-			/// <summary>
-			/// Ignore la propriété Id héritée de UserAudit.
-			/// Elle n'est pas utilisée dans la clé composite.
-			/// </summary>
-			builder.Ignore(e => e.Id);
-			#endregion
-
-			#region DRD – Colonnes principales
+			// Colonnes
 			builder.Property(e => e.UserId)
 				   .IsRequired()
 				   .HasMaxLength(50);
@@ -71,22 +51,17 @@ namespace DRD.Infrastructure.Data.Configurations.GrpIdentity
 			builder.Property(e => e.PrivilegeCode)
 				   .IsRequired()
 				   .HasMaxLength(20);
-			#endregion
 
-			#region DRD – Relations
-			/// <summary>Relation 1 → N vers ApplicationUser.</summary>
+			// Relations
 			builder.HasOne(e => e.User)
 				   .WithMany(u => u.ViewAccesses)
 				   .HasForeignKey(e => e.UserId)
 				   .OnDelete(DeleteBehavior.Cascade);
 
-			/// <summary>Relation 1 → N vers ApplicationView.</summary>
 			builder.HasOne(e => e.ApplicationView)
 				   .WithMany(v => v.ViewAccesses)
 				   .HasForeignKey(e => e.ViewCode)
 				   .OnDelete(DeleteBehavior.Cascade);
-			#endregion
 		}
-		#endregion
 	}
 }

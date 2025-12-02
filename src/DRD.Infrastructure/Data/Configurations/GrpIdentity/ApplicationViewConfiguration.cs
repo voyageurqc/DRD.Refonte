@@ -20,6 +20,7 @@
 //
 // Modifications
 //     2025-12-01    Création initiale conforme au standard DRD (Option B).
+//     2025-12-02    Ajout de Ignore(Id) pour compatibilité EF Core (DRDv10).
 // ============================================================================
 
 using DRD.Infrastructure.Identity;
@@ -28,31 +29,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DRD.Infrastructure.Data.Configurations.GrpIdentity
 {
-	/// <summary>
-	/// Configuration EF Core pour l'entité ApplicationView.
-	/// </summary>
 	public class ApplicationViewConfiguration : IEntityTypeConfiguration<ApplicationView>
 	{
-		#region DRD – Configuration
-		/// <summary>
-		/// Configure le mapping EF Core pour l'entité ApplicationView.
-		/// </summary>
 		public void Configure(EntityTypeBuilder<ApplicationView> builder)
 		{
-			#region DRD – Table
-			/// <summary>Définition du nom de la table physique.</summary>
+			// Table
 			builder.ToTable("ApplicationView");
-			#endregion
 
-			#region DRD – Clé primaire
-			/// <summary>
-			/// ApplicationView utilise ViewCode comme clé naturelle.
-			/// </summary>
+			// Clé primaire
 			builder.HasKey(e => e.ViewCode);
 
-			#endregion
-
-			#region DRD – Colonnes principales
+			// Colonnes principales
 			builder.Property(e => e.ViewCode)
 				   .IsRequired()
 				   .HasMaxLength(100);
@@ -71,18 +58,12 @@ namespace DRD.Infrastructure.Data.Configurations.GrpIdentity
 
 			builder.Property(e => e.DescriptionEn)
 				   .HasMaxLength(200);
-			#endregion
 
-			#region DRD – Relations
-			/// <summary>
-			/// Un ApplicationView possède plusieurs UserViewAccess.
-			/// </summary>
+			// Relations
 			builder.HasMany(e => e.ViewAccesses)
 				   .WithOne(v => v.ApplicationView)
 				   .HasForeignKey(v => v.ViewCode)
 				   .OnDelete(DeleteBehavior.Cascade);
-			#endregion
 		}
-		#endregion
 	}
 }
