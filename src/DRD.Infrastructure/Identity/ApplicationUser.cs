@@ -82,6 +82,7 @@ namespace DRD.Infrastructure.Identity
 
 		/// <summary>Indique si le compte est actif.</summary>
 		public bool IsActive { get; set; } = true;
+		public AccessType AccessType { get; private set; }
 
 		#endregion
 	}
