@@ -42,7 +42,7 @@ namespace DRD.Infrastructure.Data.Configurations.GrpIdentity
 			// Colonnes
 			builder.Property(e => e.UserId)
 				   .IsRequired()
-				   .HasMaxLength(50);
+				   .HasMaxLength(450);
 
 			builder.Property(e => e.ViewCode)
 				   .IsRequired()
