@@ -13,13 +13,15 @@
 //
 // Fonctionnalité
 //     - Définition d’un code d’accès (clé naturelle).
-//     - Description bilingue.
+//     - Descriptions bilingues.
 //     - Champs d’audit via UserAudit.
-//     - Relation avec ApplicationUser.
+//     - Relation 1 → N avec ApplicationUser.
+//     - Utilisable dans le seeding via un constructeur public.
 //
 // Modifications
 //     2025-11-30    Version conforme Clean Architecture (déplacée hors Domain).
-//     2025-07-14    Ajustements initiaux.
+//     2025-12-02    Option B : Ajout d’un constructeur public avec paramètres,
+//                   setters privés → conformité EF Core + IdentitySeeder.
 // ============================================================================
 
 using DRD.Infrastructure.Common;
@@ -31,6 +33,25 @@ namespace DRD.Infrastructure.Identity
 	/// </summary>
 	public class AccessType : UserAudit
 	{
+		#region Constructeur
+		/// <summary>
+		/// Constructeur utilisé pour créer un AccessType (ex. : seeding).
+		/// </summary>
+		public AccessType(
+			string accessTypeCode,
+			string descriptionFr,
+			string? descriptionEn = null)
+		{
+			AccessTypeCode = accessTypeCode;
+			DescriptionFr = descriptionFr;
+			DescriptionEn = descriptionEn;
+		}
+
+		// Constructeur protégé EF Core
+		protected AccessType() { }
+		#endregion
+
+
 		#region Identification
 
 		/// <summary>
@@ -59,7 +80,7 @@ namespace DRD.Infrastructure.Identity
 		#region Relations
 
 		/// <summary>
-		/// Utilisateurs auxquels ce type d’accès est assigné.
+		/// Liste des utilisateurs associés à ce type d’accès.
 		/// </summary>
 		public ICollection<ApplicationUser> Users { get; private set; }
 			= new List<ApplicationUser>();
