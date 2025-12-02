@@ -2,36 +2,67 @@
 # GITIGNORE POUR DRD.Refonte
 # =====================================================================
 
+# ------------------------------
 # Visual Studio
+# ------------------------------
 .vs/
 *.user
 *.suo
 *.userprefs
 
-# Build
+# ------------------------------
+# Build Outputs
+# ------------------------------
 bin/
 obj/
 Debug/
 Release/
+[Bb]uild/
+[Rr]elease/
+x64/
+x86/
 
-# ASP.NET / temp / logs
+# ------------------------------
+# Logs (Serilog, runtime, diagnostics)
+# ------------------------------
+Logs/
 *.log
-logs/
 
+# ------------------------------
+# ASP.NET / Temp files
+# ------------------------------
+*.dbmdl
+*.temp
+*.tmp
+
+# ------------------------------
+# Databases (LocalDB, SQLite)
+# ------------------------------
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# ------------------------------
 # NuGet
+# ------------------------------
 *.nupkg
-packages/
 *.snupkg
+packages/
 
-# EF Migrations snapshot (optionnel)
+# ------------------------------
+# EF Core Migrations backup (optionnel)
+# ------------------------------
 *_efmigrationbackup/
 
+# ------------------------------
 # Cache
+# ------------------------------
 *.cache
 *.idx
-*.tmp
-*.temp
-*.dbmdl
 
-# Other
+# ------------------------------
+# Windows files
+# ------------------------------
 Thumbs.db
+desktop.ini
