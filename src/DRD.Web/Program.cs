@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // Projet                         DRD.Web
 // Nom du fichier                 Program.cs
 // Type de fichier                Point d'entrée
@@ -222,3 +222,5 @@ finally
 {
 	Log.CloseAndFlush();
 }
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
