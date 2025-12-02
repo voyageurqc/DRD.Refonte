@@ -3,7 +3,7 @@
 // Nom du fichier                 CodeSet.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/SystemTables/
+// Emplacement                    Entities/GrpSystemTables/
 // Auteur                         Michel Gariépy
 // Créé le                        2025-06-17
 //
@@ -24,8 +24,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpSystemTables;
 
-namespace DRD.Domain.Entities.SystemTables
+namespace DRD.Domain.Entities.GrpSystemTables
 {
 	/// <summary>
 	/// Représente une entrée générique de type Code Set utilisée dans l’ensemble du système.

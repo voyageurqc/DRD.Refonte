@@ -3,7 +3,7 @@
 // Nom du fichier                 Client.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/Client/
+// Emplacement                    Entities/GrpClient/
 // Auteur                         Michel Gariépy
 // Créé le                        2025-06-18
 //
@@ -24,8 +24,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpClient;
 
-namespace DRD.Domain.Entities.Client
+namespace DRD.Domain.Entities.GrpClient
 {
 	/// <summary>
 	/// Représente un client dans le domaine DRD.

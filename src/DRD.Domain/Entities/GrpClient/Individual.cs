@@ -3,7 +3,7 @@
 // Nom du fichier                 Individual.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/Client/
+// Emplacement                    Entities/GrpClient
 // Auteur                         Michel Gariépy
 // Créé le                        2025-11-05
 //
@@ -28,8 +28,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpClient;
 
-namespace DRD.Domain.Entities.Client
+namespace DRD.Domain.Entities.GrpClient
 {
 	/// <summary>
 	/// Représente un individu lié à un ClientDetail dans le domaine DRD.

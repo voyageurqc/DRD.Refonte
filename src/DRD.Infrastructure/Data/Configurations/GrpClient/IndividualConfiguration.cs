@@ -22,7 +22,7 @@
 //     2025-12-01    Création initiale conforme au standard DRD (Option B).
 // ============================================================================
 
-using DRD.Domain.Entities.Client;
+using DRD.Domain.Entities.GrpClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

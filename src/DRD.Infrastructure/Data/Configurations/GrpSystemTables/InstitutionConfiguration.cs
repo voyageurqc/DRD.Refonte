@@ -21,7 +21,7 @@
 //         2025-12-01    Création initiale conforme au standard DRD .NET 10.
 // ============================================================================
 
-using DRD.Domain.Entities.SystemTables;
+using DRD.Domain.Entities.GrpSystemTables;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

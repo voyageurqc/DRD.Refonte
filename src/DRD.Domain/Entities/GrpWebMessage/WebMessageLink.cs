@@ -3,7 +3,7 @@
 // Nom du fichier                 WebMessageLink.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/WebMessage/
+// Emplacement                    Entities/GrpWebMessage/
 // Auteur                         Michel Gariépy
 // Créé le                        2025-06-17
 //
@@ -24,8 +24,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpWebMessage;
 
-namespace DRD.Domain.Entities.WebMessage
+namespace DRD.Domain.Entities.GrpWebMessage
 {
 	/// <summary>
 	/// Représente un lien hypertexte associé à un WebMessage.

@@ -3,7 +3,7 @@
 // Nom du fichier                 WebMessageUser.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/WebMessage/
+// Emplacement                    Entities/GrpWebMessage/
 // Auteur                         Michel Gariépy
 // Créé le                        2025-06-27
 //
@@ -24,8 +24,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpWebMessage;
 
-namespace DRD.Domain.Entities.WebMessage
+namespace DRD.Domain.Entities.GrpWebMessage
 {
 	/// <summary>
 	/// État individuel d’un message WebMessage pour un utilisateur.

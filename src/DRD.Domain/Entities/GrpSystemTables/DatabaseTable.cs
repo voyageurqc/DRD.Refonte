@@ -3,7 +3,7 @@
 // Nom du fichier                 DatabaseTable.cs
 // Type de fichier                Entity
 // Nature C#                      Class
-// Emplacement                    Entities/SystemTables/
+// Emplacement                    Entities/GrpSystemTables/
 // Auteur                         Michel Gariépy
 // Créé le                        2025-07-02
 //
@@ -36,8 +36,9 @@
 // ============================================================================
 
 using DRD.Domain.Common;
+using DRD.Domain.Entities.GrpSystemTables;
 
-namespace DRD.Domain.Entities.SystemTables
+namespace DRD.Domain.Entities.GrpSystemTables
 {
 	/// <summary>
 	/// Métadonnées représentant une table physique de la base de données.

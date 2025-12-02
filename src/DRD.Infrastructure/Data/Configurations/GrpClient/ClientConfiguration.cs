@@ -23,10 +23,9 @@
 //     2025-12-01    Version DRD conforme au standard (header, régions, alignement).
 // ============================================================================
 
-using DRD.Domain.Entities.Client;
+using DRD.Domain.Entities.GrpClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ClientEntity = DRD.Domain.Entities.Client.Client;
 
 
 namespace DRD.Infrastructure.Data.Configurations.GrpClient
