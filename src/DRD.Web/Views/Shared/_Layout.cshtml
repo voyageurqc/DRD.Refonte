@@ -1,50 +1,165 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@*
+// ============================================================================
+// Projet                        	DRD.Web
+// Nom du fichier                		_Layout.cshtml
+// Type de fichier                		Vue Razor
+// Nature C#                     		n/a
+// Emplacement                   		Views/Shared
+// Auteur                        		Michel Gariépy
+// Créé le                       		2025-12-03
+//
+// Description
+//     Représente le layout principal de l'application DRD. Définit la structure
+//     générale de l’interface : en-tête fixe, menu latéral, zone de contenu et
+//     scripts principaux.
+//
+// Fonctionnalité
+//     - En-tête DRD (logo, titre, utilisateur, langue, déconnexion).
+//     - Menu latéral via partial _NavLayout.
+//     - Structure DOM DRD moderne compatible avec site.css v10.
+//     - Toastr pour messages utilisateur (TempData).
+//     - Chargement des bibliothèques locales (jQuery, Bootstrap, DataTables).
+//
+// Modifications
+//     2025-12-03		Création du fichier conforme aux standards DRD v10.
+// ============================================================================
+*@
+
+@using DRD.Resources.Common
+@using DRD.Resources.Menu
+@using DRD.Resources.Toastr
+
+<!DOCTYPE html>
+<html lang="fr-CA">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DRD.Web</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <title>@Common.AppName</title>
+
+    <!-- CSS de base -->
+    <link rel="stylesheet" href="~/lib/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/all.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" />
+
+    <!-- CSS DRD -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DRD.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DRD.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+
+<body class="app-header-fixed">
+
+    <!-- ===================================================================== -->
+    <!--  HEADER DRD                                                            -->
+    <!-- ===================================================================== -->
+    @* REGION DRD : Header *@
+    ///
+    <summary>
+        /// En-tête DRD contenant : logo, texte, menu utilisateur, langue, déconnexion.
+        ///
+    </summary>
+    <header id="app-header">
+
+        <!-- Logo + Texte DRD -->
+        <div class="d-flex align-items-center">
+            <img src="~/Images/UNI/unilogo.png"
+                 alt="UNI Logo"
+                 style="height:40px; width:auto; margin-right:10px;" />
+
+            <h5 class="m-0 fw-bold">@Common.AppName</h5>
+        </div>
+
+        <!-- Section Droite (Langue + User + Déconnexion) -->
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- Langue -->
+            <span class="text-white">
+                @Common.Language :
+                <strong class="ms-1">FR</strong>
+            </span>
+
+            <!-- Nom de l'utilisateur -->
+            <span class="text-white">
+                @User.Identity?.Name
+            </span>
+
+            <!-- Déconnexion (POST) -->
+            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                <button type="submit"
+                        class="btn btn-3d btn-danger"
+                        title="@Menu.Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </form>
+
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
+
+    <!-- ===================================================================== -->
+    <!--  BODY WRAPPER (SIDEBAR + CONTENT)                                     -->
+    <!-- ===================================================================== -->
+    <div id="app-body-wrapper">
+
+        <!-- SIDEBAR -->
+        <partial name="_NavLayout" />
+
+        <!-- ================================================================= -->
+        <!--  ZONE DE CONTENU PRINCIPAL                                        -->
+        <!-- ================================================================= -->
+        <main id="app-content-wrapper">
+            <div id="app-content">
+                @RenderBody()
+            </div>
+
+            <!-- FOOTER DRD -->
+            @* REGION DRD : Footer *@
+            /// <summary>
+                /// Pied de page DRD affiché sous la zone de contenu.
+                ///
+            </summary>
+            <footer id="app-footer">
+                © 2025 UNI Institution Financière – Tous droits réservés
+            </footer>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - DRD.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ===================================================================== -->
+    <!--  SCRIPTS (ORDRE CRITIQUE DRD)                                         -->
+    <!-- ===================================================================== -->
+    <!-- Librairies principales -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/datatables/datatables.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
+
+    <!-- Scripts DRD -->
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Scripts de validation MVC -->
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- ===================================================================== -->
+    <!--  TOASTR TEMP DATA                                                     -->
+    <!-- ===================================================================== -->
+    <script>
+        @* Succès *@
+        @if (TempData["ToastrSuccess"] != null)
+        {
+                <text>
+                    toastr.success("@TempData["ToastrSuccess"]");
+                </text>
+        }
+
+        @* Erreur *@
+        @if (TempData["ToastrError"] != null)
+        {
+                <text>
+                    toastr.error("@TempData["ToastrError"]");
+                </text>
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>

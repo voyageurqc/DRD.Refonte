@@ -1,31 +1,447 @@
+﻿/*
+// ============================================================================
+// Projet DRD.Web
+// Nom du fichier site.css
+// Type de fichier Fichier CSS
+// Nature C# n/a
+// Emplacement wwwroot/css
+// Auteur Michel Gariépy
+// Créé le 2025-12-03
+//
+// Description
+// Contient les styles globaux de l'application DRD, incluant la structure
+// du layout principal (header fixe, sidebar, contenu) et les styles
+// personnalisés pour les composants réutilisables.
+//
+// Fonctionnalité
+// - Mise en page principale DRD (header fixe, sidebar, contenu flexible).
+// - Thème visuel uniforme (couleurs, polices, espacements).
+// - Boutons 3D, sélecteurs 3D, champs 3D.
+// - États visuels (actif, inactif, validation).
+// - Préparation pour menu collapsible.
+//
+// Modifications
+// 2025-12-03 Version consolidée et adaptée au DOM DRD v10.
+// ============================================================================
+*/
+/* Style personnalisé pour le Popover d'Alerte */
+.popover-orange {
+    --bs-popover-bg: #ffc107;
+    --bs-popover-border-color: #ffc100;
+    --bs-popover-arrow-border-color: #ffc100;
+}
+
+    .popover-orange .popover-body {
+        color: #343a40;
+        font-weight: 500;
+    }
+
+/* Styles personnalisés pour des bordures plus épaisses */
+.border-2px {
+    border-width: 2px !important;
+}
+
+.border-3px {
+    border-width: 3px !important;
+}
+
+/* ==========================================================================
+   1. VARIABLES GLOBALES ET STYLES DE BASE
+   ========================================================================== */
+:root {
+    --header-height: 70px;
+    --sidebar-width: 350px;
+    --main-blue: #1f77b0;
+}
+
 html {
-  font-size: 14px;
+    box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: var(--header-height);
+    background-color: #f4f7fa;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* ==========================================================================
+   2. LAYOUT PRINCIPAL - EN-TÊTE FIXE
+   ========================================================================== */
+
+.app-header-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    z-index: 1030;
+    background-color: var(--main-blue);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* Conteneur principal */
+.app-body-wrapper {
+    display: flex;
+    height: calc(100vh - var(--header-height));
+}
+
+/* Sidebar DRD */
+.app-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background-color: var(--main-blue);
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+}
+
+    .app-sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        padding: 0.6rem 1rem;
+        border-radius: 0.3rem;
+        white-space: nowrap;
+    }
+
+        .app-sidebar .nav-link:hover,
+        .app-sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+    /* Support des sous-menus collapsibles (futur) */
+    .app-sidebar .submenu {
+        margin-left: 1.5rem;
+    }
+
+/* ==========================================================================
+   NOUVELLE STRUCTURE DOM DRD V10
+   ========================================================================== */
+
+/* Wrapper principal du contenu */
+#app-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    min-height: calc(100vh - var(--header-height)); /* Footer collé */
+}
+
+/* Zone interne de contenu */
+#app-content {
+    flex-grow: 1;
+    padding: 1rem;
+}
+
+/* Pied de page DRD */
+#app-footer {
+    background-color: var(--main-blue);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+/* ==========================================================================
+   3. ÉTATS DES LIGNES (Actif / Inactif)
+   ========================================================================== */
+
+.row-active {
+    background-color: #e6ffed !important;
+}
+
+.row-inactive {
+    background-color: #ffe6e6 !important;
+}
+
+/* ==========================================================================
+   4. SECTION RAPPORTS
+   ========================================================================== */
+
+.report-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.report-tile {
+    padding: 20px;
+    background: #f3f3f3;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    width: 250px;
+}
+
+    .report-tile:hover {
+        background: #ddd;
+        transform: translateY(-3px);
+    }
+
+    .report-tile:active {
+        transform: translateY(2px);
+    }
+
+.report-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   5. PAGINATION
+   ========================================================================== */
+
+.pagination-container {
+    margin-top: 20px;
+}
+
+    .pagination-container ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+    }
+
+    .pagination-container .page-item {
+        margin: 0 5px;
+    }
+
+/* ==========================================================================
+   6. CASE ACTIVE / INACTIVE
+   ========================================================================== */
+
+.is-active-icon {
+    font-size: 1.3rem;
+    color: black;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+    .is-active-icon.fa-square {
+        color: white;
+    }
+
+    .is-active-icon.fa-check-square {
+        color: black;
+    }
+
+/* ==========================================================================
+   7. BOUTONS 3D
+   ========================================================================== */
+
+.btn-3d {
+    color: white;
+    padding: 6px 14px;
+    font-size: 12px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+    .btn-3d:hover {
+        box-shadow: 0px 8px 12px rgba(0,0,0,0.3);
+        transform: translateY(-3px);
+    }
+
+    .btn-3d:active {
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+        transform: translateY(2px);
+    }
+
+/* ==========================================================================
+   8. SELECTEURS 3D
+   ========================================================================== */
+
+.Select-3d {
+    appearance: none;
+    background-color: #ffffff;
+    border: 2px solid #007bff;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml,%3Csvg fill='black' ... %3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    padding-right: 2rem;
+}
+
+    .Select-3d:hover {
+        border-color: #0056b3;
+        box-shadow: 0px 8px 12px rgba(0,0,0,0.3);
+        transform: translateY(-3px);
+    }
+
+    .Select-3d:focus {
+        outline: none;
+        border-color: #004080;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+    }
+
+/* ==========================================================================
+   9. INPUTS 3D
+   ========================================================================== */
+
+.input-3d {
+    background-color: #fdfdfd;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+    .input-3d:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+
+/* ==========================================================================
+   10. SELECT ACTIF / INACTIF
+   ========================================================================== */
+
+.form-select option.option-color-active {
+    background-color: lightgreen !important;
+    color: #333 !important;
+}
+
+.form-select option.option-color-inactive {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+/* ==========================================================================
+   11. VALIDATION
+   ========================================================================== */
+
+.required-empty {
+    border: 2px dashed #dc3545 !important;
+    background-color: #ffe6e6 !important;
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220,53,69,0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(220,53,69,0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(220,53,69,0);
+    }
+}
+
+/* ==========================================================================
+   12. WEBMESSAGE - INDICATEURS
+   ========================================================================== */
+
+.form-group.h-100 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .form-group.h-100 .form-check {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-group.h-100 .form-check-input {
+        transform: scale(1.3);
+        cursor: pointer;
+    }
+
+    .form-group.h-100 label.form-label {
+        margin-bottom: .4rem;
+    }
+
+@media (max-width: 768px) {
+    .form-group.h-100 {
+        margin-bottom: 1rem;
+    }
+}
+
+.indicator-box {
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+    padding: 0.8rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.center-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.large-toggle {
+    transform: scale(1.3);
+    margin-bottom: 0.4rem;
+}
+
+.badge {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background-color: #198754;
+    color: #fff;
+}
+
+.badge-inactive {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.badge-info {
+    background-color: #0dcaf0;
+    color: #000;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-primary {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .indicator-box {
+        margin-bottom: 1rem;
+    }
 }

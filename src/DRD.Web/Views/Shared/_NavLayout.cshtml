@@ -1,0 +1,108 @@
+﻿@*
+// ============================================================================
+// Projet                         DRD.Web
+// Nom du fichier                 _NavLayout.cshtml
+// Type de fichier                Vue Razor
+// Nature C#                      n/a
+// Emplacement                    Views/Shared
+// Auteur                         Michel Gariépy
+// Créé le                        2025-12-03
+//
+// Description
+//     Représente le menu latéral (navigation) utilisé dans l’application DRD.
+//     Affiche les liens de navigation principaux (Accueil, Clients, etc.).
+//
+// Fonctionnalité
+//     - Menu latéral fixe.
+//     - Icônes FontAwesome.
+//     - Contenu bilingue via Menu.resx fortement typés.
+//     - Préparation pour menu collapsible (Bootstrap 5).
+//
+// Modifications
+//     2025-12-03    Création du fichier conforme aux standards DRD v10.
+// ============================================================================
+*@
+
+@using DRD.Resources.Menu
+
+<aside id="app-sidebar">
+    <nav class="nav flex-column">
+
+        <!-- ===================================================================== -->
+        <!--  ACCUEIL                                                             -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "Home")" title="@Menu.Home">
+            <i class="fa-solid fa-house fa-lg me-2"></i>
+            @Menu.Home
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  SÉCURITÉ                                                             -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "Security")" title="@Menu.Security">
+            <i class="fa-solid fa-shield-halved fa-lg me-2"></i>
+            @Menu.Security
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  CLIENTS                                                              -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "Client")" title="@Menu.Clients">
+            <i class="fa-solid fa-users fa-lg me-2"></i>
+            @Menu.Clients
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  INSTITUTIONS FINANCIÈRES                                            -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "FinancialInstitution")" title="@Menu.Institutions">
+            <i class="fa-solid fa-building-columns fa-lg me-2"></i>
+            @Menu.Institutions
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  RAPPORTS                                                             -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "Reports")" title="@Menu.Reports">
+            <i class="fa-solid fa-chart-pie fa-lg me-2"></i>
+            @Menu.Reports
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  MESSAGES WEB                                                         -->
+        <!-- ===================================================================== -->
+        <a class="nav-link" href="@Url.Action("Index", "WebMessage")" title="@Menu.Messages">
+            <i class="fa-solid fa-envelope fa-lg me-2"></i>
+            @Menu.Messages
+        </a>
+
+        <!-- ===================================================================== -->
+        <!--  PRÉPARATION FUTURE : COLLAPSIBLE MENU                                -->
+        <!-- ===================================================================== -->
+        @*
+        Exemple (activable plus tard) :
+
+        <a class="nav-link"
+           data-bs-toggle="collapse"
+           href="#submenu-admin"
+           role="button"
+           aria-expanded="false"
+           aria-controls="submenu-admin">
+            <i class="fa-solid fa-gear fa-lg me-2"></i>
+            Administration
+        </a>
+
+        <div class="collapse submenu" id="submenu-admin">
+            <a class="nav-link" href="/Users">
+                <i class="fa-solid fa-user-gear me-2"></i>
+                Gestion des utilisateurs
+            </a>
+            <a class="nav-link" href="/Roles">
+                <i class="fa-solid fa-shield me-2"></i>
+                Gestion des rôles
+            </a>
+        </div>
+        *@
+
+    </nav>
+</aside>
