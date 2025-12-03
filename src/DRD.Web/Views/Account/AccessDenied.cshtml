@@ -1,0 +1,103 @@
+﻿@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 AccessDenied.cshtml
+Type de fichier                Razor View (MVC)
+Classe                         AccessDenied (View)
+Emplacement                    Views/Account
+Entités concernées             AccountController
+Créé le                        2025-12-03
+
+Description
+    Page d’erreur affichée lorsqu’un utilisateur tente d’accéder à une
+    ressource protégée sans disposer des autorisations nécessaires.
+
+Fonctionnalité
+    - Affiche un message clair et bilingue (texte statique ou ressources).
+    - Utilise le layout DRD.
+    - Compatible avec les styles visuels DRD.
+    - Option d’ajouter Toastr via TempData si le contrôleur le souhaite.
+
+Modifications
+    2025-12-03    Migration DRD v9 → DRD v10, ajout en-tête, régions DRD.
+===============================================================================
+*@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Accès refusé";
+}
+
+@* ============================================================================
+   Région : Style visuel
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Image de fond uniforme DRD utilisée dans v9 pour les écrans d'accès.
+   /// </summary>
+   ========================================================================== *@
+<style>
+    body {
+        background: url('/Images/UNI/backaccceu.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+
+@* ============================================================================
+   Région : Contenu principal
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Affichage central du message d'accès refusé avec design DRD.
+   /// </summary>
+   ========================================================================== *@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white bg-danger">
+                    <h4 class="mb-0 text-center">
+                        <i class="fa-solid fa-ban"></i>&nbsp;Accès refusé
+                    </h4>
+                </div>
+
+                <div class="card-body text-center">
+
+                    <p class="lead mt-3">
+                        Vous n'avez pas les autorisations nécessaires pour accéder à cette ressource.
+                    </p>
+
+                    <hr />
+
+                    @* Option : afficher un message additionnel si le contrôleur utilise TempData *@
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <p class="text-danger fw-bold">@TempData["ErrorMessage"]</p>
+                    }
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="~/"
+                           class="btn btn-primary btn-3d">
+                            <i class="fa-solid fa-house"></i>&nbsp;Retour à l'accueil
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@* ============================================================================
+   Région : Scripts (aucun requis, mais section laissée pour cohérence DRD)
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Point d’insertion pour scripts spécifiques si requis plus tard.
+   /// </summary>
+   ========================================================================== *@
+@section Scripts {
+    <!-- Aucun script spécifique pour AccessDenied à ce stade -->
+}

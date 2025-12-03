@@ -1,60 +1,56 @@
-// =============================================================================
+// ============================================================================
 // Projet                         DRD.Web
 // Nom du fichier                 Program.cs
 // Type de fichier                Point d'entrée
-// Nature C#                      Top-level statements
+// Classe                         (Top-level statements)
 // Emplacement                    /
-// Auteur                         Michel Gariépy
+// Entités concernées             ApplicationUser, ApplicationDbContext
 // Créé le                        2025-12-02
 //
 // Description
 //     Point d'entrée principal de l'application Web DRD. Configure Serilog,
-//     le DbContext, Identity, la localisation, MVC et le pipeline HTTP.
-//     Intègre également le seeding Identity (rôles, access type,
-//     administrateur système).
+//     la base de données, Identity, la localisation bilingue, MVC, la
+//     politique d'autorisation globale et le pipeline HTTP. Exécute aussi
+//     le seeding Identity (rôles, types d’accès, administrateur système).
 //
 // Fonctionnalité
-//     - Initialiser la journalisation Serilog (console + fichier).
-//     - Configurer ApplicationDbContext (BD DRDv10).
-//     - Configurer ASP.NET Identity avec ApplicationUser.
-//     - Activer la localisation fr-CA / en-CA.
+//     - Initialiser la journalisation Serilog (console + fichiers).
+//     - Configurer ApplicationDbContext.
+//     - Configurer ASP.NET Identity (ApplicationUser).
+//     - Activer fr-CA et en-CA; culture par défaut : fr-CA.
+//     - Ajouter MVC avec localisation et AuthorizeFilter global.
 //     - Exécuter le seeding Identity au démarrage.
-//     - Enregistrer MVC (controllers + views).
-//     - Configurer le pipeline HTTP.
+//     - Configurer le pipeline HTTP complet.
 //
 // Modifications
-//     2025-12-02    Clean start .NET 10 + intégration Serilog DEV + PROD.
-//     2025-12-02    Ajout du seeding Identity DRD (rôles + access type + admin).
+//     2025-12-02    Création initiale DRD v10.
+//     2025-12-03    Nettoyage Identity (retrait DefaultIdentity).
+//     2025-12-03    Ajout AuthorizeFilter global (Option B).
+//     2025-12-03    Régions DRD + résumés.
+//     2025-12-03    Ajout obligatoire AddLogging() pour injection ILogger<T>.
 // ============================================================================
 
 using System.Globalization;
 using DRD.Infrastructure.Data;
 using DRD.Infrastructure.Identity;
 using DRD.Infrastructure.Identity.Seeding;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 // ---------------------------------------------------------
-// DRD – Bootstrap du logger (Serilog DEV + PROD)
+// DRD – Bootstrap de Serilog (Logger minimal initial)
 // ---------------------------------------------------------
-
 var logDirectory = @"C:\DRD.Refonte\Logs";
-
 Directory.CreateDirectory(logDirectory);
 
-// DEV → fichier par lancement
-var devLogFile = Path.Combine(
-	logDirectory,
-	$"app-log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
+var devLogFile = Path.Combine(logDirectory, $"app-log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
+var prodLogPattern = Path.Combine(logDirectory, "app-.log");
 
-// PROD → fichier par jour
-var prodLogPattern = Path.Combine(
-	logDirectory,
-	"app-.log");
-
-// Bootstrap logging
 Log.Logger = new LoggerConfiguration()
 	.WriteTo.Console()
 	.WriteTo.File(devLogFile)
@@ -66,9 +62,11 @@ try
 
 	var builder = WebApplication.CreateBuilder(args);
 
-	#region DRD – Configuration Serilog
+	// ============================================================================
+	// Région DRD – Configuration Serilog
+	// ============================================================================
 	/// <summary>
-	/// Active la configuration Serilog complète (DEV/PROD).
+	/// Configure Serilog (DEV/PROD) à partir de appsettings.json et services DI.
 	/// </summary>
 	builder.Host.UseSerilog((context, services, configuration) =>
 	{
@@ -91,12 +89,12 @@ try
 				rollingInterval: RollingInterval.Day);
 		}
 	});
-	#endregion
 
-
-	#region DRD – DbContext
+	// ============================================================================
+	// Région DRD – Base de données
+	// ============================================================================
 	/// <summary>
-	/// Connexion SQL Server DRDv10.
+	/// Configure ApplicationDbContext avec SQL Server.
 	/// </summary>
 	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
 		?? throw new InvalidOperationException(
@@ -104,12 +102,12 @@ try
 
 	builder.Services.AddDbContext<ApplicationDbContext>(options =>
 		options.UseSqlServer(connectionString));
-	#endregion
 
-
-	#region DRD – Identity
+	// ============================================================================
+	// Région DRD – Identity
+	// ============================================================================
 	/// <summary>
-	/// ASP.NET Identity avec ApplicationUser.
+	/// Configure ASP.NET Identity (ApplicationUser + rôles).
 	/// </summary>
 	builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 	{
@@ -117,12 +115,12 @@ try
 	})
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
-	#endregion
 
-
-	#region DRD – Localization
+	// ============================================================================
+	// Région DRD – Localisation
+	// ============================================================================
 	/// <summary>
-	/// Localisation fr-CA / en-CA.
+	/// Active le bilinguisme fr-CA / en-CA.
 	/// </summary>
 	builder.Services.AddLocalization(options => options.ResourcesPath = "");
 
@@ -137,26 +135,45 @@ try
 		options.DefaultRequestCulture = new RequestCulture("fr-CA");
 		options.SupportedCultures = supportedCultures;
 		options.SupportedUICultures = supportedCultures;
+		options.ApplyCurrentCultureToResponseHeaders = true;
 	});
-	#endregion
 
-
-	#region DRD – MVC
+	// ============================================================================
+	// Région DRD – MVC + AuthorizeFilter global
+	// ============================================================================
 	/// <summary>
-	/// MVC (controllers + views).
+	/// Active MVC + localisation + validation et exige login partout
+	/// sauf actions décorées [AllowAnonymous].
 	/// </summary>
-	builder.Services.AddControllersWithViews()
-		.AddViewLocalization()
-		.AddDataAnnotationsLocalization();
-	#endregion
+	builder.Services.AddControllersWithViews(options =>
+	{
+		var policy = new AuthorizationPolicyBuilder()
+			.RequireAuthenticatedUser()
+			.Build();
 
+		options.Filters.Add(new AuthorizeFilter(policy));
+	})
+	.AddViewLocalization()
+	.AddDataAnnotationsLocalization();
 
+	// ============================================================================
+	// Région DRD – Injection ILogger<T>
+	// ============================================================================
+	/// <summary>
+	/// Autorise l’injection de ILogger<T> dans tous les contrôleurs DRD.
+	/// </summary>
+	builder.Services.AddLogging();
+
+	// ============================================================================
+	// Région DRD – Construction
+	// ============================================================================
 	var app = builder.Build();
 
-
-	#region DRD – Seeding Identity
+	// ============================================================================
+	// Région DRD – Seeding Identity
+	// ============================================================================
 	/// <summary>
-	/// Exécution du seeding Identity au démarrage.
+	/// Exécute la création automatique des rôles, access types et admin système.
 	/// </summary>
 	try
 	{
@@ -167,26 +184,23 @@ try
 		var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 		var context = services.GetRequiredService<ApplicationDbContext>();
 
-		Log.Information("Exécution du seeding Identity DRD…");
+		Log.Information("Seeding Identity DRD…");
 
 		await IdentitySeeder.SeedAsync(roleManager, userManager, context);
 
-		Log.Information("Seeding Identity complété avec succès.");
+		Log.Information("Seeding Identity terminé.");
 	}
-	catch (Exception seedEx)
+	catch (Exception seedingEx)
 	{
-		Log.Error(seedEx, "Erreur lors de l'exécution du seeding Identity DRD.");
+		Log.Error(seedingEx, "Erreur lors du seeding Identity.");
 		throw;
 	}
-	#endregion
 
-
-	#region DRD – Pipeline HTTP
-	/// <summary>
-	/// Pipeline MVC + Auth + Localisation + Erreurs.
-	/// </summary>
-	var localizationOptions = app.Services.GetRequiredService<
-		Microsoft.Extensions.Options.IOptions<RequestLocalizationOptions>>().Value;
+	// ============================================================================
+	// Région DRD – Pipeline HTTP
+	// ============================================================================
+	var localizationOptions =
+		app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
 
 	app.UseRequestLocalization(localizationOptions);
 
@@ -202,15 +216,14 @@ try
 
 	app.UseHttpsRedirection();
 	app.UseStaticFiles();
-	app.UseRouting();
 
+	app.UseRouting();
 	app.UseAuthentication();
 	app.UseAuthorization();
 
 	app.MapControllerRoute(
 		name: "default",
 		pattern: "{controller=Home}/{action=Index}/{id?}");
-	#endregion
 
 	app.Run();
 }
@@ -222,5 +235,3 @@ finally
 {
 	Log.CloseAndFlush();
 }
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();

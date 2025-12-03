@@ -1,0 +1,133 @@
+﻿@model DRD.Web.Models.Account.LoginVM
+
+@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Login.cshtml
+Type de fichier                Razor View (MVC)
+Classe                         Login (View)
+Emplacement                    Views/Account
+Entités concernées             LoginVM, AccountController
+Créé le                        2025-12-03
+
+Description
+    Écran de connexion DRD utilisant le modèle LoginVM et AccountController.
+    Intègre le layout DRD, les styles 3D, les ressources multilingues,
+    la validation et les messages Toastr.
+
+Fonctionnalité
+    - Saisie du courriel, mot de passe et RememberMe.
+    - Validation côté client et serveur.
+    - Bouton 3D DRD unifié.
+    - Style d’arrière-plan et structure card DRD.
+    - Messages Toastr via TempData.
+
+Modifications
+    2025-12-03    Conversion DRD v9 → DRD v10 (MVC, Identity sans Areas).
+===============================================================================
+*@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Connexion";
+}
+
+@* ============================================================================
+   Région : Styles page Login
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Styles spécifiques à la page de connexion, incluant l'image de fond DRD.
+   /// </summary>
+   ========================================================================== *@
+<style>
+    body {
+        background: url('/Images/UNI/backaccceu.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+
+@* ============================================================================
+   Région : Conteneur principal
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Structure Bootstrap centrée contenant la carte DRD de connexion.
+   /// </summary>
+   ========================================================================== *@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white" style="background-color:#1f77b0;">
+                    <h4 class="mb-0 text-center">
+                        <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Connexion
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    @* ============================================================================
+                       Région : Formulaire Login
+                       ----------------------------------------------------------------------------
+                       /// <summary>
+                       /// Formulaire de connexion utilisant LoginVM et AccountController.Login.
+                       /// </summary>
+                       ========================================================================== *@
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control input-3d" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control input-3d" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="form-check mb-3">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label"></label>
+                        </div>
+
+                        @* ============================================================================
+                           Région : Bouton Connexion
+                           ----------------------------------------------------------------------------
+                           /// <summary>
+                           /// Bouton principal stylisé (3D) pour la connexion utilisateur.
+                           /// </summary>
+                           ========================================================================== *@
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-3d">
+                                <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Connexion
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@* ============================================================================
+   Région : Scripts validation
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Scripts de validation côté client.
+   /// </summary>
+   ========================================================================== *@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

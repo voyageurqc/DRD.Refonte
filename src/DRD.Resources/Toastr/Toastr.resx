@@ -126,16 +126,28 @@
   <data name="ErrorOccurred" xml:space="preserve">
     <value>Une erreur est survenue</value>
   </data>
+  <data name="LoginInvalid" xml:space="preserve">
+    <value>Courriel ou mot de passe invalide.</value>
+  </data>
   <data name="LoginSuccess" xml:space="preserve">
     <value>Connexion réussie</value>
   </data>
   <data name="LogoutSuccess" xml:space="preserve">
     <value>Déconnexion réussie</value>
   </data>
+  <data name="RegisterInvalid" xml:space="preserve">
+    <value>Impossible de créer le compte.</value>
+  </data>
+  <data name="RegisterSuccess" xml:space="preserve">
+    <value>Compte créé avec succès.</value>
+  </data>
   <data name="SaveSuccess" xml:space="preserve">
     <value>Enregistrement réussi</value>
   </data>
   <data name="UpdateSuccess" xml:space="preserve">
     <value>Mise à jour réussie</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Aucun utilisateur trouvé avec ce courriel.</value>
   </data>
 </root>

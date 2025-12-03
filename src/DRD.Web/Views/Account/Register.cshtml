@@ -1,0 +1,153 @@
+﻿@model DRD.Web.Models.Account.RegisterVM
+
+@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Register.cshtml
+Type de fichier                Razor View (MVC)
+Classe                         Register (View)
+Emplacement                    Views/Account
+Entités concernées             RegisterVM, AccountController, ApplicationUser
+Créé le                        2025-12-03
+
+Description
+    Écran d'inscription utilisateur DRD. Utilise RegisterVM et communique avec
+    AccountController.Register (GET/POST). Reprend fidèlement la présentation de
+    la version DRD v9 tout en étant adaptée aux standards DRD v10.
+
+Fonctionnalité
+    - Saisie du prénom, nom, courriel et mot de passe.
+    - Création d'un nouvel ApplicationUser via AccountController.
+    - Validation côté client et serveur.
+    - Bouton principal 3D DRD.
+    - Arrière-plan unifié DRD.
+    - Support Toastr via TempData.
+
+Modifications
+    2025-12-03    Migration DRD v9 → DRD v10, ajout en-tête DRD + régions.
+===============================================================================
+*@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Inscription";
+}
+
+@* ============================================================================
+   Région : Styles page Register
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Image de fond DRD (identique à la connexion) et styles visuels locaux.
+   /// </summary>
+   ========================================================================== *@
+<style>
+    body {
+        background: url('/Images/UNI/backaccceu.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+
+@* ============================================================================
+   Région : Conteneur principal
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Structure centrale Bootstrap contenant la carte d'inscription DRD.
+   /// </summary>
+   ========================================================================== *@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white" style="background-color:#1f77b0;">
+                    <h4 class="mb-0 text-center">
+                        <i class="fa-solid fa-user-plus"></i>&nbsp;Créer un compte
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    @* ============================================================================
+                       Région : Formulaire Register
+                       ----------------------------------------------------------------------------
+                       /// <summary>
+                       /// Formulaire complet d'inscription pour ApplicationUser via RegisterVM.
+                       /// </summary>
+                       ========================================================================== *@
+                    <form asp-action="Register" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <!-- Prénom -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label"></label>
+                                <input asp-for="FirstName" class="form-control input-3d" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <!-- Nom -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input asp-for="LastName" class="form-control input-3d" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" class="form-control input-3d" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Mot de passe -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" type="password" class="form-control input-3d" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <!-- Confirmation -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control input-3d" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @* ============================================================================
+                           Région : Bouton d'inscription
+                           ----------------------------------------------------------------------------
+                           /// <summary>
+                           /// Bouton 3D DRD pour valider la création du compte.
+                           /// </summary>
+                           ========================================================================== *@
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-3d">
+                                <i class="fa-solid fa-user-check"></i>&nbsp;Créer mon compte
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@* ============================================================================
+   Région : Scripts de validation
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Initialise la validation côté client pour RegisterVM.
+   /// </summary>
+   ========================================================================== *@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

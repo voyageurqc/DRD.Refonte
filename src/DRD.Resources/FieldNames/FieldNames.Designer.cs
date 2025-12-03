@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DRD.Resources.Toastr {
+namespace DRD.Resources.FieldNames {
     using System;
     
     
@@ -19,17 +19,17 @@ namespace DRD.Resources.Toastr {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Toastr {
+    public class FieldNames {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Toastr() {
+        internal FieldNames() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DRD.Resources.Toastr {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.Toastr.Toastr", typeof(Toastr).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.FieldNames.FieldNames", typeof(FieldNames).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,101 +61,83 @@ namespace DRD.Resources.Toastr {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Accès refusé.
+        ///   Looks up a localized string similar to Confirm password.
         /// </summary>
-        public static string AccessDenied {
+        public static string ConfirmPassword {
             get {
-                return ResourceManager.GetString("AccessDenied", resourceCulture);
+                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Suppression réussie.
+        ///   Looks up a localized string similar to Main printer.
         /// </summary>
-        public static string DeleteSuccess {
+        public static string DefaultPrinter {
             get {
-                return ResourceManager.GetString("DeleteSuccess", resourceCulture);
+                return ResourceManager.GetString("DefaultPrinter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Une erreur est survenue.
+        ///   Looks up a localized string similar to Email.
         /// </summary>
-        public static string ErrorOccurred {
+        public static string Email {
             get {
-                return ResourceManager.GetString("ErrorOccurred", resourceCulture);
+                return ResourceManager.GetString("Email", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Courriel ou mot de passe invalide..
+        ///   Looks up a localized string similar to First name.
         /// </summary>
-        public static string LoginInvalid {
+        public static string FirstName {
             get {
-                return ResourceManager.GetString("LoginInvalid", resourceCulture);
+                return ResourceManager.GetString("FirstName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connexion réussie.
+        ///   Looks up a localized string similar to Laser printer.
         /// </summary>
-        public static string LoginSuccess {
+        public static string LaserPrinter {
             get {
-                return ResourceManager.GetString("LoginSuccess", resourceCulture);
+                return ResourceManager.GetString("LaserPrinter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Déconnexion réussie.
+        ///   Looks up a localized string similar to Last name.
         /// </summary>
-        public static string LogoutSuccess {
+        public static string LastName {
             get {
-                return ResourceManager.GetString("LogoutSuccess", resourceCulture);
+                return ResourceManager.GetString("LastName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Impossible de créer le compte..
+        ///   Looks up a localized string similar to Password.
         /// </summary>
-        public static string RegisterInvalid {
+        public static string Password {
             get {
-                return ResourceManager.GetString("RegisterInvalid", resourceCulture);
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compte créé avec succès..
+        ///   Looks up a localized string similar to Remember me.
         /// </summary>
-        public static string RegisterSuccess {
+        public static string RememberMe {
             get {
-                return ResourceManager.GetString("RegisterSuccess", resourceCulture);
+                return ResourceManager.GetString("RememberMe", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enregistrement réussi.
+        ///   Looks up a localized string similar to Sector.
         /// </summary>
-        public static string SaveSuccess {
+        public static string SectorCode {
             get {
-                return ResourceManager.GetString("SaveSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mise à jour réussie.
-        /// </summary>
-        public static string UpdateSuccess {
-            get {
-                return ResourceManager.GetString("UpdateSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Aucun utilisateur trouvé avec ce courriel..
-        /// </summary>
-        public static string UserNotFound {
-            get {
-                return ResourceManager.GetString("UserNotFound", resourceCulture);
+                return ResourceManager.GetString("SectorCode", resourceCulture);
             }
         }
     }

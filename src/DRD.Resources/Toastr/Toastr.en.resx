@@ -126,16 +126,28 @@
   <data name="ErrorOccurred" xml:space="preserve">
     <value>An error has occurred</value>
   </data>
+  <data name="LoginInvalid" xml:space="preserve">
+    <value>Invalid email or password.</value>
+  </data>
   <data name="LoginSuccess" xml:space="preserve">
     <value>Login successful</value>
   </data>
   <data name="LogoutSuccess" xml:space="preserve">
     <value>Logout successful</value>
   </data>
+  <data name="RegisterInvalid" xml:space="preserve">
+    <value>Unable to create the account.</value>
+  </data>
+  <data name="RegisterSuccess" xml:space="preserve">
+    <value>Account successfully created.</value>
+  </data>
   <data name="SaveSuccess" xml:space="preserve">
     <value>Record saved successfully</value>
   </data>
   <data name="UpdateSuccess" xml:space="preserve">
     <value>Update successful</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>No user found with this email.</value>
   </data>
 </root>
