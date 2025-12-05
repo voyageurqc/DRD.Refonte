@@ -1,103 +1,53 @@
-﻿@*
+﻿@using static DRD.Resources.Common.Common
+@using static DRD.Resources.Menu.Menu
+@using static DRD.Resources.Buttons
+
+@*
 ===============================================================================
-Projet                         DRD.Web
-Nom du fichier                 AccessDenied.cshtml
-Type de fichier                Razor View (MVC)
-Classe                         AccessDenied (View)
-Emplacement                    Views/Account
-Entités concernées             AccountController
-Créé le                        2025-12-03
+Projet        DRD.Web
+Fichier       AccessDenied.cshtml
+Type          View (Razor)
+Classe        n/a (Géré par AccountController)
+Emplacement   Views/Account
+Entité(s)     AccountController
+Créé le       2025-12-03
 
 Description
-    Page d’erreur affichée lorsqu’un utilisateur tente d’accéder à une
-    ressource protégée sans disposer des autorisations nécessaires.
+    Page d'accès refusé standard de l'application DRD. Affiche un message
+    bilingue et offre des options de redirection.
+    Le Layout est hérité du _ViewStart global.
 
 Fonctionnalité
-    - Affiche un message clair et bilingue (texte statique ou ressources).
-    - Utilise le layout DRD.
-    - Compatible avec les styles visuels DRD.
-    - Option d’ajouter Toastr via TempData si le contrôleur le souhaite.
+    - Affichage du message d'erreur d'accès via DRD.Resources.
+    - Redirection vers l'URL précédente (si disponible dans ViewBag).
+    - Redirection par défaut vers la page d'accueil.
+    - Utilisation de la règle de conception des boutons (icône seule + titre).
 
 Modifications
-    2025-12-03    Migration DRD v9 → DRD v10, ajout en-tête, régions DRD.
+    2025-12-05    Remplacement du contenu par la version v9 finalisée.
+                   Application de la règle de conception des boutons (icône/title).
 ===============================================================================
 *@
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Accès refusé";
+    ViewData["Title"] = AccessDenied_Title;
 }
 
-@* ============================================================================
-   Région : Style visuel
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Image de fond uniforme DRD utilisée dans v9 pour les écrans d'accès.
-   /// </summary>
-   ========================================================================== *@
-<style>
-    body {
-        background: url('/Images/UNI/backaccceu.jpg') no-repeat center center fixed;
-        background-size: cover;
+<div class="container text-center mt-5">
+    <h1 class="text-danger">🚫 @AccessDenied_Title</h1>
+    <p class="lead">@AccessDenied_Description</p>
+
+    @* Région Boutons de redirection (Application de la règle de conception) *@
+    @if (ViewBag.ReturnUrl != null)
+    {
+        <a href="@ViewBag.ReturnUrl" class="btn btn-3d btn-light mt-3" title="@Button_Previous">
+            ⬅️ <i class="fa fa-arrow-left"></i>
+        </a>
     }
-</style>
-
-
-@* ============================================================================
-   Région : Contenu principal
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Affichage central du message d'accès refusé avec design DRD.
-   /// </summary>
-   ========================================================================== *@
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-
-            <div class="card shadow-lg border-0">
-                <div class="card-header text-white bg-danger">
-                    <h4 class="mb-0 text-center">
-                        <i class="fa-solid fa-ban"></i>&nbsp;Accès refusé
-                    </h4>
-                </div>
-
-                <div class="card-body text-center">
-
-                    <p class="lead mt-3">
-                        Vous n'avez pas les autorisations nécessaires pour accéder à cette ressource.
-                    </p>
-
-                    <hr />
-
-                    @* Option : afficher un message additionnel si le contrôleur utilise TempData *@
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <p class="text-danger fw-bold">@TempData["ErrorMessage"]</p>
-                    }
-
-                    <div class="d-grid gap-2 mt-4">
-                        <a href="~/"
-                           class="btn btn-primary btn-3d">
-                            <i class="fa-solid fa-house"></i>&nbsp;Retour à l'accueil
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
+    else
+    {
+        <a href="@Url.Action("Index", "Home")" class="btn btn-3d btn-light mt-3" title="@Button_Home">
+            🏠 <i class="fa fa-home"></i>
+        </a>
+    }
 </div>
-
-
-@* ============================================================================
-   Région : Scripts (aucun requis, mais section laissée pour cohérence DRD)
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Point d’insertion pour scripts spécifiques si requis plus tard.
-   /// </summary>
-   ========================================================================== *@
-@section Scripts {
-    <!-- Aucun script spécifique pour AccessDenied à ce stade -->
-}

@@ -1,0 +1,35 @@
+﻿@* ============================================================================
+   Projet        DRD.Web
+   Fichier       _ToastrMinimal.cshtml
+   Type          Vue partielle Razor
+   Classe        n/a
+   Emplacement   Views/Shared
+   Créé le       2025-12-04
+
+   Description
+       Version minimale du système Toastr pour les pages anonymes (Login,
+       Register, AccessDenied). Aucun dépendance vers Serilog, highlight,
+       ConfirmModal ou métadonnées.
+
+   Fonctionnalité
+       - Affiche uniquement les messages TempData de type Success ou Error.
+       - Ne dépend d'aucun composant interne.
+       - Compatible dès le premier chargement de l’application.
+
+   Modifications
+       2025-12-04    Création initiale.
+   ============================================================================ *@
+
+@if (TempData["ToastrSuccess"] is string successMsg && !string.IsNullOrWhiteSpace(successMsg))
+{
+    <script>
+        toastr.success("@successMsg");
+    </script>
+}
+
+@if (TempData["ToastrError"] is string errorMsg && !string.IsNullOrWhiteSpace(errorMsg))
+{
+    <script>
+        toastr.error("@errorMsg");
+    </script>
+}

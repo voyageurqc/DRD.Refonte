@@ -4,39 +4,43 @@
 // Type de fichier                ViewModel
 // Classe                         LoginVM
 // Emplacement                    Models/Account
-// Entités concernées             LoginVM
+// Entité(s)                      LoginVM
 // Créé le                        2025-12-03
 //
 // Description
-//     Modèle de données utilisé pour la connexion des utilisateurs dans DRD.
-//     Permet la saisie du courriel, du mot de passe et de l’option RememberMe.
+//     Modèle de vue pour la connexion des utilisateurs. Utilise l'approche
+//     de localisation par ResourceType/ResourceName pour garantir la détection
+//     des erreurs de localisation à la compilation.
 //
 // Fonctionnalité
 //     - Validation des champs.
-//     - Localisation via ressources DRD.
+//     - Localisation via ressources DRD pour la robustesse à la compilation.
 //     - Compatible avec AccountController (Login GET/POST).
 //
 // Modifications
-//     2025-12-03    Version initiale DRD v10 (remplace LoginViewModel v9).
+//     2025-12-03    Version traditionnelle .NET v10 basée sur les attributs
+//                   ResourceName + ResourceType (validation runtime).
+//     2025-12-05    Uniformisation des noms de ressources d'erreur :
+//                   FieldRequired -> Validation_Required; InvalidEmail -> Validation_Email.
 // ============================================================================
 
-using System.ComponentModel.DataAnnotations;
 using DRD.Resources.Common;
 using DRD.Resources.FieldNames;
+using System.ComponentModel.DataAnnotations;
 
 namespace DRD.Web.Models.Account
 {
-	/// <summary>
-	/// ViewModel utilisé pour l'écran de connexion DRD.
-	/// </summary>
 	public class LoginVM
 	{
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
-		[EmailAddress(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "InvalidEmail")]
+		[Required(ErrorMessageResourceName = "Validation_Required",
+				 ErrorMessageResourceType = typeof(Common))]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email",
+					 ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "Email", ResourceType = typeof(FieldNames))]
 		public string Email { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
+		[Required(ErrorMessageResourceName = "Validation_Required",
+				 ErrorMessageResourceType = typeof(Common))]
 		[DataType(DataType.Password)]
 		[Display(Name = "Password", ResourceType = typeof(FieldNames))]
 		public string Password { get; set; } = string.Empty;

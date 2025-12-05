@@ -3,106 +3,192 @@
 // Projet                         DRD.Web
 // Nom du fichier                 _NavLayout.cshtml
 // Type de fichier                Vue Razor
-// Nature C#                      n/a
+// Classe                         n/a
 // Emplacement                    Views/Shared
-// Auteur                         Michel Gariépy
-// Créé le                        2025-12-03
+// Entités concernées             Sidebar (ressources)
+// Créé le                        2025-12-04
 //
 // Description
-//     Représente le menu latéral (navigation) utilisé dans l’application DRD.
-//     Affiche les liens de navigation principaux (Accueil, Clients, etc.).
+//     Menu latéral DRD v10 avec collapsibles intelligents, compatible
+//     structure DOM DRD v10, utilisant SideBar.resx (FR/EN).
 //
 // Fonctionnalité
-//     - Menu latéral fixe.
-//     - Icônes FontAwesome.
-//     - Contenu bilingue via Menu.resx fortement typés.
-//     - Préparation pour menu collapsible (Bootstrap 5).
+//     - 6 sections : Home, Security, Clients, Pilotage, Stats, Reports
+//     - Collapsibles Bootstrap
+//     - Mise en évidence de l'item actif
+//     - Réouverture automatique des sections (via sidebar.js)
+//     - Multilingue FR-CA / EN-CA via SideBar.resx
 //
 // Modifications
-//     2025-12-03    Création du fichier conforme aux standards DRD v10.
+//     2025-12-04    Version initiale collapsible DRD v10.
 // ============================================================================
 *@
-
-@using DRD.Resources.Menu
+@using DRD.Resources
 
 <aside id="app-sidebar">
     <nav class="nav flex-column">
 
-        <!-- ===================================================================== -->
-        <!--  ACCUEIL                                                             -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "Home")" title="@Menu.Home">
-            <i class="fa-solid fa-house fa-lg me-2"></i>
-            @Menu.Home
+        <!-- =============================================================== -->
+        <!--  HOME                                                          -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-item"
+           href="@Url.Action("Index", "Home")"
+           data-item="Home">
+            <i class="fa-solid fa-house me-2"></i>
+            @SideBar.Home
         </a>
 
-        <!-- ===================================================================== -->
-        <!--  SÉCURITÉ                                                             -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "Security")" title="@Menu.Security">
-            <i class="fa-solid fa-shield-halved fa-lg me-2"></i>
-            @Menu.Security
-        </a>
 
-        <!-- ===================================================================== -->
-        <!--  CLIENTS                                                              -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "Client")" title="@Menu.Clients">
-            <i class="fa-solid fa-users fa-lg me-2"></i>
-            @Menu.Clients
-        </a>
-
-        <!-- ===================================================================== -->
-        <!--  INSTITUTIONS FINANCIÈRES                                            -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "FinancialInstitution")" title="@Menu.Institutions">
-            <i class="fa-solid fa-building-columns fa-lg me-2"></i>
-            @Menu.Institutions
-        </a>
-
-        <!-- ===================================================================== -->
-        <!--  RAPPORTS                                                             -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "Reports")" title="@Menu.Reports">
-            <i class="fa-solid fa-chart-pie fa-lg me-2"></i>
-            @Menu.Reports
-        </a>
-
-        <!-- ===================================================================== -->
-        <!--  MESSAGES WEB                                                         -->
-        <!-- ===================================================================== -->
-        <a class="nav-link" href="@Url.Action("Index", "WebMessage")" title="@Menu.Messages">
-            <i class="fa-solid fa-envelope fa-lg me-2"></i>
-            @Menu.Messages
-        </a>
-
-        <!-- ===================================================================== -->
-        <!--  PRÉPARATION FUTURE : COLLAPSIBLE MENU                                -->
-        <!-- ===================================================================== -->
-        @*
-        Exemple (activable plus tard) :
-
-        <a class="nav-link"
+        <!-- =============================================================== -->
+        <!--  SECURITY                                                      -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
-           href="#submenu-admin"
+           href="#secSecurity"
            role="button"
            aria-expanded="false"
-           aria-controls="submenu-admin">
-            <i class="fa-solid fa-gear fa-lg me-2"></i>
-            Administration
+           aria-controls="secSecurity"
+           data-section="Security">
+            <i class="fa-solid fa-shield-halved me-2"></i>
+            @SideBar.Security_Section
         </a>
 
-        <div class="collapse submenu" id="submenu-admin">
-            <a class="nav-link" href="/Users">
-                <i class="fa-solid fa-user-gear me-2"></i>
-                Gestion des utilisateurs
+        <div class="collapse submenu" id="secSecurity">
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "Users")"
+               data-item="Security_Users">
+                @SideBar.Security_Users
             </a>
-            <a class="nav-link" href="/Roles">
-                <i class="fa-solid fa-shield me-2"></i>
-                Gestion des rôles
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "Roles")"
+               data-item="Security_Roles">
+                @SideBar.Security_Roles
+            </a>
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Register", "Account")"
+               data-item="Security_Register">
+                @SideBar.Security_Register
             </a>
         </div>
-        *@
+
+
+        <!-- =============================================================== -->
+        <!--  CLIENTS                                                       -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-section"
+           data-bs-toggle="collapse"
+           href="#secClients"
+           role="button"
+           aria-expanded="false"
+           aria-controls="secClients"
+           data-section="Clients">
+            <i class="fa-solid fa-users me-2"></i>
+            @SideBar.Clients_Section
+        </a>
+
+        <div class="collapse submenu" id="secClients">
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "Client")"
+               data-item="Clients_Client">
+                @SideBar.Clients_Client
+            </a>
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "ClientDetails")"
+               data-item="Clients_ClientDetails">
+                @SideBar.Clients_ClientDetails
+            </a>
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "Individual")"
+               data-item="Clients_Individual">
+                @SideBar.Clients_Individual
+            </a>
+        </div>
+
+
+        <!-- =============================================================== -->
+        <!--  PILOTAGE                                                      -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-section"
+           data-bs-toggle="collapse"
+           href="#secPilotage"
+           role="button"
+           aria-expanded="false"
+           aria-controls="secPilotage"
+           data-section="Pilotage">
+            <i class="fa-solid fa-gears me-2"></i>
+            @SideBar.Pilotage_Section
+        </a>
+
+        <div class="collapse submenu" id="secPilotage">
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "WebMessage")"
+               data-item="Pilotage_WebMessage">
+                @SideBar.Pilotage_WebMessage
+            </a>
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "CdSet")"
+               data-item="Pilotage_CdSet">
+                @SideBar.Pilotage_CdSet
+            </a>
+
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "FinancialInstitution")"
+               data-item="Pilotage_FinancialInstitution">
+                @SideBar.Pilotage_FinancialInstitution
+            </a>
+        </div>
+
+
+        <!-- =============================================================== -->
+        <!--  STATISTIQUES                                                  -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-section"
+           data-bs-toggle="collapse"
+           href="#secStats"
+           role="button"
+           aria-expanded="false"
+           aria-controls="secStats"
+           data-section="Stats">
+            <i class="fa-solid fa-chart-simple me-2"></i>
+            @SideBar.Stats_Section
+        </a>
+
+        <div class="collapse submenu" id="secStats">
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Index", "DatabaseTable")"
+               data-item="Stats_DatabaseTable">
+                @SideBar.Stats_DatabaseTable
+            </a>
+        </div>
+
+
+        <!-- =============================================================== -->
+        <!--  REPORTS                                                       -->
+        <!-- =============================================================== -->
+        <a class="nav-link sidebar-section"
+           data-bs-toggle="collapse"
+           href="#secReports"
+           role="button"
+           aria-expanded="false"
+           aria-controls="secReports"
+           data-section="Reports">
+            <i class="fa-solid fa-chart-pie me-2"></i>
+            @SideBar.Reports_Section
+        </a>
+
+        <div class="collapse submenu" id="secReports">
+            <a class="nav-link ms-4 sidebar-item"
+               href="@Url.Action("Report_Production", "Reports")"
+               data-item="Reports_Production">
+                @SideBar.Reports_Production
+            </a>
+        </div>
+
 
     </nav>
 </aside>

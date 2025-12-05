@@ -117,49 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Clients" xml:space="preserve">
-    <value>Client Management</value>
+  <data name="Header_Uni_Subtitle" xml:space="preserve">
+    <value>Accès sécurisé à votre espace client DRD</value>
   </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+  <data name="Header_Uni_Title" xml:space="preserve">
+    <value>UNI Institution Financière</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="Info_Avantages_P1" xml:space="preserve">
+    <value>Dépôt direct : élimine l'émission de chèques aux individus</value>
   </data>
-  <data name="Institutions" xml:space="preserve">
-    <value>Financial Institutions</value>
+  <data name="Info_Avantages_P2" xml:space="preserve">
+    <value>Retrait direct : élimine la réception de paiements par chèques</value>
   </data>
-  <data name="LanguageSwitch" xml:space="preserve">
-    <value>Switch Language</value>
+  <data name="Info_Avantages_P3" xml:space="preserve">
+    <value>Économies : réduction des coûts d'impression</value>
   </data>
-  <data name="Login_Title" xml:space="preserve">
-    <value>Login</value>
+  <data name="Info_Avantages_Title" xml:space="preserve">
+    <value>Avantages : épargnez temps et argent</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+  <data name="Info_Description" xml:space="preserve">
+    <value>Ce service permet à toute entreprise d'expédier des dépôts ou faire des retraits à toute compagnie ou individu de façon simple et pratique.</value>
   </data>
-  <data name="Messages" xml:space="preserve">
-    <value>Web Messages</value>
+  <data name="Info_Solution_Ideal" xml:space="preserve">
+    <value>La solution idéale pour vos dépôts et retraits !</value>
   </data>
-  <data name="Not_Registered" xml:space="preserve">
-    <value>Not Yet Registered?</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Manage My Account</value>
-  </data>
-  <data name="Register_Title" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Reports" xml:space="preserve">
-    <value>Report Generation</value>
-  </data>
-  <data name="Secured_Access" xml:space="preserve">
-    <value>Secured Access to your DRD Client space</value>
-  </data>
-  <data name="Security" xml:space="preserve">
-    <value>Security Management</value>
-  </data>
-  <data name="Stats" xml:space="preserve">
-    <value>Statistics</value>
+  <data name="Info_Title" xml:space="preserve">
+    <value>DÉPÔTS / RETRAITS DIRECTS</value>
   </data>
 </root>

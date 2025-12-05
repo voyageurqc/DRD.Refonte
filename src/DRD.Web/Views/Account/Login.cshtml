@@ -1,133 +1,120 @@
-﻿@model DRD.Web.Models.Account.LoginVM
-
-@*
+﻿@*
 ===============================================================================
-Projet                         DRD.Web
-Nom du fichier                 Login.cshtml
-Type de fichier                Razor View (MVC)
-Classe                         Login (View)
-Emplacement                    Views/Account
-Entités concernées             LoginVM, AccountController
-Créé le                        2025-12-03
+Projet        DRD.Web
+Fichier       Login.cshtml
+Type          View (Razor)
+Classe        Login
+Emplacement   Views/Account
+Entité(s)     LoginVM, AccountController
+Créé le       2025-12-03
 
 Description
-    Écran de connexion DRD utilisant le modèle LoginVM et AccountController.
-    Intègre le layout DRD, les styles 3D, les ressources multilingues,
-    la validation et les messages Toastr.
+    Page de connexion DRD. Rétablie à la structure 2 sections (Formulaire et Information)
+    de la version v9. Toutes les chaînes littérales sont maintenant gérées par les ressources.
 
 Fonctionnalité
-    - Saisie du courriel, mot de passe et RememberMe.
-    - Validation côté client et serveur.
-    - Bouton 3D DRD unifié.
-    - Style d’arrière-plan et structure card DRD.
-    - Messages Toastr via TempData.
+    - Champs Email, Password, RememberMe.
+    - Structure en deux colonnes (5/6).
+    - Utilisation complète des ressources statiques (y compris pour la section descriptive).
 
 Modifications
-    2025-12-03    Conversion DRD v9 → DRD v10 (MVC, Identity sans Areas).
+    2025-12-05    Rétablissement de la structure en deux colonnes. Remplacement de toutes
+                   les chaînes littérales de la section Information par les ressources
+                   de la nouvelle classe 'Informations'.
 ===============================================================================
 *@
+@model DRD.Web.Models.Account.LoginVM
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.FieldNames.FieldNames
+@using static DRD.Resources.Menu.Menu
+@using static DRD.Resources.Buttons
+@using static DRD.Resources.NavBar
+@using static DRD.Resources.Informations
+
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Connexion";
+    ViewData["Title"] = Login_Title ?? "Connexion";
 }
 
-@* ============================================================================
-   Région : Styles page Login
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Styles spécifiques à la page de connexion, incluant l'image de fond DRD.
-   /// </summary>
-   ========================================================================== *@
-<style>
-    body {
-        background: url('/Images/UNI/backaccceu.jpg') no-repeat center center fixed;
-        background-size: cover;
-    }
-</style>
-
-
-@* ============================================================================
-   Région : Conteneur principal
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Structure Bootstrap centrée contenant la carte DRD de connexion.
-   /// </summary>
-   ========================================================================== *@
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-
-            <div class="card shadow-lg border-0">
-                <div class="card-header text-white" style="background-color:#1f77b0;">
-                    <h4 class="mb-0 text-center">
-                        <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Connexion
-                    </h4>
-                </div>
-
-                <div class="card-body">
-
-                    @* ============================================================================
-                       Région : Formulaire Login
-                       ----------------------------------------------------------------------------
-                       /// <summary>
-                       /// Formulaire de connexion utilisant LoginVM et AccountController.Login.
-                       /// </summary>
-                       ========================================================================== *@
-                    <form asp-action="Login" method="post">
-                        @Html.AntiForgeryToken()
-
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control input-3d" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <!-- Mot de passe -->
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control input-3d" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <!-- Remember Me -->
-                        <div class="form-check mb-3">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label"></label>
-                        </div>
-
-                        @* ============================================================================
-                           Région : Bouton Connexion
-                           ----------------------------------------------------------------------------
-                           /// <summary>
-                           /// Bouton principal stylisé (3D) pour la connexion utilisateur.
-                           /// </summary>
-                           ========================================================================== *@
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-3d">
-                                <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Connexion
-                            </button>
-                        </div>
-
-                    </form>
-
-                </div>
-
+@* ========================== ENTÊTE SPÉCIFIQUE À LA PAGE (CENTRE) ========================== *@
+<div class="container pt-0">
+    <div class="bg-light border rounded-3 shadow-sm p-0" style="background-color: #f0f4ff;">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
+            <img src="~/images/UNI/unilogo.png" alt="Logo UNI" class="img-fluid" style="height: 80px;" />
+            <div class="text-center">
+                <h2 class="text-primary fw-bold text-uppercase mb-1">@Header_Uni_Title</h2>
+                <p class="text-secondary fst-italic mb-0">@Header_Uni_Subtitle</p>
             </div>
-
         </div>
     </div>
 </div>
 
+@* ========================== CONTENU PRINCIPAL (2 SECTIONS) ========================== *@
+<div class="container pt-2 pb-5">
+    <div class="row justify-content-center align-items-start">
 
-@* ============================================================================
-   Région : Scripts validation
-   ----------------------------------------------------------------------------
-   /// <summary>
-   /// Scripts de validation côté client.
-   /// </summary>
-   ========================================================================== *@
+        <div class="col-lg-5 mb-4">
+            <form asp-action="Login" method="post" class="card p-4 shadow-lg rounded-3 bg-light">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control input-3d" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control input-3-d" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label"></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-3d w-100" title="@Button_Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                </button>
+
+                <div class="mt-3 text-center">
+                    <a asp-action="Register" class="text-primary">@Not_Registered <strong>@Register_Title</strong></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="bg-white p-4 border rounded-3 shadow-sm">
+                <h5 class="text-uppercase text-center mb-3">
+                    <i class="fas fa-thumbtack text-danger"></i> @Info_Title
+                </h5>
+                <p class="lead text-center border border-primary p-3 mb-4">
+                    @Info_Description
+                </p>
+
+                <div class="text-center mb-3">
+                    <img src="~/images/UNI/servicepaie2.jpg" alt="Service DRD" class="img-fluid rounded" style="max-height: 200px;" />
+                </div>
+
+                <div>
+                    <p><strong class="text-success"><i class="fas fa-check-square"></i> @Info_Avantages_Title</strong></p>
+                    <ul class="list-unstyled ps-3">
+                        <li><strong>• @Info_Avantages_P1</strong></li>
+                        <li><strong>• @Info_Avantages_P2</strong></li>
+                        <li><strong>• @Info_Avantages_P3</strong></li>
+                    </ul>
+                    <p class="fw-bold text-center text-success mt-3">
+                        @Info_Solution_Ideal
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessDenied_Description" xml:space="preserve">
+    <value>You do not have the necessary permissions to view this page. Please contact your administrator.</value>
+  </data>
+  <data name="AccessDenied_Message" xml:space="preserve">
+    <value>You do not have the required permissions to access this resource</value>
+  </data>
+  <data name="AccessDenied_Title" xml:space="preserve">
+    <value>Access Denied!</value>
+  </data>
   <data name="AppName" xml:space="preserve">
     <value>UNI Direct Deposit Withdrawal</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Back to Home</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -132,6 +144,12 @@
   <data name="Error" xml:space="preserve">
     <value>An error has occurred</value>
   </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>This field is required.</value>
+  </data>
+  <data name="Validation_Email" xml:space="preserve">
+    <value>Invalid email address.</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -140,6 +158,12 @@
   </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
+  </data>
+  <data name="Validation_ComparePassword" xml:space="preserve">
+    <value>The passwords do not match.</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>The password must be at least 6 characters long.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -152,5 +176,8 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="UNI_Name" xml:space="preserve">
+    <value>UNI Financial Institution</value>
   </data>
 </root>

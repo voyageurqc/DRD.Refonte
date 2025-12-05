@@ -117,49 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Clients" xml:space="preserve">
-    <value>Client Management</value>
+  <data name="Button_Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+  <data name="Button_Create" xml:space="preserve">
+    <value>Create</value>
   </data>
-  <data name="Home" xml:space="preserve">
+  <data name="Button_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Button_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Button_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Button_Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Button_Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Button_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Button_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Button_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Button_Home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="Institutions" xml:space="preserve">
-    <value>Financial Institutions</value>
+  <data name="Button_Accept" xml:space="preserve">
+    <value>Accept</value>
   </data>
-  <data name="LanguageSwitch" xml:space="preserve">
-    <value>Switch Language</value>
+  <data name="Button_Reject" xml:space="preserve">
+    <value>Reject</value>
   </data>
-  <data name="Login_Title" xml:space="preserve">
+  <data name="Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Button_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Button_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Button_Login" xml:space="preserve">
     <value>Login</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
-  </data>
-  <data name="Messages" xml:space="preserve">
-    <value>Web Messages</value>
-  </data>
-  <data name="Not_Registered" xml:space="preserve">
-    <value>Not Yet Registered?</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Manage My Account</value>
-  </data>
-  <data name="Register_Title" xml:space="preserve">
+  <data name="Button_Register" xml:space="preserve">
     <value>Register</value>
   </data>
-  <data name="Reports" xml:space="preserve">
-    <value>Report Generation</value>
+  <data name="Button_Submit" xml:space="preserve">
+    <value>Submit</value>
   </data>
-  <data name="Secured_Access" xml:space="preserve">
-    <value>Secured Access to your DRD Client space</value>
+  <data name="Button_Next" xml:space="preserve">
+    <value>Next</value>
   </data>
-  <data name="Security" xml:space="preserve">
-    <value>Security Management</value>
+  <data name="Button_Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
-  <data name="Stats" xml:space="preserve">
-    <value>Statistics</value>
+  <data name="Button_Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="Button_Logout" xml:space="preserve">
+    <value>Exit application</value>
+  </data>
+  <data name="Button_Toggle_Culture" xml:space="preserve">
+    <value>Switch display language</value>
   </data>
 </root>

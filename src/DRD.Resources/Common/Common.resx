@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessDenied_Description" xml:space="preserve">
+    <value>Vous n'avez pas les permissions nécessaires pour voir cette page. Veuillez contacter votre administrateur.</value>
+  </data>
+  <data name="AccessDenied_Message" xml:space="preserve">
+    <value>Vous n'avez pas les autorisations nécessaires pour accéder à cette ressource.</value>
+  </data>
+  <data name="AccessDenied_Title" xml:space="preserve">
+    <value>Accès refusé!</value>
+  </data>
   <data name="AppName" xml:space="preserve">
     <value>UNI Dépôt Direct</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Retour à l'accueil</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
@@ -132,6 +144,12 @@
   <data name="Error" xml:space="preserve">
     <value>Une erreur est survenue</value>
   </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Ce champ est requis</value>
+  </data>
+  <data name="Validation_Email" xml:space="preserve">
+    <value>Adresse courriel invalide.</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Langue</value>
   </data>
@@ -140,6 +158,12 @@
   </data>
   <data name="No" xml:space="preserve">
     <value>Non</value>
+  </data>
+  <data name="Validation_ComparePassword" xml:space="preserve">
+    <value>Les mots de passe ne correspondent pas.</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Le mot de passe doit contenir au moins 6 caractères.</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
@@ -152,5 +176,8 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Oui</value>
+  </data>
+  <data name="UNI_Name" xml:space="preserve">
+    <value>UNI Institution Financière</value>
   </data>
 </root>

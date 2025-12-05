@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DRD.Resources.FieldNames {
+namespace DRD.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DRD.Resources.FieldNames {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class FieldNames {
+    public class Informations {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal FieldNames() {
+        internal Informations() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DRD.Resources.FieldNames {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.FieldNames.FieldNames", typeof(FieldNames).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.Informations", typeof(Informations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,83 +61,83 @@ namespace DRD.Resources.FieldNames {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirmation du mot de passe.
+        ///   Looks up a localized string similar to Accès sécurisé à votre espace client DRD.
         /// </summary>
-        public static string ConfirmPassword {
+        public static string Header_Uni_Subtitle {
             get {
-                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+                return ResourceManager.GetString("Header_Uni_Subtitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Imprimante par défaut.
+        ///   Looks up a localized string similar to UNI Institution Financière.
         /// </summary>
-        public static string DefaultPrinter {
+        public static string Header_Uni_Title {
             get {
-                return ResourceManager.GetString("DefaultPrinter", resourceCulture);
+                return ResourceManager.GetString("Header_Uni_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Courriel.
+        ///   Looks up a localized string similar to Dépôt direct : élimine l&apos;émission de chèques aux individus.
         /// </summary>
-        public static string Email {
+        public static string Info_Avantages_P1 {
             get {
-                return ResourceManager.GetString("Email", resourceCulture);
+                return ResourceManager.GetString("Info_Avantages_P1", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prénom.
+        ///   Looks up a localized string similar to Retrait direct : élimine la réception de paiements par chèques.
         /// </summary>
-        public static string FirstName {
+        public static string Info_Avantages_P2 {
             get {
-                return ResourceManager.GetString("FirstName", resourceCulture);
+                return ResourceManager.GetString("Info_Avantages_P2", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Imprimante laser.
+        ///   Looks up a localized string similar to Économies : réduction des coûts d&apos;impression.
         /// </summary>
-        public static string LaserPrinter {
+        public static string Info_Avantages_P3 {
             get {
-                return ResourceManager.GetString("LaserPrinter", resourceCulture);
+                return ResourceManager.GetString("Info_Avantages_P3", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nom.
+        ///   Looks up a localized string similar to Avantages : épargnez temps et argent.
         /// </summary>
-        public static string LastName {
+        public static string Info_Avantages_Title {
             get {
-                return ResourceManager.GetString("LastName", resourceCulture);
+                return ResourceManager.GetString("Info_Avantages_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mot de passe.
+        ///   Looks up a localized string similar to Ce service permet à toute entreprise d&apos;expédier des dépôts ou faire des retraits à toute compagnie ou individu de façon simple et pratique..
         /// </summary>
-        public static string Password {
+        public static string Info_Description {
             get {
-                return ResourceManager.GetString("Password", resourceCulture);
+                return ResourceManager.GetString("Info_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Se souvenir de moi.
+        ///   Looks up a localized string similar to La solution idéale pour vos dépôts et retraits !.
         /// </summary>
-        public static string RememberMe {
+        public static string Info_Solution_Ideal {
             get {
-                return ResourceManager.GetString("RememberMe", resourceCulture);
+                return ResourceManager.GetString("Info_Solution_Ideal", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code de secteur.
+        ///   Looks up a localized string similar to DÉPÔTS / RETRAITS DIRECTS.
         /// </summary>
-        public static string SectorCode {
+        public static string Info_Title {
             get {
-                return ResourceManager.GetString("SectorCode", resourceCulture);
+                return ResourceManager.GetString("Info_Title", resourceCulture);
             }
         }
     }

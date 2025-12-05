@@ -1,27 +1,71 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@*
+===============================================================================
+Projet        DRD.Web
+Fichier       _LoginPartial.cshtml
+Type          Partial View (Razor)
+Nature C#     n/a
+Emplacement   Views/Shared
+Entité(s)     ApplicationUser, AccountController
+Créé le       2025-12-05
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+Description
+    Vue partielle DRD affichant l'état d'authentification de l'usager.
+    Version reproduite fidèlement à DRD v9 :
+        - Si l’usager est connecté → montre son nom + bouton Logout.
+        - Si non connecté → montre Login / Register.
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+Fonctionnalité
+    - Utilise User.Identity.IsAuthenticated.
+    - Appelle AccountController.Login / Register / Logout.
+    - Compatible MVC Identity v10 sans Areas.
+    - À inclure dans _LayoutLogin.cshtml et/ou _Layout.cshtml.
+
+Modifications
+    2025-12-05   Recréation DRD v9 → DRD v10.
+===============================================================================
+*@
+
+@using DRD.Resources
+@using Microsoft.AspNetCore.Identity
+@using DRD.Infrastructure.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav ms-auto">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+
+        <li class="nav-item d-flex align-items-center text-white me-3">
+            <i class="fa-solid fa-user-check me-2"></i>
+            <span class="fw-bold">
+                @($"{user?.FirstName} {user?.LastName}")
+            </span>
+        </li>
+
+        <li class="nav-item">
+            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                <button type="submit" class="btn btn-danger btn-3d" title="@Buttons.Button_Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Account" asp-action="Login">
+                <i class="fa-solid fa-right-to-bracket"></i> @Buttons.Button_Login
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Account" asp-action="Register">
+                <i class="fa-solid fa-user-plus"></i> @SideBar.Security_Register
+            </a>
+        </li>
+    }
+
 </ul>

@@ -1,30 +1,31 @@
 ﻿// ============================================================================
-// Projet                         DRD.Web
-// Nom du fichier                 AccountController.cs
-// Type de fichier                Contrôleur MVC
-// Classe                         AccountController
-// Emplacement                    Controllers
-// Entités concernées             LoginVM, RegisterVM, ApplicationUser, AccessType
-// Créé le                        2025-12-03
+// Projet                         DRD.Web
+// Nom du fichier                 AccountController.cs
+// Type de fichier                Contrôleur MVC
+// Classe                         AccountController
+// Emplacement                    Controllers
+// Entités concernées             LoginVM, RegisterVM, ApplicationUser, AccessType
+// Créé le                        2025-12-03
 //
 // Description
-//     Contrôleur Identity du projet DRD gérant la connexion, l'inscription,
-//     la déconnexion et la page d'accès refusé. Remplace l'utilisation des
-//     Areas Identity afin d'assurer une intégration totale avec le layout DRD,
-//     les messages Toastr, les ressources bilingues et la journalisation.
+//     Contrôleur Identity du projet DRD gérant la connexion, l'inscription,
+//     la déconnexion et la page d'accès refusé. Compatible avec l’utilisation
+//     d’un AuthorizeFilter global dans Program.cs.
 //
 // Fonctionnalité
-//     - Connexion utilisateur (GET/POST).
-//     - Création d'un nouvel utilisateur ApplicationUser.
-//     - Validation modèle DRD (LoginVM, RegisterVM).
-//     - Déconnexion sécurisée.
-//     - Gestion AccessDenied.
-//     - Messages Toastr basés sur DRD.Resources.
-//     - Journalisation complète via ILogger<T> (Serilog en backend).
+//     - Connexion utilisateur (GET/POST).
+//     - Création d'un nouvel utilisateur ApplicationUser.
+//     - Validation modèle DRD (LoginVM, RegisterVM).
+//     - Déconnexion sécurisée.
+//     - Gestion AccessDenied.
+//     - Messages Toastr basés sur DRD.Resources.
+//     - Journalisation via ILogger<T>.
 //
 // Modifications
-//     2025-12-03    Version initiale DRD v10.
-//     2025-12-03    Injection logger corrigée (ILogger<T>).
+//     2025-12-05    Finalisation pour v10. Confirmation de la cohérence avec les ViewModels
+//                   LoginVM et RegisterVM mis à jour.
+//     2025-12-03    Version initiale DRD v10.
+//     2025-12-03    Ajout [AllowAnonymous] selon Option A (Login, Register, AccessDenied).
 // ============================================================================
 
 using DRD.Infrastructure.Identity;
@@ -34,6 +35,8 @@ using DRD.Web.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using System; // Nécessaire pour DateTime.UtcNow
 
 namespace DRD.Web.Controllers
 {
@@ -59,12 +62,12 @@ namespace DRD.Web.Controllers
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// GET : /Account/Login
-		// ============================================================================
+		// =====================================================================
 		#region Login GET
 		[HttpGet]
+		[AllowAnonymous]   // ← obligatoire
 		public IActionResult Login(string? returnUrl = null)
 		{
 			ViewData["ReturnUrl"] = returnUrl;
@@ -72,12 +75,12 @@ namespace DRD.Web.Controllers
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// POST : /Account/Login
-		// ============================================================================
+		// =====================================================================
 		#region Login POST
 		[HttpPost]
+		[AllowAnonymous]   // ← obligatoire
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Login(LoginVM model, string? returnUrl = null)
 		{
@@ -89,6 +92,7 @@ namespace DRD.Web.Controllers
 				return View(model);
 			}
 
+			// Utilise l'Email comme UserName pour la recherche (standard Identity)
 			var user = await _userManager.FindByEmailAsync(model.Email);
 
 			if (user is null)
@@ -122,24 +126,24 @@ namespace DRD.Web.Controllers
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// GET : /Account/Register
-		// ============================================================================
+		// =====================================================================
 		#region Register GET
 		[HttpGet]
+		[AllowAnonymous]  // ← obligatoire
 		public IActionResult Register()
 		{
 			return View(new RegisterVM());
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// POST : /Account/Register
-		// ============================================================================
+		// =====================================================================
 		#region Register POST
 		[HttpPost]
+		[AllowAnonymous]  // ← obligatoire
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Register(RegisterVM model)
 		{
@@ -171,7 +175,7 @@ namespace DRD.Web.Controllers
 					ModelState.AddModelError(string.Empty, error.Description);
 
 				TempData["ToastrError"] = Toastr.RegisterInvalid;
-				_logger.LogWarning("Échec lors de la création du compte : {Email}", model.Email);
+				_logger.LogWarning("Échec création utilisateur : {Email}", model.Email);
 
 				return View(model);
 			}
@@ -185,10 +189,9 @@ namespace DRD.Web.Controllers
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// POST : /Account/Logout
-		// ============================================================================
+		// =====================================================================
 		#region Logout
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -203,12 +206,12 @@ namespace DRD.Web.Controllers
 		}
 		#endregion
 
-
-		// ============================================================================
+		// =====================================================================
 		// GET : /Account/AccessDenied
-		// ============================================================================
+		// =====================================================================
 		#region AccessDenied
 		[HttpGet]
+		[AllowAnonymous]    // ← recommandé
 		public IActionResult AccessDenied()
 		{
 			return View();

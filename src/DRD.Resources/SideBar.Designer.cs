@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DRD.Resources.Menu {
+namespace DRD.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DRD.Resources.Menu {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Menu {
+    public class SideBar {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Menu() {
+        internal SideBar() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DRD.Resources.Menu {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.Menu.Menu", typeof(Menu).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.SideBar", typeof(SideBar).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,38 @@ namespace DRD.Resources.Menu {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gestion des clients.
+        ///   Looks up a localized string similar to Clients.
         /// </summary>
-        public static string Clients {
+        public static string Clients_Client {
             get {
-                return ResourceManager.GetString("Clients", resourceCulture);
+                return ResourceManager.GetString("Clients_Client", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tableau de bord.
+        ///   Looks up a localized string similar to Détails client.
         /// </summary>
-        public static string Dashboard {
+        public static string Clients_ClientDetails {
             get {
-                return ResourceManager.GetString("Dashboard", resourceCulture);
+                return ResourceManager.GetString("Clients_ClientDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individu.
+        /// </summary>
+        public static string Clients_Individual {
+            get {
+                return ResourceManager.GetString("Clients_Individual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gestion des clients.
+        /// </summary>
+        public static string Clients_Section {
+            get {
+                return ResourceManager.GetString("Clients_Section", resourceCulture);
             }
         }
         
@@ -88,110 +106,110 @@ namespace DRD.Resources.Menu {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CdSet.
+        /// </summary>
+        public static string Pilotage_CdSet {
+            get {
+                return ResourceManager.GetString("Pilotage_CdSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Institutions financières.
         /// </summary>
-        public static string Institutions {
+        public static string Pilotage_FinancialInstitution {
             get {
-                return ResourceManager.GetString("Institutions", resourceCulture);
+                return ResourceManager.GetString("Pilotage_FinancialInstitution", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changer de langue.
+        ///   Looks up a localized string similar to Pilotage.
         /// </summary>
-        public static string LanguageSwitch {
+        public static string Pilotage_Section {
             get {
-                return ResourceManager.GetString("LanguageSwitch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Connexion.
-        /// </summary>
-        public static string Login_Title {
-            get {
-                return ResourceManager.GetString("Login_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Déconnexion.
-        /// </summary>
-        public static string Logout {
-            get {
-                return ResourceManager.GetString("Logout", resourceCulture);
+                return ResourceManager.GetString("Pilotage_Section", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Messages Web.
         /// </summary>
-        public static string Messages {
+        public static string Pilotage_WebMessage {
             get {
-                return ResourceManager.GetString("Messages", resourceCulture);
+                return ResourceManager.GetString("Pilotage_WebMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pas encore de compte ?.
+        ///   Looks up a localized string similar to Production de rapports.
         /// </summary>
-        public static string Not_Registered {
+        public static string Reports_Production {
             get {
-                return ResourceManager.GetString("Not_Registered", resourceCulture);
+                return ResourceManager.GetString("Reports_Production", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gérer mon compte.
+        ///   Looks up a localized string similar to Rapports.
         /// </summary>
-        public static string Profile {
+        public static string Reports_Section {
             get {
-                return ResourceManager.GetString("Profile", resourceCulture);
+                return ResourceManager.GetString("Reports_Section", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Inscription.
         /// </summary>
-        public static string Register_Title {
+        public static string Security_Register {
             get {
-                return ResourceManager.GetString("Register_Title", resourceCulture);
+                return ResourceManager.GetString("Security_Register", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Production de rapport.
+        ///   Looks up a localized string similar to Rôles.
         /// </summary>
-        public static string Reports {
+        public static string Security_Roles {
             get {
-                return ResourceManager.GetString("Reports", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Accès sécurisé à votre espace Cclient DRD.
-        /// </summary>
-        public static string Secured_Access {
-            get {
-                return ResourceManager.GetString("Secured_Access", resourceCulture);
+                return ResourceManager.GetString("Security_Roles", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Gestion de la sécurité.
         /// </summary>
-        public static string Security {
+        public static string Security_Section {
             get {
-                return ResourceManager.GetString("Security", resourceCulture);
+                return ResourceManager.GetString("Security_Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utilisateurs.
+        /// </summary>
+        public static string Security_Users {
+            get {
+                return ResourceManager.GetString("Security_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tables de base de données.
+        /// </summary>
+        public static string Stats_DatabaseTable {
+            get {
+                return ResourceManager.GetString("Stats_DatabaseTable", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Statistiques.
         /// </summary>
-        public static string Stats {
+        public static string Stats_Section {
             get {
-                return ResourceManager.GetString("Stats", resourceCulture);
+                return ResourceManager.GetString("Stats_Section", resourceCulture);
             }
         }
     }

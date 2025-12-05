@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- MAIN SECTIONS -->
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+
+  <!-- SECURITY -->
+  <data name="Security_Section" xml:space="preserve">
+    <value>Security Management</value>
+  </data>
+  <data name="Security_Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Security_Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="Security_Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+
+  <!-- CLIENTS -->
+  <data name="Clients_Section" xml:space="preserve">
+    <value>Client Management</value>
+  </data>
+  <data name="Clients_Client" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="Clients_ClientDetails" xml:space="preserve">
+    <value>Client Details</value>
+  </data>
+  <data name="Clients_Individual" xml:space="preserve">
+    <value>Individual</value>
+  </data>
+
+  <!-- PILOTAGE -->
+  <data name="Pilotage_Section" xml:space="preserve">
+    <value>System Management</value>
+  </data>
+  <data name="Pilotage_WebMessage" xml:space="preserve">
+    <value>Web Messages</value>
+  </data>
+  <data name="Pilotage_CdSet" xml:space="preserve">
+    <value>Code Set</value>
+  </data>
+  <data name="Pilotage_FinancialInstitution" xml:space="preserve">
+    <value>Financial Institutions</value>
+  </data>
+
+  <!-- STATISTICS -->
+  <data name="Stats_Section" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="Stats_DatabaseTable" xml:space="preserve">
+    <value>Database Tables</value>
+  </data>
+
+  <!-- REPORTS -->
+  <data name="Reports_Section" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Reports_Production" xml:space="preserve">
+    <value>Report Production</value>
+  </data>
+
+</root>

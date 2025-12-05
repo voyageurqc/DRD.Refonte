@@ -117,49 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Clients" xml:space="preserve">
-    <value>Client Management</value>
+  <data name="Date_Connected" xml:space="preserve">
+    <value>Connected on :</value>
   </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+  <data name="Lang_English" xml:space="preserve">
+    <value>English</value>
   </data>
-  <data name="Home" xml:space="preserve">
+  <data name="Lang_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Manage_Account" xml:space="preserve">
+    <value>Manage my account</value>
+  </data>
+  <data name="Msg_AccessDenied" xml:space="preserve">
+    <value>Msg_AccessDenied</value>
+  </data>
+  <data name="Msg_AuthRequired" xml:space="preserve">
+    <value>Msg_AuthRequired</value>
+  </data>
+  <data name="Nav_CdSet" xml:space="preserve">
+    <value>Nav_CdSet</value>
+  </data>
+  <data name="Nav_ClientList" xml:space="preserve">
+    <value>Nav_ClientList</value>
+  </data>
+  <data name="Nav_Clients" xml:space="preserve">
+    <value>Nav_Clients</value>
+  </data>
+  <data name="Nav_DRDFiles" xml:space="preserve">
+    <value>Nav_DRDFiles</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="Institutions" xml:space="preserve">
-    <value>Financial Institutions</value>
+  <data name="Nav_ManageUsers" xml:space="preserve">
+    <value>User Nav</value>
   </data>
-  <data name="LanguageSwitch" xml:space="preserve">
-    <value>Switch Language</value>
+  <data name="Nav_Messages" xml:space="preserve">
+    <value>Nav_Messages</value>
   </data>
-  <data name="Login_Title" xml:space="preserve">
-    <value>Login</value>
+  <data name="Nav_Pilotage" xml:space="preserve">
+    <value>Nav_Pilotage</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Nav register</value>
   </data>
-  <data name="Messages" xml:space="preserve">
-    <value>Web Messages</value>
+  <data name="Nav_Reports" xml:space="preserve">
+    <value>Nav_Reports</value>
   </data>
-  <data name="Not_Registered" xml:space="preserve">
-    <value>Not Yet Registered?</value>
+  <data name="Nav_Security" xml:space="preserve">
+    <value>Security</value>
   </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Manage My Account</value>
-  </data>
-  <data name="Register_Title" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Reports" xml:space="preserve">
-    <value>Report Generation</value>
-  </data>
-  <data name="Secured_Access" xml:space="preserve">
-    <value>Secured Access to your DRD Client space</value>
-  </data>
-  <data name="Security" xml:space="preserve">
-    <value>Security Management</value>
-  </data>
-  <data name="Stats" xml:space="preserve">
-    <value>Statistics</value>
+  <data name="Trade_Mark" xml:space="preserve">
+    <value>UNI Financial Institution All rights reserved</value>
   </data>
 </root>

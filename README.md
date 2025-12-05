@@ -1,88 +1,337 @@
-﻿//2025-11-30- 16:35 
-📜 Standards et Règles de Codification
-Ce document sert de guide de référence unique pour toutes les conventions, règles et standards de développement à suivre pour le projet.
+﻿📜 Standards et Règles de Développement — DRD
 
-## 🧭 1. Priorités de Développement (Règles Fondamentales)
+Version : 2025-12-03
 
-Ces règles dictent l'ordre d'importance et la manière dont toutes les autres règles doivent être appliquées.
+Ce document constitue la référence officielle des standards techniques, des conventions et des politiques de développement applicables à toute la solution DRD.
+Il doit être suivi strictement et uniformément, dans tous les projets, tous les fichiers, et par tous les collaborateurs.
 
-toujours utiliser les fonctionnalités de base pour correction, on corrige les fichiers courants non les fichiers de base.
-Liste des fichiers de base
+🧭 1. Priorités de Développement (Règle Mère)
 
-Fichiers avec Generique dans le nom
-Fichiers avec Base dans le nom
+Les règles suivantes sont classées par ordre de priorité.
+Chaque décision de développement doit respecter cet ordre.
 
-### I. Priorité Critique (Architecture & Sécurité)
+🟥 I. Priorité Critique — Architecture, Sécurité, Structure
+1. Architecture Clean Architecture (obligatoire)
+DRD.Domain        → Entités, Interfaces, Enums, Logique métier
+DRD.Application  → Services applicatifs, DTOs, Interfaces
+DRD.Infrastructure → EF Core, Identity, Repositories, Logging, Services
+DRD.Web          → MVC, Views, Controllers, ViewModels
+DRD.Resources    → Tous les fichiers .resx (bilingue)
 
-Ces règles définissent la structure et la sécurité de l'application et sont **non négociables**.
 
-* **Architecture (Règle 2)**: Utiliser une architecture **N-Tier/Clean Architecture** avec séparation des responsabilités. Le `DRD.Domain` (cœur) ne doit dépendre d'aucune autre couche.
-* **Sécurité (Règle 9)**: Utiliser **ASP.NET Identity** et appliquer `[Authorize]` globalement. L'accès doit être contrôlé par **Rôle + SecurityLevel**.
-* **Dates & Localisation (Règle 7)**:
-    * La culture par défaut de l'application est **fr-CA**.
-    * Toutes les dates assignées dans le code doivent utiliser le **temps universel coordonné (DateTime.UtcNow)**.
+Règles :
 
-### II. Priorité Fonctionnelle (Modèle & Flux de Travail)
+Aucun accès Web → Infrastructure, Domain → Web, etc.
 
-Ces règles dictent la manière dont le code est écrit et la façon dont nous collaborons.
+Domain ne dépend jamais d’autre chose.
 
-* **Contrat de Base (Priorité Absolue)**: L'architecture actuelle de votre projet a **préséance** sur ce `README.md`.
-* **Dépendance Code/Modèle**: Nous ne modifions pas les fichiers d'héritage (Generic, Base, etc.), mais ajustons les modules spécifiques pour qu'ils soient **conformes** à ces bases.
-* **Flux de Travail (Règle 4)**:
-    * Procéder **un fichier à la fois**.
-    * Je dois vous demander votre **code actuel** avant toute modification.
-    * Utiliser **`FinancialInstitution-branches`** comme modèle de référence pour les nouveaux modules.
-* **Localisation (Règle 7)**: Toutes les chaînes de caractères visibles par l'utilisateur doivent provenir des fichiers **`.resx`** du projet `DRD.Resources`.
+Web ne contient aucune logique métier.
 
-### III. Priorité Standard (Documentation & Nommage)
+2. Sécurité ASP.NET Identity (obligatoire)
 
-Ces règles assurent la lisibilité, la maintenabilité et la cohérence visuelle.
+[Authorize] appliqué globalement via AuthorizeFilter dans Program.cs.
 
-* **Documentation (Règle 3)**: L'**en-tête de fichier** standardisé est **fondamental et obligatoire** sur chaque fichier, avec les deux-points (`:`) alignés et l'historique des modifications mis à jour.
-* **Interface Utilisateur (Règle 5)**:
-    * Utiliser **DataTables.net** (support bilingue) pour les tables de données.
-    * Utiliser **Bootstrap 5**.
-    * Standardisation des boutons (ex: `btn-3d`, ordre **Visualiser, Modifier, Supprimer**).
-    * Icônes : **Font Awesome** (les emojis sont encouragés).
-    * Tous les messages **Toastr** et **Popups** doivent provenir des fichiers `DRD.Resources`.
-* **Conventions de Code (Règle 6)**: Les ViewModels doivent se terminer par le suffixe **VM** (ex: `InstitutionListVM`).
+Seules les actions annotées [AllowAnonymous] sont accessibles publiquement.
 
----
+Gestion des rôles + AccessType + SecurityLevel conforme DRD v10.
 
-## 🏛️ 2. Architecture du Projet
+Déconnexion sécurisée et résistante aux attaques.
 
-Le projet est structuré en plusieurs couches distinctes, suivant les principes de la Clean Architecture pour garantir une séparation claire des responsabilités.
+3. Localisation & Dates
 
-* **DRD.Domain**: 💜 Le cœur de l'application. Il contient les entités, les interfaces des services et des repositories. Il ne dépend d'aucune autre couche.
-* **DRD.Infrastructure**: ⚙️ La couche technique. Elle contient les implémentations concrètes : DbContext, Repositories, migrations, etc.
-* **DRD.Application**: 🧠 La couche d'orchestration. Elle contient la logique applicative (Services) et les objets de transfert de données (DTOs).
-* **DRD.Web**: 🖥️ La couche de présentation (ASP.NET Core MVC). Elle gère les Controllers, les ViewModels et les Views.
-* **DRD.Resources**: 🌍 La couche de localisation. Elle centralise tous les fichiers de ressources (.resx).
+Culture par défaut : fr-CA
 
-## ✍️ 3. Documentation des Fichiers
-dans mon 
-La documentation est une règle fondamentale et doit être suivie sans exception.
+Cultures supportées : fr-CA, en-CA
 
-### 3.1. En-tête de Fichier
+Toutes les dates assignées dans le code utilisent :
 
-Chaque fichier doit commencer par le bloc d'en-tête suivant, avec les deux-points (:) parfaitement alignés. L'historique des modifications doit être préservé et mis à jour à chaque intervention.
+DateTime.UtcNow
 
-```csharp
+🟧 II. Priorité Fonctionnelle — Collaboration & Workflow DRD
+4. Collaboration : règle d’or
+
+Un seul fichier à la fois. Jamais plusieurs.
+
+Processus obligatoire :
+
+Tu fournis le fichier exact.
+
+Analyse.
+
+Proposition.
+
+Fichier complet + explications.
+
+Validation.
+
+Commit & Push.
+
+Étape suivante.
+
+5. Pas de modifications non validées
+
+Toute amélioration doit :
+
+être expliquée
+
+être justifiée
+
+être approuvée
+
+être inscrite dans la TODO si reportée
+
+🟨 III. Priorité Standard — Documentation, UI, Conventions
+6. En-tête DRD obligatoire dans tous les fichiers
 // ============================================================================
-// Projet:      [Nom du projet, ex: DRD.Web]
-// Fichier:     [Nom complet du fichier, ex: ClientService.cs]
-// Type:        [Rôle fonctionnel, ex: Service (Svc)]
-// Classe:      [Type de construction, ex: Class]
-// Emplacement: [Chemin relatif depuis la racine du projet, ex: Services/]
-// Entité(s):   [Entité(s) principale(s) concernée(s), ex: Client]
-// Créé le:     [Date de création, ex: YYYY-MM-DD]
+// Projet      DRD.[Nom]
+// Fichier     [NomFichier.ext]
+// Type        [Type .NET : Contrôleur MVC, ViewModel, Service, etc.]
+// Classe      [Nom de la classe / View]
+// Emplacement [Chemin relatif]
+// Entité(s)   [Liste des entités concernées]
+// Créé le     YYYY-MM-DD
 //
 // Description:
-//     [Description brève et claire du but du fichier.]
+//     [Résumé concis]
 //
 // Fonctionnalité:
-//     - [Liste à puces des responsabilités ou des actions clés du fichier.]
+//     - [Point]
+//     - [Point]
 //
 // Modifications:
-//     [YYYY-MM-DD]: [Description de la modification.]
+//     YYYY-MM-DD: [Modif la plus récente]
+//     YYYY-MM-DD: [Modif précédente]
 // ============================================================================
+
+
+Fichiers .cs, .cshtml, .razor
+
+Champs alignés avec TABs
+
+Sections standardisées
+
+Section Modifications triée du plus récent au plus ancien
+
+ℹ️ Le modèle complet se trouve à la section 4.
+
+7. UI DRD — Normes officielles
+
+Bootstrap 5
+
+Font Awesome + Emojis
+
+Boutons 3D DRD
+
+Ordre standard :
+Voir → Modifier → Supprimer
+
+Tooltips obligatoires
+
+Styles dans site.css, jamais inline sauf exceptions minimes
+
+DataTables bilingue partout
+
+8. Conventions de nommage
+
+Tous les ViewModels finissent par VM
+
+LoginVM
+
+RegisterVM
+
+ClientListVM
+
+Les Views .cshtml doivent :
+
+avoir @model en toute première ligne
+
+contenir un en-tête DRD complet
+
+utiliser des régions avec /// <summary>
+
+🏛️ 2. Structure Officielle de la Solution DRD
+DRD.Domain
+
+Entités métiers
+
+Interfaces
+
+Enums
+
+Pas de dépendances extérieures
+
+DRD.Application
+
+Services + Interfaces
+
+DTOs / VM mappés
+
+Règle métier de haut niveau
+
+DRD.Infrastructure
+
+EF Core / DbContext
+
+Identity (ApplicationUser, AccessType)
+
+Logique externe (mail, PDF)
+
+Repositories + UnitOfWork
+
+DRD.Web
+
+MVC
+
+Controllers
+
+Views .cshtml
+
+ViewModels (VM)
+
+Toastr / Validation / DataTables
+
+DRD.Resources
+
+Tous les fichiers .resx (FR-CA et EN-CA)
+
+Aucun texte visible ne doit rester dans le code
+
+🖼️ 3. Documentation : En-tête Officiel DRD
+3.1 Format obligatoire
+// ============================================================================
+// Projet:      DRD.[Nom]
+// Fichier:     [NomFichier.ext]
+// Type:        [Type .NET : Contrôleur MVC, ViewModel, Service, etc.]
+// Classe:      [Nom de la classe / View]
+// Emplacement: [Chemin relatif]
+// Entité(s):   [Liste des entités concernées]
+// Créé le:     YYYY-MM-DD
+//
+// Description:
+//     [Résumé concis]
+//
+// Fonctionnalité:
+//     - [Point]
+//     - [Point]
+//
+// Modifications:
+//     YYYY-MM-DD: [Modif la plus récente]
+//     YYYY-MM-DD: [Modif précédente]
+// ============================================================================
+
+📝 4. Template Officiel — Views .cshtml
+
+Intégré officiellement aux règles DRD
+
+@model [Namespace].[NomDuVM]
+
+@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 [Nom].cshtml
+Type de fichier                Razor View (MVC)
+Classe                         [Nom de la Page]
+Emplacement                    Views/[Dossier]
+Entités concernées             [Liste]
+Créé le                        YYYY-MM-DD
+
+Description
+    [Description claire de la vue.]
+
+Fonctionnalité
+    - [Point]
+    - [Point]
+
+Modifications
+    YYYY-MM-DD    [Modif la plus récente]
+    YYYY-MM-DD    [Modif précédente]
+============================================================================ *@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "[Titre]";
+}
+
+@* ============================================================================
+   Région : Styles
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Styles spécifiques à cette page.
+   /// </summary>
+   ========================================================================== *@
+
+@* ============================================================================
+   Région : Conteneur principal
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Structure principale de la vue.
+   /// </summary>
+   ========================================================================== *@
+
+@* ============================================================================
+   Région : Scripts
+   ----------------------------------------------------------------------------
+   /// <summary>
+   /// Scripts liés à cette page (validation, JS DRD, etc.).
+   /// </summary>
+   ========================================================================== *@
+@section Scripts {
+}
+
+🌍 5. Règles Ressources (.resx)
+1. Aucun texte visible dans le code
+
+Tous les messages doivent provenir des fichiers ressources :
+
+Common.resx
+
+Toastr.resx
+
+FieldNames.resx
+
+Popups.resx
+
+2. Les clés doivent exister → validation à la compilation
+
+Aucune exécution ne doit échouer pour une clé .resx manquante.
+
+Les erreurs doivent être détectées avant runtime.
+
+🔧 6. Workflow de Développement DRD
+
+Un seul fichier à la fois
+
+Le fichier complet est toujours requis
+
+Modification fournie avec explications
+
+Validation
+
+Commit & Push
+
+Étape suivante
+
+📌 7. Ajouts du 2025-12-03
+
+Intégration du template .cshtml DRD
+
+Ajout de la règle @model en première ligne
+
+Ajout de la règle historique trié du plus récent au plus vieux
+
+Validation des .resx renforcée
+
+Révision Program.cs (Authorize global + Serilog)
+
+Clarification du rôle des projets DRD
+
+Normalisation complète du module Identity
+
+📚 8. Historique du README.md
+
+2025-12-03 : Mise à jour majeure (v10)
+
+2025-11-29 : Intégration Serilog + règles metadata
+
+2025-11-20 : Adoption Clean Architecture stricte
+
+🎯 Fin du README

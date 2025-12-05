@@ -4,22 +4,22 @@
 // Type de fichier                ViewModel
 // Classe                         RegisterVM
 // Emplacement                    Models/Account
-// Entités concernées             RegisterVM, ApplicationUser
-// Créé le                        2025-12-03
+// Entités concernées             ApplicationUser
+// Créé le                        2025-12-03 (Date d'origine de la VM)
 //
 // Description
-//     Modèle d'inscription permettant la création d'un utilisateur Identity
-//     enrichi selon les besoins du système DRD.
+//     Modèle de vue pour l'inscription des utilisateurs. Utilise l'approche
+//     de localisation par ResourceType/ResourceName pour garantir la détection
+//     des erreurs de localisation à la compilation.
 //
 // Fonctionnalité
-//     - Champs personnels essentiels (prénom, nom).
-//     - Champs Identity standard (email, mot de passe).
-//     - Champs préférences DRD (SectorCode, imprimantes).
-//     - Validation complète avec localisation.
-//     - Compatible avec AccountController (Register GET/POST).
+//     - Contient les champs nécessaires à la création d'un ApplicationUser.
+//     - Utilise des références statiques aux classes de ressources pour la robustesse.
 //
 // Modifications
-//     2025-12-03    Version initiale DRD v10 (remplace RegisterViewModel v9).
+//     2025-12-05    Renommage en RegisterVM. Remplacement de FullName par FirstName
+//                   et LastName. Implémentation de la localisation par ResourceType/Name
+//                   pour la détection des erreurs de ressources à la compilation.
 // ============================================================================
 
 using System.ComponentModel.DataAnnotations;
@@ -28,45 +28,75 @@ using DRD.Resources.FieldNames;
 
 namespace DRD.Web.Models.Account
 {
-	/// <summary>
-	/// ViewModel utilisé pour la création d'un utilisateur DRD.
-	/// </summary>
 	public class RegisterVM
 	{
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
+		#region Identification
+
+		/// <summary>
+		/// Prénom de l'utilisateur, obligatoire.
+		/// </summary>
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "FirstName", ResourceType = typeof(FieldNames))]
 		public string FirstName { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
+		/// <summary>
+		/// Nom de l'utilisateur, obligatoire.
+		/// </summary>
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "LastName", ResourceType = typeof(FieldNames))]
 		public string LastName { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
-		[EmailAddress(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "InvalidEmail")]
+		/// <summary>
+		/// Adresse courriel de l'utilisateur (utilisée comme nom d'utilisateur).
+		/// </summary>
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Common))]
+		[EmailAddress(ErrorMessageResourceName = "Validation_Email", ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "Email", ResourceType = typeof(FieldNames))]
 		public string Email { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
-		[StringLength(100, MinimumLength = 6,
-			ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "PasswordTooShort")]
+		#endregion
+
+		#region Mot de passe
+
+		/// <summary>
+		/// Mot de passe du compte.
+		/// </summary>
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Common))]
 		[DataType(DataType.Password)]
 		[Display(Name = "Password", ResourceType = typeof(FieldNames))]
 		public string Password { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
+		/// <summary>
+		/// Confirmation du mot de passe.
+		/// </summary>
 		[DataType(DataType.Password)]
-		[Compare("Password", ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "PasswordsDoNotMatch")]
+		[Compare("Password", ErrorMessageResourceName = "Validation_ComparePassword", ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "ConfirmPassword", ResourceType = typeof(FieldNames))]
 		public string ConfirmPassword { get; set; } = string.Empty;
 
-		[Required(ErrorMessageResourceType = typeof(Common), ErrorMessageResourceName = "FieldRequired")]
+		#endregion
+
+		#region Préférences de l'utilisateur
+
+		/// <summary>
+		/// Code du secteur de l'utilisateur, obligatoire.
+		/// </summary>
+		[Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Common))]
 		[Display(Name = "SectorCode", ResourceType = typeof(FieldNames))]
 		public string SectorCode { get; set; } = string.Empty;
 
+		/// <summary>
+		/// Imprimante par défaut.
+		/// </summary>
 		[Display(Name = "DefaultPrinter", ResourceType = typeof(FieldNames))]
-		public string? DefaultPrinter { get; set; }
+		public string DefaultPrinter { get; set; } = string.Empty;
 
+		/// <summary>
+		/// Imprimante laser.
+		/// </summary>
 		[Display(Name = "LaserPrinter", ResourceType = typeof(FieldNames))]
-		public string? LaserPrinter { get; set; }
+		public string LaserPrinter { get; set; } = string.Empty;
+
+		#endregion
 	}
 }

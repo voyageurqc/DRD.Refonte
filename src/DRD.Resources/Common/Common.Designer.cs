@@ -19,7 +19,7 @@ namespace DRD.Resources.Common {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Common {
@@ -61,11 +61,47 @@ namespace DRD.Resources.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vous n&apos;avez pas les permissions nécessaires pour voir cette page. Veuillez contacter votre administrateur..
+        /// </summary>
+        public static string AccessDenied_Description {
+            get {
+                return ResourceManager.GetString("AccessDenied_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vous n&apos;avez pas les autorisations nécessaires pour accéder à cette ressource..
+        /// </summary>
+        public static string AccessDenied_Message {
+            get {
+                return ResourceManager.GetString("AccessDenied_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accès refusé!.
+        /// </summary>
+        public static string AccessDenied_Title {
+            get {
+                return ResourceManager.GetString("AccessDenied_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UNI Dépôt Direct.
         /// </summary>
         public static string AppName {
             get {
                 return ResourceManager.GetString("AppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retour à l&apos;accueil.
+        /// </summary>
+        public static string BackToHome {
+            get {
+                return ResourceManager.GetString("BackToHome", resourceCulture);
             }
         }
         
@@ -133,6 +169,15 @@ namespace DRD.Resources.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Le mot de passe doit contenir au moins 6 caractères..
+        /// </summary>
+        public static string PasswordTooShort {
+            get {
+                return ResourceManager.GetString("PasswordTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sauvegarder.
         /// </summary>
         public static string Save {
@@ -147,6 +192,42 @@ namespace DRD.Resources.Common {
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UNI Institution Financière.
+        /// </summary>
+        public static string UNI_Name {
+            get {
+                return ResourceManager.GetString("UNI_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Les mots de passe ne correspondent pas..
+        /// </summary>
+        public static string Validation_ComparePassword {
+            get {
+                return ResourceManager.GetString("Validation_ComparePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adresse courriel invalide..
+        /// </summary>
+        public static string Validation_Email {
+            get {
+                return ResourceManager.GetString("Validation_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ce champ est requis.
+        /// </summary>
+        public static string Validation_Required {
+            get {
+                return ResourceManager.GetString("Validation_Required", resourceCulture);
             }
         }
         

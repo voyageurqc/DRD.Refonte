@@ -1,0 +1,99 @@
+﻿@* ✅ Razor-Generated JavaScript Script with Toastr Calls *@
+@using Serilog
+
+@functions {
+    private string EscapeJs(string? input) =>
+        input?.Replace("\\", "\\\\")
+              .Replace("'", "\\'")
+              .Replace("\r", " ")
+              .Replace("\n", " ")
+              ?? string.Empty;
+}
+
+@{
+    var highlightCode = ViewData["HighlightCode"] as string;
+    var highlightTypeCode = ViewData["HighlightTypeCode"] as string;
+
+    var successMessage = EscapeJs(TempData["ToastrSuccess"] as string);
+    var errorMessage = EscapeJs(TempData["ToastrError"] as string);
+    var infoMessage = EscapeJs(TempData["ToastrInfo"] as string);
+    var warningMessage = EscapeJs(TempData["ToastrWarning"] as string);
+
+    var toastScript = "";
+
+    if (!string.IsNullOrWhiteSpace(successMessage))
+    {
+        toastScript += $"toastr.success('{successMessage}');\n";
+    }
+
+    if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        toastScript += $"toastr.error('{errorMessage}');\n";
+    }
+
+    if (!string.IsNullOrWhiteSpace(infoMessage))
+    {
+        toastScript += $"toastr.info('{infoMessage}');\n";
+    }
+
+    if (!string.IsNullOrWhiteSpace(warningMessage))
+    {
+        toastScript += $"toastr.warning('{warningMessage}');\n";
+    }
+
+    Log.Information("🧪 _Toastr.cshtml script generated: {Script}", toastScript);
+}
+
+@if (!string.IsNullOrWhiteSpace(toastScript))
+{
+    <script>
+        $(function () {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-top-right',
+                timeOut: '5000'
+            };
+
+        @Html.Raw(toastScript)
+        });
+    </script>
+}
+
+@if (!string.IsNullOrEmpty(highlightCode) && !string.IsNullOrEmpty(highlightTypeCode))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rowId = `highlightedRow-@highlightTypeCode-@highlightCode`;
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.classList.add("flash");
+            }
+        });
+    </script>
+    <script>
+        function openConfirmationModal(actionUrl, message, method = 'post', hiddenFields = {}) {
+            const form = document.getElementById("confirmModalForm");
+            const msg = document.getElementById("confirmModalMessage");
+
+            form.action = actionUrl;
+            form.method = method;
+            msg.textContent = message;
+
+            // Clear old hidden fields
+            [...form.querySelectorAll('input[type="hidden"]')].forEach(input => input.remove());
+
+            // Add hidden fields if any
+            for (const key in hiddenFields) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = hiddenFields[key];
+                form.appendChild(input);
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById("confirmModal"));
+            modal.show();
+        }
+    </script>
+}
