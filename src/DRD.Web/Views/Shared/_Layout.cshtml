@@ -124,9 +124,22 @@ Modifications
             else
             {
                 @* Bouton Connexion pour les utilisateurs non authentifiés (si désiré) *@
-                <a asp-controller="Account" asp-action="Login" class="btn btn-3d btn-primary" title="@Button_Login">
-                    <i class="fas fa-sign-in-alt"></i>
-                </a>
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <!-- Déconnexion (rouge) -->
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                        <button type="submit" class="btn btn-3d btn-danger" title="Déconnexion">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <!-- Connexion (vert) -->
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-3d btn-success" title="Connexion">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                }
             }
         </div>
     </header>

@@ -162,4 +162,7 @@
   <data name="Stats" xml:space="preserve">
     <value>Statistiques</value>
   </data>
+  <data name="Welcome_Message" xml:space="preserve">
+    <value>Bienvenu dans vorte système Dépôt - Retraits Direct</value>
+  </data>
 </root>

@@ -1,9 +1,4 @@
-﻿@model DRD.Web.Models.Account.RegisterVM
-@using static DRD.Resources.Common.Common
-@using static DRD.Resources.FieldNames.FieldNames
-@using static DRD.Resources.Menu.Menu
-@using static DRD.Resources.Buttons
-@*
+﻿@*
 ===============================================================================
 Projet        DRD.Web
 Fichier       Register.cshtml
@@ -30,6 +25,12 @@ Modifications
                    uniquement icône, texte dans l'attribut title).
 ===============================================================================
 *@
+@model DRD.Web.Models.Account.RegisterVM
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.FieldNames.FieldNames
+@using static DRD.Resources.Menu.Menu
+@using static DRD.Resources.Buttons
+
 
 @{
     ViewData["Title"] = Register_Title ?? "Inscription";
@@ -50,6 +51,7 @@ Modifications
                 </div>
 
                 <div class="card-body">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
                     @* Région Formulaire d'inscription *@
                     <form asp-action="Register" method="post">

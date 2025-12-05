@@ -194,5 +194,14 @@ namespace DRD.Resources.Menu {
                 return ResourceManager.GetString("Stats", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bienvenu dans vorte système Dépôt - Retraits Direct.
+        /// </summary>
+        public static string Welcome_Message {
+            get {
+                return ResourceManager.GetString("Welcome_Message", resourceCulture);
+            }
+        }
     }
 }

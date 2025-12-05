@@ -1,6 +1,46 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@using DRD.Resources
+@using System.Globalization
+@using Serilog
+@using DRD.Web.Models
 
-<p>Use this page to detail your site's privacy policy.</p>
+<h2>Privacy home</h2>
+@* @{
+    // Set the page title
+    ViewData["Title"] = Common.Privacy;
+
+    // ✅ Logging page access
+    Log.Information("🔒 Privacy page accessed. Referrer URL: {Referrer}", Model?.ReferrerUrl);
+
+    // Set up current and return URLs using CodesetNavigation
+    var currentUrl = Url.Action(null, null);
+    var returnUrl = Model?.ReferrerUrl ?? Url.Action("Index", "Home");
+
+    // ✅ Additional debugging logs for URL handling
+    Log.Debug("Current URL: {CurrentUrl}, Return URL: {ReturnUrl}", currentUrl, returnUrl);
+}
+
+<div class="container">
+    <!-- Page Header -->
+    <h1>@Common.Privacy</h1>
+    <p>@Common.Privacy_Description</p>
+
+    <!-- Back Button -->
+    <a href="@returnUrl" class="btn btn-3d btn-secondary">
+        <i class="fa fa-arrow-left"></i> @Common.Button_Back
+    </a>
+</div>
+
+<!-- Include Navigation Buttons -->
+<div class="navigation-buttons">
+    @await Html.PartialAsync("_NavigationButtons", new CodesetNavigation
+{
+    CurrentUrl = currentUrl ?? string.Empty,
+    ReferrerUrl = returnUrl ?? Url.Action("Index", "Home") ?? string.Empty // Ensure fallback to Home for ReferrerUrl
+})
+</div>
+
+@* Logging for debugging (optional) *@
+@*@{
+    Log.Debug("Privacy view rendered successfully. ReturnUrl: {ReturnUrl}, CurrentUrl: {CurrentUrl}", returnUrl, currentUrl);
+}
+ *@

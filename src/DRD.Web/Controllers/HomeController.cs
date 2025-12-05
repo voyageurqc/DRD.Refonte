@@ -1,24 +1,28 @@
-using System.Diagnostics;
+using DRD.Infrastructure.Identity;
+using DRD.Web.Models.Home;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DRD.Web.Models;
-
-namespace DRD.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
-    {
-        return View();
-    }
+	private readonly UserManager<ApplicationUser> _userManager;
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+	public HomeController(UserManager<ApplicationUser> userManager)
+	{
+		_userManager = userManager;
+	}
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+	public async Task<IActionResult> Index()
+	{
+		var vm = new HomeVM();
+
+		// Si l'utilisateur est connecté, on charge son nom complet
+		if (User?.Identity?.IsAuthenticated == true)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			vm.UserFullName = $"{user?.FirstName} {user?.LastName}".Trim();
+		}
+
+		return View(vm);
+	}
 }

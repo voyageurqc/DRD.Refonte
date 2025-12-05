@@ -162,4 +162,7 @@
   <data name="Stats" xml:space="preserve">
     <value>Statistics</value>
   </data>
+  <data name="Welcome_Message" xml:space="preserve">
+    <value>Welcome to your automatic Deposit - Withdrawal system</value>
+  </data>
 </root>

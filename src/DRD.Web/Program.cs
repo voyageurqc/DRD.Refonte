@@ -137,6 +137,18 @@ try
 		options.SupportedUICultures = supportedCultures;
 		options.ApplyCurrentCultureToResponseHeaders = true;
 	});
+	builder.Services.Configure<IdentityOptions>(options =>
+	{
+		options.Password.RequireDigit = false;
+		options.Password.RequireLowercase = false;
+		options.Password.RequireUppercase = false;
+		options.Password.RequireNonAlphanumeric = false;
+		options.Password.RequiredLength = 6;
+
+		// Options lockout (optionnel)
+		options.Lockout.AllowedForNewUsers = false;
+	});
+
 
 	// ============================================================================
 	// Région DRD – MVC + AuthorizeFilter global
