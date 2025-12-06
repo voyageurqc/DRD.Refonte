@@ -1,61 +1,68 @@
-﻿@* ===============================================================================
-Projet        DRD.Web
-Fichier       _Layout.cshtml
-Type          View (Razor)
-Classe        n/a (Mise en page)
-Emplacement   Views/Shared
-Entité(s)     ApplicationUser
-Créé le       2025-06-18
+﻿@* ============================================================================
+Projet:      DRD.Web
+Fichier:     _Layout.cshtml
+Type:        Layout (Razor)
+Classe:      Layout Global
+Emplacement: Views/Shared
+Entité(s):   ApplicationUser
+Créé le:     2025-12-06
 
 Description
-    Fichier de mise en page principal (Master Page) de l'application. Définit la
-    structure commune, les menus, et charge les scripts/styles globaux. La
-    structure est conditionnelle : Sidebar/Menu affichés uniquement si l'utilisateur est authentifié.
+    Mise en page principale DRD v10 : entête fixe, sidebar bilingue (_NavLayout),
+    contenu flexible et footer sticky DRD avec logo, © FontAwesome, ressources 
+    bilingues et numéro de version dynamique.
 
 Fonctionnalité
-    - Structure HTML de base.
-    - Header et Footer fixes.
-    - Affichage conditionnel de la Sidebar.
-    - Gestion dynamique des boutons Connexion/Déconnexion et Langue.
+    - Header fixe avec gestion culture, profil usager, heure de connexion.
+    - Sidebar bilingue rendue via _NavLayout.
+    - Zone de contenu responsive.
+    - Footer permanent DRD avec texte bilingue, logo, version dynamique.
+    - Ressources .resx pour tout le texte visible.
 
 Modifications
-    2025-12-05: Révision de l'en-tête et suppression de tous les commentaires
-                   de fin de ligne pour respecter les conventions du projet.
-    2025-12-05: Finalisation de la structure pour v10. Correction des using static
-                   pour éviter les erreurs de compilation et garantir l'accès direct aux ressources.
-                   Implémentation complète de la logique conditionnelle du Header/Sidebar/Footer.
-    2025-07-24: Ajout de la variable de configuration globale 'drdConfig' pour
-                   centraliser l'initialisation des scripts (ex: DataTables).
-===============================================================================
-*@
-@* --- DIRECTIVES DE NAMESPACE ET DE TYPE (doivent être en premier) --- *@
+    2025-12-06  Ajout footer DRD sticky avec logo, ©, version dynamique.
+    2025-12-06  Intégration bilingue ressources Footer_*.
+    2025-12-05  Nettoyage flex + correction disparition footer.
+    2025-12-04  Version DRD v10.
+=============================================================================== *@
+
 @using System.Globalization
+@using System.Reflection
 @using Microsoft.AspNetCore.Hosting
 @using DRD.Infrastructure.Identity
 @using Microsoft.AspNetCore.Identity
 
-@* --- DIRECTIVES USING STATIC (Accès direct aux propriétés de ressources) --- *@
 @using static DRD.Resources.Common.Common
 @using static DRD.Resources.Menu.Menu
 @using static DRD.Resources.Buttons
 @using static DRD.Resources.NavBar
 @using static DRD.Resources.SideBar
 
-@* --- DÉCLARATION DU MODÈLE (doit suivre les using) --- *@
 @model object
 
-@* --- INJECTIONS DE SERVICE (peuvent être après les using/model) --- *@
 @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager 
+@inject SignInManager<ApplicationUser> SignInManager
 @inject IWebHostEnvironment Env
+@{
+    // Récupère la version de l’assembly en cours (DRD.Web)
+    var assembly = Assembly.GetExecutingAssembly();
+    var rawVersion = assembly.GetName().Version;
+
+    // formate version : 10.0.1.0 → "10.0.1"
+    string version = rawVersion != null
+        ? $"{rawVersion.Major}.{rawVersion.Minor}.{rawVersion.Build}"
+        : "1.0.0";
+}
+
+
+
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentCulture.Name">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>App_Title</title>
+    <title>@AppName</title>
 
-    @* --- Références CSS --- *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
@@ -64,33 +71,32 @@ Modifications
 
     @RenderSection("Styles", required: false)
 </head>
+
 <body class="@ViewData["BodyClass"]">
 
     @{
-        // Simplification de la vérification grâce à l'injection de SignInManager
-        bool userIsAuthenticated = SignInManager.IsSignedIn(User); 
+        bool userIsAuthenticated = SignInManager.IsSignedIn(User);
         string? fullName = null;
-        DateTime? connectionTime = null; // Nouvelle variable pour l'heure de connexion
+        DateTime? connectionTime = null;
 
-        if (userIsAuthenticated && User is not null)
+        if (userIsAuthenticated)
         {
             var currentUser = await UserManager.GetUserAsync(User);
-            fullName = $"{currentUser?.FirstName} {currentUser?.LastName}";
-            connectionTime = DateTime.Now; 
+            fullName = $"{currentUser?.FirstName} {currentUser?.LastName}".Trim();
+            connectionTime = DateTime.Now;
         }
     }
 
-    @* ========================== EN-TÊTE FIXE UNIFIÉ ========================== *@
-    <header class="app-header-fixed shadow">
+    <header class="app-header-fixed shadow d-flex justify-content-between align-items-center px-3">
         <div class="d-flex align-items-center">
             <img src="~/images/UNI/unilogo.png" alt="Logo DRD" style="height: 40px;" />
             <span class="ms-3 fs-5 fw-bold text-white d-none d-md-block">@AppName</span>
         </div>
 
         <div class="d-flex align-items-center gap-4">
+
             @if (userIsAuthenticated)
             {
-                @* --- Section Informations Usager (Conditionnelle) --- *@
                 <div class="d-flex align-items-center gap-3 text-white">
                     <i class="fa-solid fa-user-check fa-lg"></i>
                     <div class="small text-end">
@@ -100,16 +106,14 @@ Modifications
                     <div class="vr"></div>
                     <div class="small text-end">
                         <div>@Date_Connected</div>
-                        <strong>@connectionTime?.ToString("dd MMMM, HH:mm")</strong> 
+                        <strong>@connectionTime?.ToString("dd MMMM, HH:mm")</strong>
                     </div>
                 </div>
             }
 
-            @* --- Section Boutons Langue / Connexion / Déconnexion (Gérée par un seul bloc) --- *@
             <form asp-controller="Localization" asp-action="ToggleLanguage" method="post" class="m-0">
                 <button type="submit" class="btn btn-info text-dark btn-sm btn-3d" title="@Button_Toggle_Culture">
-                    🌍 @(CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToUpper() == "FR" ?
-                    "English" : "Français")
+                    🌍 @(CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToUpper() == "FR" ? "English" : "Français")
                 </button>
             </form>
 
@@ -117,75 +121,58 @@ Modifications
             {
                 <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                     <button type="submit" class="btn btn-3d btn-danger" title="@Button_Logout">
-                        <i class="fas fa-sign-out-alt"></i> 
+                        <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </form>
             }
             else
             {
-                @* Bouton Connexion pour les utilisateurs non authentifiés (si désiré) *@
-                @if (User?.Identity?.IsAuthenticated ?? false)
-                {
-                    <!-- Déconnexion (rouge) -->
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                        <button type="submit" class="btn btn-3d btn-danger" title="Déconnexion">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <!-- Connexion (vert) -->
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-3d btn-success" title="Connexion">
-                        <i class="fas fa-sign-in-alt"></i>
-                    </a>
-                }
+                <a asp-controller="Account" asp-action="Login" class="btn btn-3d btn-success" title="@Button_Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                </a>
             }
+
         </div>
     </header>
 
-    @* ========================== CORPS DE L'APPLICATION ========================== *@
     <div class="app-body-wrapper">
 
-        @* --- SIDEBAR (Conditionnelle) --- *@
         @if (userIsAuthenticated)
         {
-            <nav class="app-sidebar">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Accueil</a></li>
-                    @* ... (Reste de votre menu) ... *@
-                    <li class="nav-item mt-2">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#menuSecurity">👤 Gestion de la sécurité</a>
-                        <div class="collapse ps-3" id="menuSecurity">
-                            <a class="nav-link" asp-controller="Users" asp-action="Index">📋 @Security_Users</a>
-                            <a class="nav-link" asp-controller="Account" asp-action="Register">📋 @Register_Title</a> 
-                    </li>
-                    @* ... (Reste des sections du menu) ... *@
-                    <li class="nav-item mt-2">
-                        <a class="nav-link" asp-controller="Reports" asp-action="Report_Selection">📄 @Reports</a> 
-                </ul>
-            </nav>
+            <aside class="app-sidebar">
+                @await Html.PartialAsync("_NavLayout")
+            </aside>
         }
 
-        @* --- Zone de Contenu Principal et Pied de Page --- *@
-        <div class="main-content-area flex-grow-1 d-flex flex-column"> 
-            <main class="flex-grow-1 p-4">
+        <div class="main-content-area d-flex flex-column flex-grow-1">
+
+            <main class="p-4" style="flex: 1 0 auto";>
                 @RenderBody()
             </main>
-            
-            @* --- Pied de Page (Fixé au bas de la zone de contenu) --- *@
-            <footer class="main-footer text-center p-2">
+
+            @* === FOOTER DRD v10 — Logo Mini + © + Texte Bilingue + Version Dynamique === *@
+            <footer class="app-footer-fixed d-flex align-items-center justify-content-center shadow text-white py-2 px-3">
+
+                <img src="~/images/UNI/unilogo.png" alt="Logo DRD" class="footer-logo me-2" />
+
+                <i class="fa-regular fa-copyright me-1"></i>
+
+                <span class="fw-bold">
+                    <span class="fw-bold">
+                        @DateTime.Now.Year — @Footer_Text — @Footer_Version @($"v{version}")
+                    </span>
+                </span>
+
             </footer>
+
         </div>
     </div>
 
-    @* --- Scripts et Modales --- *@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    @* ... (Le reste de vos scripts) ... *@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @* ... (Vos composants et partiels) ... *@
     <partial name="_Toastr" />
+
     @RenderSection("Scripts", required: false)
 
 </body>

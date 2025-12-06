@@ -120,6 +120,12 @@
   <data name="Date_Connected" xml:space="preserve">
     <value>Connected on :</value>
   </data>
+  <data name="Footer_Text" xml:space="preserve">
+    <value>All rights reserved</value>
+  </data>
+  <data name="Footer_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="Lang_English" xml:space="preserve">
     <value>English</value>
   </data>
@@ -167,8 +173,5 @@
   </data>
   <data name="Nav_Security" xml:space="preserve">
     <value>Security</value>
-  </data>
-  <data name="Trade_Mark" xml:space="preserve">
-    <value>UNI Financial Institution All rights reserved</value>
   </data>
 </root>

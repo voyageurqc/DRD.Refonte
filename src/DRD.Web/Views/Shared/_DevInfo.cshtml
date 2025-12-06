@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Hosting
+@inject IWebHostEnvironment Env
+@using System.Reflection
+
+@{
+    if (!Env.IsDevelopment())
+    {
+        return;
+    }
+
+    var assembly = Assembly.GetExecutingAssembly();
+    var asm = assembly.GetName();
+
+    string compilationVersion =
+        $"{asm.Version?.Major}.{asm.Version?.Minor}.{asm.Version?.Build}.{asm.Version?.Revision}";
+
+    string marketingVersion =
+        $"{asm.Version?.Major}.{asm.Version?.Minor}.{asm.Version?.Build}";
+
+    var buildDate = System.IO.File.GetLastWriteTime(assembly.Location);
+    string buildString = buildDate.ToString("yyyy-MM-dd HH:mm");
+}
+
+<div class="alert alert-warning p-2 mt-3" style="font-size:0.78rem;">
+    <strong>🛠 Développement</strong><br />
+    Version : @marketingVersion<br />
+    Compilation : @compilationVersion<br />
+    Build : @buildString
+</div>

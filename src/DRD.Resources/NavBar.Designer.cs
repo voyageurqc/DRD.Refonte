@@ -70,6 +70,24 @@ namespace DRD.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tous droits réservés.
+        /// </summary>
+        public static string Footer_Text {
+            get {
+                return ResourceManager.GetString("Footer_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string Footer_Version {
+            get {
+                return ResourceManager.GetString("Footer_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anglais.
         /// </summary>
         public static string Lang_English {
@@ -210,15 +228,6 @@ namespace DRD.Resources {
         public static string Nav_Security {
             get {
                 return ResourceManager.GetString("Nav_Security", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UNI Institution Financière Tous droits réservés.
-        /// </summary>
-        public static string Trade_Mark {
-            get {
-                return ResourceManager.GetString("Trade_Mark", resourceCulture);
             }
         }
     }

@@ -1,41 +1,59 @@
-﻿@*
-===============================================================================
-Projet               DRD.Web
-Fichier              _NavLayout.cshtml
-Type                 Vue Razor (Partielle)
-Classe               n/a
-Emplacement          Views/Shared
-Entité(s)            SideBar (ressources)
-Créé le              2025-12-04
+﻿@* ============================================================================
+Projet:      DRD.Web
+Fichier:     _NavLayout.cshtml
+Type:        Vue Razor (Partielle)
+Classe:      Navigation
+Emplacement: Views/Shared
+Entité(s):   SideBar (ressources)
+Créé le:     2025-12-04
 
 Description
-    Menu latéral DRD v10 avec sections collapsibles. Reproduit l’organisation
-    fonctionnelle DRD v9 tout en utilisant SideBar.resx (FR/EN). La logique
-    d'ouverture/fermeture est gérée par sidebar.js.
+    Menu latéral DRD v10 avec sections collapsibles. Utilise SideBar.resx pour
+    l’affichage bilingue FR-CA / EN-CA. Le comportement d’ouverture/fermeture
+    est géré par sidebar.js.
 
 Fonctionnalité
     - 6 sections principales : Home, Security, Clients, Pilotage, Stats, Reports
-    - Utilise Bootstrap collapse
-    - Mise en évidence possible via attributs data-item
-    - Bilingue grâce aux ressources SideBar.*
-    - Design simple mais extensible (DRD standard)
+    - Navigation structurée avec Bootstrap collapse
+    - Prise en charge du bilinguisme via les resources
+    - Indicateur visuel possible avec data-item / data-section
+    - Ajout d'une section Développement fixée en bas de la sidebar (DEV uniquement)
 
 Modifications
-    2025-12-05   Version complète remise à neuf (aucune section omise)
-    2025-12-04    Version initiale collapsible DRD v10.
-===============================================================================
-*@
+    2025-12-06  Section Développement fixée bas-sidebar (flex, sans absolute).
+    2025-12-06  Ajout version marketing + compilation + build.
+    2025-12-05  Nettoyage complet.
+    2025-12-04  Version initiale DRD v10.
+=============================================================================== *@
 
 @using static DRD.Resources.SideBar
-<p>TEST : @Home</p>
-<p>TEST2 : @Security_Section</p>
+@inject IWebHostEnvironment Env
+@using System.Reflection
 
-<aside id="app-sidebar">
-    <nav class="nav flex-column">
+@{
+    // Assembly DRD.Web
+    var assembly = Assembly.GetExecutingAssembly();
+    var asm = assembly.GetName();
 
-        <!-- =============================================================== -->
-        <!--  HOME                                                          -->
-        <!-- =============================================================== -->
+    // Version compilation (AssemblyVersion)
+    string compilationVersion =
+        $"{asm.Version?.Major}.{asm.Version?.Minor}.{asm.Version?.Build}.{asm.Version?.Revision}";
+
+    // Version marketing DRD
+    string marketingVersion =
+        $"{asm.Version?.Major}.{asm.Version?.Minor}.{asm.Version?.Build}";
+
+    // Date du fichier .dll
+    var buildDate = System.IO.File.GetLastWriteTime(assembly.Location);
+    string buildString = buildDate.ToString("yyyy-MM-dd HH:mm");
+}
+
+<aside id="app-sidebar" style="display:flex; flex-direction:column; height:100%;">
+
+    <!-- NAVIGATION PRINCIPALE -->
+    <nav class="nav flex-column" style="flex:1 1 auto;">
+
+        @* REGION: Home *@
         <a class="nav-link sidebar-item"
            href="@Url.Action("Index", "Home")"
            data-item="Home">
@@ -43,14 +61,10 @@ Modifications
             @Home
         </a>
 
-
-        <!-- =============================================================== -->
-        <!--  SECURITY                                                      -->
-        <!-- =============================================================== -->
+        @* REGION: Security *@
         <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
            href="#secSecurity"
-           role="button"
            aria-expanded="false"
            aria-controls="secSecurity"
            data-section="Security">
@@ -59,140 +73,66 @@ Modifications
         </a>
 
         <div class="collapse submenu" id="secSecurity">
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "Users")"
-               data-item="Security_Users">
-                @Security_Users
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "Roles")"
-               data-item="Security_Roles">
-                @Security_Roles
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Register", "Account")"
-               data-item="Security_Register">
-                @Security_Register
-            </a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "Users")">@Security_Users</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "Roles")">@Security_Roles</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Register", "Account")">@Security_Register</a>
         </div>
 
-
-        <!-- =============================================================== -->
-        <!--  CLIENTS                                                       -->
-        <!-- =============================================================== -->
+        @* REGION: Clients *@
         <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
-           href="#secClients"
-           role="button"
-           aria-expanded="false"
-           aria-controls="secClients"
-           data-section="Clients">
+           href="#secClients">
             <i class="fa-solid fa-users me-2"></i>
             @Clients_Section
         </a>
 
         <div class="collapse submenu" id="secClients">
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "Client")"
-               data-item="Clients_Client">
-                @Clients_Client
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "ClientDetails")"
-               data-item="Clients_ClientDetails">
-                @Clients_ClientDetails
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "Individual")"
-               data-item="Clients_Individual">
-                @Clients_Individual
-            </a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "Client")">@Clients_Client</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "ClientDetails")">@Clients_ClientDetails</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "Individual")">@Clients_Individual</a>
         </div>
 
-
-        <!-- =============================================================== -->
-        <!--  PILOTAGE                                                      -->
-        <!-- =============================================================== -->
+        @* REGION: Pilotage *@
         <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
-           href="#secPilotage"
-           role="button"
-           aria-expanded="false"
-           aria-controls="secPilotage"
-           data-section="Pilotage">
+           href="#secPilotage">
             <i class="fa-solid fa-gears me-2"></i>
             @Pilotage_Section
         </a>
 
         <div class="collapse submenu" id="secPilotage">
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "WebMessage")"
-               data-item="Pilotage_WebMessage">
-                @Pilotage_WebMessage
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "CdSet")"
-               data-item="Pilotage_CdSet">
-                @Pilotage_CdSet
-            </a>
-
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "FinancialInstitution")"
-               data-item="Pilotage_FinancialInstitution">
-                @Pilotage_FinancialInstitution
-            </a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "WebMessage")">@Pilotage_WebMessage</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "CdSet")">@Pilotage_CdSet</a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "FinancialInstitution")">@Pilotage_FinancialInstitution</a>
         </div>
 
-
-        <!-- =============================================================== -->
-        <!--  STATISTIQUES                                                  -->
-        <!-- =============================================================== -->
+        @* REGION: Stats *@
         <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
-           href="#secStats"
-           role="button"
-           aria-expanded="false"
-           aria-controls="secStats"
-           data-section="Stats">
+           href="#secStats">
             <i class="fa-solid fa-chart-simple me-2"></i>
             @Stats_Section
         </a>
 
         <div class="collapse submenu" id="secStats">
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Index", "DatabaseTable")"
-               data-item="Stats_DatabaseTable">
-                @Stats_DatabaseTable
-            </a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Index", "DatabaseTable")">@Stats_DatabaseTable</a>
         </div>
 
-
-        <!-- =============================================================== -->
-        <!--  REPORTS                                                       -->
-        <!-- =============================================================== -->
+        @* REGION: Reports *@
         <a class="nav-link sidebar-section"
            data-bs-toggle="collapse"
-           href="#secReports"
-           role="button"
-           aria-expanded="false"
-           aria-controls="secReports"
-           data-section="Reports">
+           href="#secReports">
             <i class="fa-solid fa-chart-pie me-2"></i>
             @Reports_Section
         </a>
 
         <div class="collapse submenu" id="secReports">
-            <a class="nav-link ms-4 sidebar-item"
-               href="@Url.Action("Report_Production", "Reports")"
-               data-item="Reports_Production">
-                @Reports_Production
-            </a>
+            <a class="nav-link ms-4 sidebar-item" href="@Url.Action("Report_Production", "Reports")">@Reports_Production</a>
         </div>
 
     </nav>
+
+    <!-- SECTION DÉVELOPPEMENT FIXÉE EN BAS -->
+
+    @await Html.PartialAsync("_DevInfo")
 </aside>
