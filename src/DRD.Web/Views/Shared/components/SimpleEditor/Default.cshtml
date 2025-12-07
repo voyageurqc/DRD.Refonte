@@ -1,0 +1,154 @@
+﻿@* ============================================================================
+// 💻 Projet                : DRD.Web
+// 📄 Nom du fichier        : Views/Shared/Components/SimpleEditor/Default.cshtml
+// 🧩 Type (Rôle)          : UI Partial
+// 🏷️ Classe (.NET)        : Razor View
+// 📍 Emplacement           : DRD.Web/Views/Shared/Components/SimpleEditor/
+// 🏛️ Entité(s) touchée(s)  : WebMessage (affichage/édition de contenu)
+// 🗓️ Créé le              : 2025-10-28
+//
+// 📝 Description           : Vue du composant SimpleEditor. Toolbar FA compacte avec icônes fines et actions colorées.
+// 🔧 Fonctionnalités       : Bilingue via IStringLocalizer<EditorMessages>. Groupes colorés et responsive.
+// 🧾 Modifications         :
+//     2025-10-29 : Version allégée — boutons de format en icônes fines, actions principales en 3D.
+// ============================================================================
+*@
+
+@using Microsoft.Extensions.Localization
+@{
+    var id = (string)ViewData["Id"]!;
+    var label = (string)ViewData["Label"]!;
+    var language = (string)ViewData["Language"]!; // "fr" ou "en"
+    var rows = (int)ViewData["Rows"]!;
+    var value = (string)ViewData["Value"]!;
+    var L = (IStringLocalizer)ViewData["L"]!;
+    var modalId = $"modal_preview_{id}";
+    var readOnly = ViewData["ReadOnly"] as bool? ?? false;
+    var type = (ViewData["Type"] as string ?? "INFO").ToUpper();
+    var isMandatory = (ViewData["IsIntegrationMandatory"] as bool?) ?? false;
+
+}
+
+<div class="mb-3">
+
+    <!-- 🧩 Barre d’outils stylisée -->
+    <div class="d-flex flex-wrap mb-2 align-items-center gap-2">
+
+        <!-- Groupe 1 : Format de texte -->
+        <div class="editor-toolbar-group d-flex gap-1">
+            <button type="button" class="btn-icon" title="@L["Bold"]" onclick="SE_wrapText('@id','<b>','</b>')"><i class="fa fa-bold"></i></button>
+            <button type="button" class="btn-icon" title="@L["Italic"]" onclick="SE_wrapText('@id','<i>','</i>')"><i class="fa fa-italic"></i></button>
+            <button type="button" class="btn-icon" title="@L["Underline"]" onclick="SE_wrapText('@id','<u>','</u>')"><i class="fa fa-underline"></i></button>
+            <button type="button" class="btn-icon text-warning" title="@L["Highlight"]" onclick="SE_wrapText('@id','<mark>','</mark>')"><i class="fa fa-highlighter"></i></button>
+            <button type="button" class="btn-icon text-dark" title="@L["Code"]" onclick="SE_wrapText('@id','<code>','</code>')"><i class="fa fa-code"></i></button>
+        </div>
+
+        <!-- Groupe 2 : Structure -->
+        <div class="editor-toolbar-group d-flex gap-1">
+            <button type="button" class="btn-icon text-success" title="@L["Center"]" onclick="SE_wrapText('@id','<div style=&quot;text-align:center;&quot;>','</div>')"><i class="fa fa-align-center"></i></button>
+            <button type="button" class="btn-icon text-success" title="@L["IncreaseFont"]" onclick="SE_wrapText('@id','<span style=&quot;font-size:larger;&quot;>','</span>')"><i class="fa fa-plus"></i></button>
+            <button type="button" class="btn-icon text-success" title="@L["DecreaseFont"]" onclick="SE_wrapText('@id','<span style=&quot;font-size:smaller;&quot;>','</span>')"><i class="fa fa-minus"></i></button>
+            <button type="button" class="btn-icon text-info" title="@L["ColorBlue"]" onclick="SE_wrapText('@id','<span style=&quot;color:blue;&quot;>','</span>')"><i class="fa fa-paint-brush"></i></button>
+        </div>
+
+        <!-- Groupe 3 : Listes & citations -->
+        <div class="editor-toolbar-group d-flex gap-1">
+            <button type="button" class="btn-icon text-warning" title="@L["ListBulleted"]" onclick="SE_wrapText('@id','<ul><li>','</li></ul>')"><i class="fa fa-list-ul"></i></button>
+            <button type="button" class="btn-icon text-warning" title="@L["ListNumbered"]" onclick="SE_wrapText('@id','<ol><li>','</li></ol>')"><i class="fa fa-list-ol"></i></button>
+            <button type="button" class="btn-icon text-secondary" title="@L["Quote"]" onclick="SE_wrapText('@id','<blockquote>','</blockquote>')"><i class="fa fa-quote-right"></i></button>
+        </div>
+
+        <!-- Groupe 4 : Outils -->
+        <div class="editor-toolbar-group d-flex gap-1">
+            <button type="button" class="btn-icon text-danger" title="@L["ClearFormatting"]" onclick="SE_clearFormatting('@id')"><i class="fa fa-eraser"></i></button>
+            <button type="button" class="btn btn-info btn-sm btn-3d" title="@L["Link"]" onclick="SE_insertLink('@id','@L["EnterUrl"]')"><i class="fa fa-link"></i></button>
+            <button type="button" class="btn btn-primary btn-sm btn-3d" title="@L["Preview"]" onclick="SE_preview('@id','@modalId')"><i class="fa fa-eye"></i></button>
+        </div>
+    </div>
+
+    <textarea id="@id" name="@id" rows="@rows"
+              class="form-control shadow-sm border rounded-3 simple-editor-textarea"
+              data-type="@type"
+              data-mandatory="@(isMandatory ? "true" : "false")"
+              style="transition: box-shadow .15s ease;" @(readOnly ? "readonly" : "")>@value</textarea>
+</div>
+
+<!-- Modal de prévisualisation -->
+<div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@($"{modalId}_label")" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 🧩 Zone de prévisualisation DRD -->
+                <div id="@($"{modalId}_content")"
+                     class="shadow-sm rounded-3 p-4 mt-2"
+                     style="border-left: 6px solid transparent;">
+                    <div class="preview-header d-flex align-items-center mb-2">
+                        <i class="fa-solid fa-file-lines text-primary me-2"></i>
+                        <strong class="fs-5">@L["PreviewTitle"]</strong>
+                    </div>
+                    <div class="preview-body" style="color:#212529; line-height:1.5;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-3d" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-1"></i>@L["Close"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ✅ Focus visuel */
+    .simple-editor-textarea:focus {
+        box-shadow: 0 0 0 .2rem rgba(13,110,253,.25);
+    }
+
+    /* 🎯 Boutons icônes fines */
+    .btn-icon {
+        background: transparent !important;
+        border: none !important;
+        padding: 3px 6px;
+        font-size: 1rem;
+        color: #0d6efd;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn-icon:hover {
+            color: #084298;
+            background-color: rgba(13,110,253,0.1);
+            border-radius: 6px;
+        }
+
+    /* ✅ Groupes de boutons */
+    .editor-toolbar-group {
+        border-radius: 6px;
+        background-color: #f8f9fa;
+        padding: 4px 6px;
+        box-shadow: inset 0 0 3px rgba(0,0,0,.1);
+    }
+
+        .editor-toolbar-group i {
+            width: 14px;
+            text-align: center;
+        }
+
+    /* ✅ Boutons 3D */
+    .btn-3d {
+        border-width: 2px;
+        box-shadow: 0 4px 0 rgba(0,0,0,.1);
+    }
+
+        .btn-3d:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0,0,0,.1);
+        }
+
+    /* ✅ Espacement global */
+    .simple-editor-textarea {
+        margin-top: .3rem;
+    }
+</style>

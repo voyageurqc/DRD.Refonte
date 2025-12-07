@@ -1,0 +1,96 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _SystemMetadataPartial.cshtml
+Type de fichier                Vue partielle (Razor)
+Classe                         SystemMetadataPartial
+Emplacement                    Views/Shared/Partials
+Entités concernées             EntityMetadataDto
+Créé le                        2025-12-08
+
+Description
+    Modale Bootstrap affichant les métadonnées système d'une entité auditable.
+    Les données proviennent du DTO EntityMetadataDto et soutiennent les vues
+    Details et Edit du projet DRD v10.
+
+Fonctionnalité
+    - Affiche les dates et utilisateurs de création et de modification.
+    - Utilise les ressources DRD pour une interface bilingue.
+    - S'intègre dans le système DRD de boutons 3D et modales universelles.
+
+Modifications
+    2025-12-08    Version initiale adaptée DRD v10.
+============================================================================ *@
+
+@using DRD.Resources
+@using System.Globalization
+@model DRD.Application.Popup.Models.EntityMetadataDto
+
+<div class="modal fade"
+     id="systemMetadataModal"
+     tabindex="-1"
+     aria-labelledby="systemMetadataLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-3">
+
+            @* ============================================================
+               HEADER
+               ============================================================ *@
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="systemMetadataLabel">
+                    <i class="fas fa-database"></i> @SystemTables.SystemInfoTitle
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="@Common.Button_Close">
+                </button>
+            </div>
+
+            @* ============================================================
+               BODY
+               ============================================================ *@
+            <div class="modal-body">
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        @Common.CreatedOn :
+                        <strong>
+                            @Model.CreationDate.ToString(CultureInfo.CurrentCulture)
+                        </strong>
+                    </li>
+
+                    <li class="list-group-item">
+                        <i class="fa-solid fa-user"></i>
+                        @Common.CreatedBy :
+                        <strong>
+                            @(Model.CreatedByName ?? Model.CreatedBy ?? "N/A")
+                        </strong>
+                    </li>
+
+                    <li class="list-group-item">
+                        <i class="fa-solid fa-calendar-pen"></i>
+                        @Common.ModifiedOn :
+                        <strong>
+                            @Model.ModificationDate.ToString(CultureInfo.CurrentCulture)
+                        </strong>
+                    </li>
+
+                    <li class="list-group-item">
+                        <i class="fa-solid fa-user-pen"></i>
+                        @Common.ModifiedBy :
+                        <strong>
+                            @(Model.UpdatedByName ?? Model.UpdatedBy ?? "N/A")
+                        </strong>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>

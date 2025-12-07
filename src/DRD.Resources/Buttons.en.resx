@@ -198,4 +198,7 @@
   <data name="Button_Toggle_Culture" xml:space="preserve">
     <value>Switch display language</value>
   </data>
+  <data name="Button_Metadata" xml:space="preserve">
+    <value>Display Audit fields</value>
+  </data>
 </root>

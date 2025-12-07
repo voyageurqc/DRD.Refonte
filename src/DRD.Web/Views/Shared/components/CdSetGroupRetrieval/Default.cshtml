@@ -1,0 +1,63 @@
+﻿@*
+============================================================================
+// 💻 Projet           : DRD.Web
+// 📄 Nom du fichier     : Default.cshtml
+// 📄 Classe du fichier   : Partial View (Razor)
+// 📍 Emplacement         : Views/Shared/Components/CdSetGroupRetrieval/
+// 🏛️ Entité(s) touchée(s) : Dictionnaire de résultats (Code, Description)
+// 📅 Créé le            : 2025-11-26
+//
+// 📌 Description :
+//      Vue par défaut (Default.cshtml) du ViewComponent CdSetGroupRetrieval.
+//      Affiche en lecture seule les codes et descriptions pour un groupe
+//      de Codesets dans un format de formulaire (Details).
+//
+// 🎯 Fonctionnalité :
+//      - Itère sur le dictionnaire passé par le ViewComponent.
+//      - Utilise la taille de colonne dynamique (colSize) et les libellés corrects.
+//      - Affiche le code et la description au format "Code - Texte".
+//
+// 🛠️ Modifications :
+//      2025-11-26 : Création initiale.
+//      ⭐ 2025-11-26 : Correction pour utiliser les libellés des ressources appropriées (ClientFN.Province, etc.).
+//      ⭐ 2025-11-26 : Implémentation de la taille de colonne dynamique (colSize) via ViewBag.
+//      ⭐ 2025-11-26 : Application du format d'affichage "Code - Description".
+// ============================================================================ *@
+@model Dictionary<string, (string Code, string Description)>
+@using DRD.Resources.FieldNames
+
+@{
+    // 1. Détermine la taille de colonne à partir du ViewBag (passé par le VC C#)
+    int colSize = 3; // Par défaut, utiliser 3 pour la configuration
+    if (ViewBag.ColSize is int size && size > 0 && size <= 12)
+    {
+        colSize = size;
+    }
+    string colClass = $"col-md-{colSize} mb-3";
+}
+
+    @foreach (var item in Model)
+    {
+        string labelKey = item.Key;
+        string displayLabel = labelKey switch
+        {
+            "CodeProvince" => ClientFN.CodeProvince, // Affiche "Province"
+            "CodePays" => ClientFN.CodePays,         // Affiche "Pays"
+            "CultureCode" => ClientFN.CultureCode,    // Affiche "Langue"
+            "TypeClientDRD" => ClientFN.TypeClientDRD,
+            "OrdreDeSaisie" => ClientFN.OrdreDeSaisie,
+            "CodeMCPA" => ClientFN.CodeMCPA,
+            "ModeDeTransfert" => ClientFN.ModeDeTransfert,
+            "TypeDeCompte" => ClientFN.TypeDeCompte,
+            _ => labelKey
+        };
+
+        <div class="form-group @colClass">
+            @* ⭐ Utilise la classe de colonne dynamique *@
+            <label>@displayLabel</label> @* ⭐ Utilise le libellé corrigé *@
+            <input value="@item.Value.Code - @item.Value.Description" @* Format "Code - Texte" *@
+                   title="@item.Value.Code"
+                   class="form-control"
+                   readonly />
+        </div>
+    }

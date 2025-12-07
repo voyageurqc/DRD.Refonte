@@ -198,4 +198,7 @@
   <data name="Button_Toggle_Culture" xml:space="preserve">
     <value>Changer la langue d'affichage</value>
   </data>
+  <data name="Button_Metadata" xml:space="preserve">
+    <value>Afficher les champs Audit</value>
+  </data>
 </root>

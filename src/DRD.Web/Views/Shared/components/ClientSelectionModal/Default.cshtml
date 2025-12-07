@@ -1,0 +1,68 @@
+﻿@*
+// ============================================================================
+// 💻 Projet            : DRD.Web
+// 📄 Nom du fichier    : Default.cshtml
+// 📄 Classe du fichier : Vue Partielle (Partial View)
+// 📍 Emplacement       : Views/Shared/Components/ClientSelectionModal/
+// 🏛️ Entité(s) touchée(s): ClientSummaryVM (Modèle de la vue)
+// 📅 Créé le           : 2025-07-19
+//
+// Description:
+//       Vue partielle pour la modale de sélection de client.
+//       Affiche un menu déroulant des clients avec coloration basée sur leur statut d'activité.
+//
+// Fonctionnalité:
+//       - Rend une modale Bootstrap avec un sélecteur de clients.
+//       - Applique des classes CSS (ActivityCssClass) aux options du menu déroulant.
+//       - Permet la sélection d'un client pour des opérations ultérieures.
+//       - Harmonisation visuelle avec la modale de sélection d'institution.
+//
+// 🛠️ Modifications :
+//       2025-07-19 : Création initiale de la vue partielle.
+//       2025-07-19 : Harmonisation visuelle avec la modale d'institution, ajout des boutons d'action.
+// ============================================================================
+*@
+
+@using DRD.Resources
+
+@model IEnumerable<DRD.Application.Common.Models.Clients.ClientSummaryVM>
+
+<div class="modal fade" id="clientSelectionModal" tabindex="-1" aria-labelledby="clientSelectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        @* J'ai conservé modal-dialog-centered pour le centrage *@
+        <div class="modal-content">
+            <form asp-controller="Client" asp-action="Index" method="get">
+                <div class="modal-header bg-primary text-white">
+                    @* Ajout des classes pour l'en-tête bleu/blanc *@
+                    <h5 class="modal-title" id="clientSelectionModalLabel">
+                        <i class="fa fa-search"></i> @ClientRS.Client_Select
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@ClientRS.Request_Client_Selection</p>
+                    <div class="mb-3">
+                        <select class="form-select Select-3d" id="clientSelect" name="id" aria-label="@ClientRS.Select_Client">
+                            <option value="">@ClientRS.Select_Client_Title...</option>
+                            @foreach (var client in Model)
+                            {
+                                <option value="@client.NumeroClient" class="@client.ActivityCssClass">
+                                    @client.NomClient1 @client.NomContact - @client.NumeroClient
+                                    @(client.IsActive ? "" : $" ({ClientRS.Client_Inactive})")
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-3d" data-bs-dismiss="modal">@Common.Button_Cancel</button> 
+                    <button type="submit" class="btn btn-primary btn-3d"
+                            id="searchClientButton">
+                        @Common.Button_Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

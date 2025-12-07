@@ -68,7 +68,7 @@ namespace DRD.Infrastructure.Data
 		/// <summary>
 		/// Codes paramétriques génériques (CodeSet/CdSet).
 		/// </summary>
-		public DbSet<CodeSet> CodeSets { get; set; } = null!;
+		public DbSet<CdSet> CdSets { get; set; } = null!;
 
 		/// <summary>
 		/// Table interne de suivi du nombre d’enregistrements par table.

@@ -205,6 +205,15 @@ namespace DRD.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Afficher les champs Audit.
+        /// </summary>
+        public static string Button_Metadata {
+            get {
+                return ResourceManager.GetString("Button_Metadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suivant.
         /// </summary>
         public static string Button_Next {

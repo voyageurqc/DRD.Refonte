@@ -1,0 +1,169 @@
+﻿<!-- ============================================================================
+💻 Projet        : DRD.Web
+📄 Fichier       : Default.cshtml
+📂 Emplacement   : Views/Shared/Components/CdSetSelect/
+🧱 Entité liée   : CdSet (TypeCode)
+📅 Création      : 2025-07-17
+👨‍💻 Auteur        : Michel Gariépy
+
+📌 Description :
+     Vue partielle Razor utilisée pour afficher un champ de sélection dynamique
+     basé sur un CdSet (TypeCode). Le champ utilise une interface personnalisée
+     où le code sélectionné s’affiche dans un champ de type visuel avec transition
+     vers une liste déroulante native.
+
+🎯 Fonctionnalités :
+     - Affiche le code actuellement sélectionné dans un champ `<div>` stylisé.
+     - Permet à l’utilisateur de cliquer pour transformer ce champ en `<select>`.
+     - Sélection d’une valeur met à jour un champ caché (`<input hidden>`).
+     - Comportement fluide : ouverture immédiate, fermeture auto au blur,
+       gestion de la touche `Escape`, mise à jour instantanée à la sélection.
+
+🛠️ Modifications :
+     2025-07-17 : Version initiale stable.
+     2025-11-18 : ✔️ Amélioration UX :
+                  - Ouverture immédiate du `select` avec `.showPicker()`
+                  - Fermeture automatique au changement ou blur
+                  - Meilleure accessibilité et contrôle clavier (Escape)
+============================================================================ -->
+@model DRD.Web.Models.ConfigurationTables.CdSetSelectVM
+@using DRD.Web.Helpers
+@using DRD.Resources
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<div class="form-group">
+    <label for="@(Model.Id ?? Model.FieldName)" class="control-label">
+        @Model.Label
+        @if (string.IsNullOrWhiteSpace(Model.SelectedValue))
+        {
+            <span class="text-danger ms-1" title="@Common.RequiredField">⚠️</span>
+        }
+    </label>
+
+    <!-- Champ masqué contenant la valeur réelle à soumettre -->
+    <input type="hidden"
+           id="@(Model.FieldName)_hidden"
+           name="@Model.FieldName"
+           value="@Model.SelectedValue" />
+
+    <!-- Élément visuel affichant le code sélectionné -->
+    <div id="@(Model.FieldName)_display"
+         class="form-control form-control-sm border rounded bg-light text-dark d-flex align-items-center"
+         role="button"
+         aria-haspopup="listbox"
+         aria-expanded="false"
+         style="height: calc(1.5em + .5rem + 2px); cursor: pointer; @Model.CalculatedWidthStyle">
+        <span class="text-truncate">
+            @if (!string.IsNullOrEmpty(Model.SelectedValue))
+            {
+                @Model.SelectedText
+            }
+            else
+            {
+                <span>-- @Common.Select_DefaultOption --</span>
+            }
+        </span>
+        <i class="fa fa-caret-down ms-auto"></i>
+    </div>
+
+    <!-- Menu déroulant masqué (activé dynamiquement) -->
+    <select id="@(Model.Id ?? Model.FieldName)"
+            name="@(Model.FieldName)_actual"
+            class="form-control select-3d @FormHelpers.RequiredCss(Model.SelectedValue) @(Model.Classes ?? "") d-none"
+            tabindex="-1">
+        @if (Model.Items != null)
+        {
+            @foreach (var item in Model.Items)
+            {
+                if (item.Selected)
+                {
+                    <option value="@item.Value" selected>
+                        @item.Text
+                    </option>
+                }
+                else
+                {
+                    <option value="@item.Value">
+                       @item.Text
+                    </option>
+                }
+            }
+        }
+    </select>
+
+    <!-- Zone de validation -->
+    <span class="text-danger" asp-validation-for="@Model.FieldName"></span>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const displayElement = document.getElementById('@(Model.FieldName)_display');
+        const hiddenInput = document.getElementById('@(Model.FieldName)_hidden');
+        const actualSelect = document.getElementById('@(Model.Id ?? Model.FieldName)');
+        const defaultOptionText = '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Common.Select_DefaultOption))';
+
+        if (displayElement && hiddenInput && actualSelect) {
+            function updateDisplay() {
+                const selectedValue = actualSelect.value;
+                const selectedText = actualSelect.options[actualSelect.selectedIndex]?.text ?? selectedValue;
+
+                if (selectedValue !== "") {
+                    displayElement.querySelector('span').textContent = selectedText;
+                    hiddenInput.value = selectedValue;
+                } else {
+                    displayElement.querySelector('span').textContent = '-- ' + defaultOptionText + ' --';
+                    hiddenInput.value = '';
+                }
+            }
+
+            // Appliquer valeur initiale
+            actualSelect.value = '@Model.SelectedValue';
+            updateDisplay();
+
+            // Lorsqu'on clique sur le champ visuel
+            displayElement.addEventListener('click', function () {
+                displayElement.classList.add('d-none');
+                actualSelect.classList.remove('d-none');
+
+                // 1. Donner le focus immédiatement
+                actualSelect.focus();
+
+                // 2. Utiliser un délai pour l'ouverture
+                setTimeout(() => {
+                    if (typeof actualSelect.showPicker === 'function') {
+                        actualSelect.showPicker();
+                    }
+                }, 10);
+            });
+
+            // Masquer le select à la perte de focus
+            actualSelect.addEventListener('blur', function () {
+                setTimeout(() => {
+                    updateDisplay();
+                    displayElement.classList.remove('d-none');
+                    actualSelect.classList.add('d-none');
+                }, 100);
+            });
+
+            // Gérer la touche 'Escape' (sur keyup)
+            actualSelect.addEventListener('keyup', function(event) {
+                if (event.key === "Escape") {
+                    actualSelect.blur();
+                }
+            });
+
+            // ================== BLOC MODIFIÉ ==================
+            // Mettre à jour la valeur affichée ET FERMER
+            actualSelect.addEventListener('change', function() {
+                // 1. Mettre à jour la valeur interne et le texte
+                updateDisplay();
+
+                // 2. Forcer la perte de focus (blur),
+                //    ce qui déclenchera notre écouteur 'blur' ci-dessus
+                //    pour fermer le select.
+                actualSelect.blur();
+            });
+            // ================ FIN BLOC MODIFIÉ ================
+        }
+    });
+</script>

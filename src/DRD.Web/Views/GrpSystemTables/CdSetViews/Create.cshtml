@@ -1,0 +1,166 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Create.cshtml
+Type de fichier                Razor View (MVC)
+Classe                         CdSet Create View
+Emplacement                    Views/CdSet
+Entités concernées             CdSetCreateVM, CdSetController
+Créé le                        2025-12-07
+
+Description
+    Vue permettant la création d’un CdSet, incluant :
+      - Sélection d’une famille existante ou création d’une nouvelle famille
+      - Formulaire horizontal Bootstrap
+      - Switch Actif (IsActive)
+      - Boutons 3D Save, Cancel, Save & Continue
+      - Validation MVC incluant champs obligatoire
+
+Fonctionnalité
+    - Affiche un formulaire clair et bilingue
+    - Gère dynamiquement l’option “Nouvelle Famille”
+    - Prend en charge ReturnUrl et Toastr
+
+Modifications
+    2025-12-07    Version initiale DRD v10.
+============================================================================ *@
+
+@using static DRD.Resources.FieldNames.CdSetFieldNames
+@using static DRD.Resources.Common
+@using DRD.Web.Models.GrpSystemTables.CdSetVM
+@model CdSetCreateVM
+
+@{
+    ViewData["Title"] = CdSet_Create;
+    var families = Model.AvailableFamilies ?? new List<string>();
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+
+    <!-- ================================
+         Famille (TypeCode) Dropdown
+         ================================ -->
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">@TypeCode</label>
+        <div class="col-sm-6">
+
+            <select asp-for="SelectedFamily" class="form-select" id="familySelect">
+                <option value="">-- @Common_Select --</option>
+
+                @foreach (var fam in families)
+                {
+                    <option value="@fam">@fam</option>
+                }
+
+                <option value="_NEW_">@NewFamily</option>
+            </select>
+
+            <span asp-validation-for="SelectedFamily" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- =====================================
+         Nouvelle Famille (champ texte dynamique)
+         ===================================== -->
+    <div class="row mb-3" id="newFamilyRow" style="display:none;">
+        <label class="col-sm-3 col-form-label">@NewFamily</label>
+        <div class="col-sm-6">
+            <input asp-for="NewFamily" class="form-control" />
+            <span asp-validation-for="NewFamily" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- ========================
+         Code
+         ======================== -->
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">@Code</label>
+        <div class="col-sm-6">
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- ========================
+         DescriptionFr
+         ======================== -->
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">@DescriptionFr</label>
+        <div class="col-sm-6">
+            <input asp-for="DescriptionFr" class="form-control" />
+            <span asp-validation-for="DescriptionFr" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- ========================
+         DescriptionEn
+         ======================== -->
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">@DescriptionEn</label>
+        <div class="col-sm-6">
+            <input asp-for="DescriptionEn" class="form-control" />
+            <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- ========================
+         Switch IsActive
+         ======================== -->
+    <div class="row mb-4">
+        <label class="col-sm-3 col-form-label">@IsActive</label>
+        <div class="col-sm-6">
+            <div class="form-check form-switch">
+                <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================
+         BUTTONS 3D
+         ======================== -->
+    <div class="row">
+        <div class="col-sm-9 offset-sm-3">
+
+            <button type="submit" class="btn btn-success btn-3d me-2">
+                <i class="fas fa-check"></i> @Button_Save
+            </button>
+
+            <button type="submit" name="continue" value="true" class="btn btn-primary btn-3d me-2">
+                <i class="fas fa-plus-circle"></i> @Button_Save_And_Continue
+            </button>
+
+            <a href="@Model.ReturnUrl" class="btn btn-secondary btn-3d" title="@Button_Cancel">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Toastr" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const familySelect = document.getElementById("familySelect");
+            const newFamilyRow = document.getElementById("newFamilyRow");
+
+            function updateFamilyUI() {
+                if (familySelect.value === "_NEW_") {
+                    newFamilyRow.style.display = "flex";
+                } else {
+                    newFamilyRow.style.display = "none";
+                }
+            }
+
+            familySelect.addEventListener("change", updateFamilyUI);
+            updateFamilyUI();
+        });
+    </script>
+}

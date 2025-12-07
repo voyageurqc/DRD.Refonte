@@ -30,6 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\GrpClient\" />
+    <Folder Include="Controllers\GrpSystemTables\" />
+    <Folder Include="Controllers\GrpWebMessage\" />
+    <Folder Include="Models\GrpClient\ClientVM\" />
+    <Folder Include="Models\GrpWebMessage\" />
+    <Folder Include="Models\Shared\" />
+    <Folder Include="Views\GrpClient\" />
+    <Folder Include="Views\GrpSystemTables\CdSetViews\" />
+    <Folder Include="Views\GrpWebMessage\" />
     <Folder Include="wwwroot\lib\datatables\i18n\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
     <Folder Include="wwwroot\lib\fontawesome\webfonts\" />

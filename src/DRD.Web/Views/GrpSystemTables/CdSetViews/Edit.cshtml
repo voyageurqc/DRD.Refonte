@@ -1,0 +1,124 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Edit.cshtml
+Type de fichier                Razor View (MVC)
+Classe                         CdSet Edit View
+Emplacement                    Views/GrpSystemTables/CdSetViews
+Entités concernées             CdSetEntity, EntityMetadataDto
+Créé le                        2025-12-08
+
+Description
+    Vue d’édition d’un CdSet. Les clés (TypeCode + Code) sont affichées en
+    lecture seule. Les champs bilingues et l’état actif/inactif sont modifiables.
+    Inclut l’affichage des métadonnées système.
+
+Fonctionnalité
+    - Modification des champs DescriptionFr, DescriptionEn, IsActive
+    - Gestion ReturnUrl pour un retour contrôlé
+    - Bouton universel Métadonnées (ouvre _SystemMetadataPartial)
+    - Validation MVC + Toastr
+    - Inputs readonly pour les clés
+
+Modifications
+    2025-12-08    Version initiale DRD v10 basée sur Create.cshtml.
+============================================================================ *@
+
+@using static DRD.Resources.Common
+@using static DRD.Resources.FieldNames.CdSetFieldNames
+@using DRD.Application.Popup.Models
+@model DRD.Domain.Entities.GrpSystemTables.CdSet
+
+@{
+    ViewData["Title"] = SystemTables.Codeset_Edit;
+
+    var returnUrl = ViewData["ReturnUrl"] as string
+                    ?? Url.Action("Index", "CdSet");
+
+    var metadata = ViewData["Metadata"] as EntityMetadataDto;
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<form asp-action="Edit" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+    <div class="card shadow-sm p-4">
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">@TypeCode</label>
+                <input class="form-control" value="@Model.TypeCode" readonly />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">@Code</label>
+                <input class="form-control" value="@Model.Code" readonly />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@DescriptionFr</label>
+            <input asp-for="DescriptionFr" class="form-control" />
+            <span asp-validation-for="DescriptionFr" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@DescriptionEn</label>
+            <input asp-for="DescriptionEn" class="form-control" />
+            <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label d-block">@IsActive</label>
+
+            <div class="form-check form-switch">
+                <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
+                <label class="form-check-label" for="IsActive">
+                    @(Model.IsActive? Common.Active: Common.Inactive)
+                </label>
+            </div>
+
+            <span asp-validation-for="IsActive" class="text-danger"></span>
+        </div>
+
+        <!-- Boutons d’action -->
+        <div class="d-flex justify-content-between mt-4">
+
+            <div>
+                <button type="submit" class="btn btn-primary btn-3d me-2">
+                    <i class="fas fa-save"></i> @Button_Save
+                </button>
+
+                <a href="@returnUrl" class="btn btn-secondary btn-3d">
+                    <i class="fas fa-arrow-left"></i> @Button_Back
+                </a>
+            </div>
+
+            <!-- Bouton Métadonnées -->
+            @if (metadata != null)
+            {
+                <button type="button"
+                        class="btn btn-info btn-3d"
+                        data-bs-toggle="modal"
+                        data-bs-target="#systemMetadataModal">
+                    <i class="fas fa-info-circle"></i> @Button_Metadata
+                </button>
+            }
+        </div>
+
+    </div>
+</form>
+
+<!-- Modale Métadonnées -->
+@if (metadata != null)
+{
+    <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml" model="metadata" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Toastr" />
+}
