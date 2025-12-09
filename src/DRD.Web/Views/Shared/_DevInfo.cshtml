@@ -1,13 +1,40 @@
-﻿@using Microsoft.AspNetCore.Hosting
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _DevInfo.cshtml
+Type de fichier                Vue partielle Razor
+Classe                         n/a
+Emplacement                    Views/Shared
+Entité(s) concernées           n/a
+Créé le                        2025-12-07
+
+Description
+    Vue partielle exclusive au mode Développement. Affiche l’information de
+    compilation et de version du projet DRD.Web pour faciliter les diagnostics
+    et validations techniques lors du développement.
+
+Fonctionnalité
+    - Affichage conditionnel uniquement si l’environnement est Development.
+    - Lecture de la version marketing (X.Y.Z).
+    - Lecture de la version de compilation (X.Y.Z.W).
+    - Lecture de la date et heure de build de l’assembly DRD.Web.
+
+Modifications
+    2025-12-07    Conversion au standard DRDv10 Option B.
+=============================================================================== *@
+
+@using Microsoft.AspNetCore.Hosting
 @inject IWebHostEnvironment Env
 @using System.Reflection
 
 @{
+    #region DRD – Validation environnement
     if (!Env.IsDevelopment())
     {
         return;
     }
+    #endregion
 
+    #region DRD – Calcul des versions et métadonnées
     var assembly = Assembly.GetExecutingAssembly();
     var asm = assembly.GetName();
 
@@ -19,6 +46,8 @@
 
     var buildDate = System.IO.File.GetLastWriteTime(assembly.Location);
     string buildString = buildDate.ToString("yyyy-MM-dd HH:mm");
+    #endregion
+
 }
 
 <div class="alert alert-warning p-2 mt-3" style="font-size:0.78rem;">

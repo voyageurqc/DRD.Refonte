@@ -1,39 +1,45 @@
-﻿@* ============================================================================
+﻿@*
+===============================================================================
 Projet                         DRD.Web
-Nom du fichier                 Details.cshtml
-Type de fichier                Razor View (MVC)
+Fichier                        Details.cshtml
+Type                           Razor View (MVC)
 Classe                         CdSet Details View
-Emplacement                    Views/GrpSystemTables/CdSetViews
-Entités concernées             CdSetEntity, EntityMetadataDto
-Créé le                        2025-12-08
+Emplacement                   Views/GrpSystemTables/CdSet
+Entités concernées            CdSetDetailsVM, EntityMetadataDto
+Créé le                       2025-12-08
 
 Description
     Vue présentant les détails d’un CdSet en mode lecture seule. Les clés
-    (TypeCode + Code) ainsi que les descriptions bilingues sont affichées
-    dans un formulaire readonly. Inclut le bouton Métadonnées pour afficher
-    les informations système.
+    (TypeCode + Code) ainsi que les descriptions bilingues sont affichées.
+    Inclut le bouton Métadonnées pour afficher les informations système.
 
 Fonctionnalité
-    - Affichage readonly des champs principaux
-    - Visualisation de l’état actif/inactif via badge Bootstrap
-    - Bouton Retour et bouton Modifier
-    - Modale de métadonnées (_SystemMetadataPartial)
-
+    - Affichage readonly
+    - Badge actif/inactif
+    - Boutons Retour / Modifier
+    - Modale Métadonnées
 Modifications
-    2025-12-08    Version initiale DRD v10.
-============================================================================ *@
+    2025-12-09   Conversion complète DRD v10 :
+                 - utilisation CdSetDetailsVM
+                 - usings resources corrigés
+                 - badge uniformisé
+===============================================================================
+*@
 
-@using static DRD.Resources.Common
-@using static DRD.Resources.FieldNames.CdSetFieldNames
+@model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetDetailsVM
+
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.Popups.Popups
+@using static DRD.Resources.EntityTitles.CdSetTitle
+
 @using DRD.Application.Popup.Models
-@model DRD.Domain.Entities.GrpSystemTables.CdSet
 
 @{
-    ViewData["Title"] = SystemTables.Codeset_Details;
+    ViewData["Title"] = Codeset_Details;
 
-    var returnUrl = ViewData["ReturnUrl"] as string
-                    ?? Url.Action("Index", "CdSet");
-
+    var returnUrl = Model.ReturnUrl ?? Url.Action("Index", "CdSet");
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
 }
 
@@ -41,55 +47,59 @@ Modifications
 
 <div class="card shadow-sm p-4">
 
+    <!-- IDENTIFICATION -->
     <div class="row mb-3">
         <div class="col-md-6">
-            <label class="form-label">@TypeCode</label>
-            <input class="form-control" value="@Model.TypeCode" readonly />
+            <label class="form-label">@Field_TypeCode</label>
+            <input class="form-control input-3d" value="@Model.TypeCode" readonly />
         </div>
 
         <div class="col-md-6">
-            <label class="form-label">@Code</label>
-            <input class="form-control" value="@Model.Code" readonly />
+            <label class="form-label">@Field_Code</label>
+            <input class="form-control input-3d" value="@Model.Code" readonly />
         </div>
     </div>
 
+    <!-- DESCRIPTIONS -->
     <div class="mb-3">
-        <label class="form-label">@DescriptionFr</label>
-        <input class="form-control" value="@Model.DescriptionFr" readonly />
+        <label class="form-label">@Field_DescriptionFr</label>
+        <input class="form-control input-3d" value="@Model.DescriptionFr" readonly />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">@DescriptionEn</label>
-        <input class="form-control" value="@Model.DescriptionEn" readonly />
+        <label class="form-label">@Field_DescriptionEn</label>
+        <input class="form-control input-3d" value="@Model.DescriptionEn" readonly />
     </div>
 
+    <!-- ACTIF / INACTIF -->
     <div class="mb-3">
-        <label class="form-label">@IsActive</label><br />
+        <label class="form-label">@Field_IsActive</label><br />
 
         @if (Model.IsActive)
         {
-            <span class="badge bg-success">@Common.Active</span>
+            <span class="badge bg-success">@Active</span>
         }
         else
         {
-            <span class="badge bg-danger">@Common.Inactive</span>
+            <span class="badge bg-danger">@Inactive</span>
         }
     </div>
 
+    <!-- BOUTONS -->
     <div class="d-flex justify-content-between mt-4">
 
         <div>
-            <a href="@returnUrl" class="btn btn-secondary btn-3d me-2">
-                <i class="fas fa-arrow-left"></i> @Button_Back
+            <a href="@returnUrl" class="btn btn-secondary btn-3d me-2" title="@Button_Back">
+                <i class="fa-solid fa-arrow-left"></i> @Button_Back
             </a>
 
-            <a asp-controller="CdSet"
-               asp-action="Edit"
+            <a asp-action="Edit"
                asp-route-id="@Model.TypeCode"
                asp-route-key2="@Model.Code"
                asp-route-returnUrl="@returnUrl"
-               class="btn btn-primary btn-3d">
-                <i class="fas fa-pen"></i> @Button_Edit
+               class="btn btn-primary btn-3d"
+               title="@Button_Edit">
+                <i class="fa-solid fa-pen"></i> @Button_Edit
             </a>
         </div>
 
@@ -98,8 +108,9 @@ Modifications
             <button type="button"
                     class="btn btn-info btn-3d"
                     data-bs-toggle="modal"
-                    data-bs-target="#systemMetadataModal">
-                <i class="fas fa-info-circle"></i> @Button_Metadata
+                    data-bs-target="#systemMetadataModal"
+                    title="@Button_Metadata">
+                <i class="fa-solid fa-circle-info"></i> @Button_Metadata
             </button>
         }
     </div>

@@ -41,19 +41,25 @@ namespace DRD.Infrastructure.Services
 		/// </summary>
 		public CurrentUserService(IHttpContextAccessor httpContextAccessor)
 		{
-			var user = httpContextAccessor.HttpContext?.User;
+			var principal = httpContextAccessor.HttpContext?.User;
 
-			IsAuthenticated = user?.Identity?.IsAuthenticated ?? false;
+			if (principal?.Identity?.IsAuthenticated == true)
+			{
+				IsAuthenticated = true;
 
-			UserId = IsAuthenticated
-				? user.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous"
-				: "Anonymous";
+				UserId = principal.FindFirstValue(ClaimTypes.NameIdentifier)
+						 ?? "Anonymous";
 
-			UserName = IsAuthenticated
-				? user.Identity?.Name ?? "Anonymous"
-				: "Anonymous";
+				UserName = principal.Identity?.Name
+						   ?? "Anonymous";
+			}
+			else
+			{
+				IsAuthenticated = false;
+				UserId = "Anonymous";
+				UserName = "Anonymous";
+			}
 		}
-
 		#endregion
 
 		#region Propriétés exposées

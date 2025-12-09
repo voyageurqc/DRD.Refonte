@@ -1,42 +1,42 @@
 ﻿@*
 ===============================================================================
-Projet        DRD.Web
-Fichier       Login.cshtml
-Type          View (Razor)
-Classe        Login
-Emplacement   Views/Account
-Entité(s)     LoginVM, AccountController
-Créé le       2025-12-03
+Projet        DRD.Web
+Fichier       Login.cshtml
+Type          View (Razor)
+Classe        Login
+Emplacement   Views/Account
+Entité(s)     LoginVM, AccountController
+Créé le       2025-12-03
 
 Description
-    Page de connexion DRD. Rétablie à la structure 2 sections (Formulaire et Information)
-    de la version v9. Toutes les chaînes littérales sont maintenant gérées par les ressources.
+    Page de connexion DRD. Rétablie à la structure 2 sections (Formulaire et 
+    Information) de la version v9. Toutes les chaînes littérales sont gérées 
+    par les ressources.
 
 Fonctionnalité
-    - Champs Email, Password, RememberMe.
-    - Structure en deux colonnes (5/6).
-    - Utilisation complète des ressources statiques (y compris pour la section descriptive).
-
+    - Champs Email, Password, RememberMe.
+    - Structure en deux colonnes (5/6).
+    - Utilisation complète des ressources statiques.
 Modifications
-    2025-12-05    Rétablissement de la structure en deux colonnes. Remplacement de toutes
-                   les chaînes littérales de la section Information par les ressources
-                   de la nouvelle classe 'Informations'.
+    2025-12-05    Rétablissement structure deux colonnes + ressources "Informations".
 ===============================================================================
 *@
+
 @model DRD.Web.Models.Account.LoginVM
+
 @using static DRD.Resources.Common.Common
-@using static DRD.Resources.FieldNames.FieldNames
-@using static DRD.Resources.Menu.Menu
-@using static DRD.Resources.Buttons
-@using static DRD.Resources.NavBar
-@using static DRD.Resources.Informations
+@using static DRD.Resources.LabelNames.IdentityEntityLN
+@using static DRD.Resources.RS_Layout.Layout
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.RS_Layout.NavBar
+@using static DRD.Resources.Informations.Informations
 
 
 @{
-    ViewData["Title"] = Login_Title ?? "Connexion";
+    ViewData["Title"] = Login_Title;
 }
 
-@* ========================== ENTÊTE SPÉCIFIQUE À LA PAGE (CENTRE) ========================== *@
+<!-- ====================== ENTÊTE UNI ====================== -->
 <div class="container pt-0">
     <div class="bg-light border rounded-3 shadow-sm p-0" style="background-color: #f0f4ff;">
         <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
@@ -49,10 +49,11 @@ Modifications
     </div>
 </div>
 
-@* ========================== CONTENU PRINCIPAL (2 SECTIONS) ========================== *@
+<!-- ====================== CONTENU PRINCIPAL ====================== -->
 <div class="container pt-2 pb-5">
     <div class="row justify-content-center align-items-start">
 
+        <!-- ======== SECTION FORMULAIRE ======== -->
         <div class="col-lg-5 mb-4">
             <form asp-action="Login" method="post" class="card p-4 shadow-lg rounded-3 bg-light">
 
@@ -66,7 +67,7 @@ Modifications
 
                 <div class="mb-3">
                     <label asp-for="Password" class="form-label"></label>
-                    <input asp-for="Password" type="password" class="form-control input-3-d" />
+                    <input asp-for="Password" type="password" class="form-control input-3d" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
@@ -80,22 +81,27 @@ Modifications
                 </button>
 
                 <div class="mt-3 text-center">
-                    <a asp-action="Register" class="text-primary">@Not_Registered <strong>@Register_Title</strong></a>
+                    <a asp-action="Register" class="text-primary">
+                        @Not_Registered <strong>@Register_Title</strong>
+                    </a>
                 </div>
             </form>
         </div>
 
+        <!-- ======== SECTION INFORMATION ======== -->
         <div class="col-lg-6">
             <div class="bg-white p-4 border rounded-3 shadow-sm">
                 <h5 class="text-uppercase text-center mb-3">
                     <i class="fas fa-thumbtack text-danger"></i> @Info_Title
                 </h5>
+
                 <p class="lead text-center border border-primary p-3 mb-4">
                     @Info_Description
                 </p>
 
                 <div class="text-center mb-3">
-                    <img src="~/images/UNI/servicepaie2.jpg" alt="Service DRD" class="img-fluid rounded" style="max-height: 200px;" />
+                    <img src="~/images/UNI/servicepaie2.jpg" alt="Service DRD"
+                         class="img-fluid rounded" style="max-height: 200px;" />
                 </div>
 
                 <div>
@@ -105,6 +111,7 @@ Modifications
                         <li><strong>• @Info_Avantages_P2</strong></li>
                         <li><strong>• @Info_Avantages_P3</strong></li>
                     </ul>
+
                     <p class="fw-bold text-center text-success mt-3">
                         @Info_Solution_Ideal
                     </p>

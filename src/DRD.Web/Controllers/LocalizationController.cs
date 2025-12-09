@@ -8,66 +8,91 @@
 // Créé le                        2025-12-05
 //
 // Description
-//     Contrôleur MVC responsable de la gestion du changement de culture
-//     (langue) de l'application via un cookie. Logique migrée de la v9.
+//     Contrôleur MVC responsable du changement de langue (culture) dans
+//     l'application DRD. La bascule s'effectue via cookie, selon la norme
+//     fr-CA / en-CA, et redirige l'utilisateur vers l'URL d'origine.
 //
 // Fonctionnalité
-//     - ToggleLanguage : Permet de basculer la langue et de rediriger
-//       l'utilisateur vers la page précédente via un champ returnUrl (V10 standard).
-//     - Journalisation Serilog (migrée de la v9).
+//     - ToggleLanguage : modifie la culture utilisateur via cookie sécurisé.
+//     - Journalisation Serilog (anglais seulement) avec logger typé.
+//     - Redirection sécurisée via LocalRedirect(returnUrl).
 //
 // Modifications
-//     2025-12-05    Création initiale et migration de la logique v9. Remplacement de la
-//                   redirection par Request.Headers["Referer"] par la méthode
-//                   sécurisée LocalRedirect(returnUrl).
+//     2025-12-09    Migration vers règles Serilog DRD v10 (logger typé).
+//     2025-12-05    Création initiale DRD v10.
 // ============================================================================
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System;
 using System.Globalization;
-using System.Linq; // Nécessaire pour FirstOrDefault() si vous l'utilisez, mais nous le retirons ici.
 
 namespace DRD.Web.Controllers
 {
-	[AllowAnonymous]
+    /// <summary>
+    /// Controller responsible for managing language switch (culture)
+    /// in the DRD system using cookie-based localization.
+    /// </summary>
+    [AllowAnonymous]
+    public class LocalizationController : Controller
+    {
+        #region DRD – Services
+        /// <summary>
+        /// Serilog logger (typed for this controller).
+        /// </summary>
+        private readonly Serilog.ILogger _logger;
 
-	/// <summary>
-	/// Controller responsible for handling language and localization operations.
-	/// </summary>
-	public class LocalizationController : Controller
-	{
-		/// <summary>
-		/// Toggles the current language between French and English.
-		/// </summary>
-		/// <param name="returnUrl">URL de la page à laquelle retourner après le changement de culture.</param>
-		/// <returns>Redirects to the previous page after toggling the language.</returns>
-		[HttpPost]
-		public IActionResult ToggleLanguage(string returnUrl) // AJOUTÉ returnUrl en paramètre
-		{
-			Log.Information("🌐 Language toggle requested.");
+        /// <summary>
+        /// Initializes a new instance of LocalizationController.
+        /// </summary>
+        public LocalizationController()
+        {
+            _logger = Log.ForContext<LocalizationController>();
+        }
+        #endregion
 
-			// Votre logique v9 pour récupérer la culture
-			var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-			Log.Debug("🌍 Current culture detected: {Culture}", currentCulture);
+        #region DRD – Actions
 
-			// Toggle entre "fr-CA" et "en-CA"
-			var newCulture = currentCulture == "fr" ? "en-CA" : "fr-CA";
-			Log.Debug("🔄 Switching culture to: {NewCulture}", newCulture);
+        /// <summary>
+        /// Toggles the current UI culture between French (fr-CA) and English (en-CA).
+        /// </summary>
+        /// <param name="returnUrl">
+        /// URL to return to after the language switch. Must be local for security.
+        /// </param>
+        /// <returns>Redirects the user back to the provided returnUrl.</returns>
+        [HttpPost]
+        public IActionResult ToggleLanguage(string? returnUrl)
+        {
+            _logger.Information("Language switch requested.");
 
-			// Stocker la nouvelle culture dans un cookie
-			Response.Cookies.Append(
-				CookieRequestCultureProvider.DefaultCookieName,
-				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(newCulture)),
-				new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-			);
+            var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            _logger.Debug("Current culture detected: {Culture}", currentCulture);
 
-			Log.Information("✅ Language toggled to {NewCulture}", newCulture);
+            // Toggle rule : fr → en-CA, en → fr-CA
+            var newCulture = currentCulture == "fr" ? "en-CA" : "fr-CA";
+            _logger.Debug("Switching culture to: {NewCulture}", newCulture);
 
-			// Redirection V10 sécurisée
-			// returnUrl contient la valeur de @Context.Request.Path que nous avons passée via le champ caché.
-			return LocalRedirect(returnUrl ?? "/");
-		}
-	}
+            // Writes the culture in the cookie used by ASP.NET Core localization
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(
+                    new RequestCulture(newCulture, newCulture)
+                ),
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddYears(1),
+                    IsEssential = true
+                }
+            );
+
+            _logger.Information("Language changed to {NewCulture}", newCulture);
+
+            // Secure redirection according to DRD v10 rules
+            return LocalRedirect(returnUrl ?? "/");
+        }
+
+        #endregion
+    }
 }

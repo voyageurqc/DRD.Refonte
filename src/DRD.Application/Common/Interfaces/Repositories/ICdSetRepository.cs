@@ -24,8 +24,6 @@
 // ============================================================================
 
 using DRD.Domain.Entities.GrpSystemTables;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DRD.Application.Common.Interfaces.Repositories
 {
@@ -45,10 +43,15 @@ namespace DRD.Application.Common.Interfaces.Repositories
 		/// Retourne un CdSet précis basé sur la clé composite TypeCode + Code.
 		/// </summary>
 		Task<CdSet?> GetByTypeCodeAndCodeAsync(string typeCode, string code);
+        /// <summary>
+        /// Vérifie si un CdSet existe pour une clé composite (TypeCode + Code).
+        /// </summary>
+        Task<bool> ExistsAsync(string typeCode, string code);
 
-		/// <summary>
-		/// Supprime physiquement un CdSet via sa clé composite.
-		/// </summary>
-		Task DeleteCdSetAsync(string typeCode, string code);
+
+        /// <summary>
+        /// Supprime physiquement un CdSet via sa clé composite.
+        /// </summary>
+        Task DeleteCdSetAsync(string typeCode, string code);
 	}
 }

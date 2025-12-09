@@ -1,9 +1,9 @@
-﻿using DRD.Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using DRD.Application.Common.Interfaces.Services;
+using DRD.Infrastructure.Identity;
 
 namespace DRD.Infrastructure.Common.Services
 {
@@ -35,9 +35,10 @@ namespace DRD.Infrastructure.Common.Services
                 _logger.LogWarning("User with ID: {UserId} not found.", userId);
                 return null; // ou "Inconnu"
             }
+			var fullName = $"{user?.FirstName} {user?.LastName}".Trim();
 
-            _logger.LogInformation("Found user: {FullName} for ID: {UserId}", user.FullName, userId);
-            return user.FullName;
+			_logger.LogInformation("Found user: {FullName} for ID: {UserId}", fullName, userId);
+            return fullName;
         }
     }
 }

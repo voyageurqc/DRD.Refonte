@@ -22,143 +22,102 @@
 //
 // Modifications
 //     2025-12-07    Conversion au format DRD v10 (en-tête, régions, nomenclature).
+//     2025-12-09    Sécurisation nullable + initialisation DRD v10.
 //     2025-10-29    Adaptation universelle pour clés multiples et callbacks JS.
 //     2025-10-24    Version initiale.
 // ============================================================================
 
 using DRD.Resources;
 using DRD.Resources.Popup;
+using DRD.Resources.Popups;
 
 namespace DRD.Web.Models.Shared
 {
-	/// <summary>
-	/// ViewModel utilisé pour le composant partiel _EntityActionButtons.
-	/// Permet de générer dynamiquement les boutons Voir, Modifier,
-	/// Désactiver et Supprimer avec messages localisés.
-	/// </summary>
-	public class EntityActionButtonsVM
-	{
-		#region Templates internes
-		/// <summary>
-		/// Modèle du message de désactivation (avant localisation dynamique).
-		/// </summary>
-		private readonly string _deactivateMessageTemplate;
+    /// <summary>
+    /// ViewModel utilisé pour le composant partiel _EntityActionButtons.
+    /// Permet de générer dynamiquement les boutons Voir, Modifier,
+    /// Désactiver et Supprimer avec messages localisés.
+    /// </summary>
+    public class EntityActionButtonsVM
+    {
+        #region Templates internes
+        private readonly string _deactivateMessageTemplate;
+        private readonly string _deleteMessageTemplate;
+        #endregion
 
-		/// <summary>
-		/// Modèle du message de suppression (avant localisation dynamique).
-		/// </summary>
-		private readonly string _deleteMessageTemplate;
-		#endregion
+        #region Configuration principale
+        public string ControllerName { get; set; } = string.Empty;
+        public string EntityId { get; set; } = string.Empty;
+        public string EntityName { get; set; } = string.Empty;
+        public string EntityIdentifier { get; set; } = string.Empty;
 
-		#region Configuration principale
-		/// <summary>
-		/// Nom du contrôleur cible (ex.: "CdSet", "Client").
-		/// </summary>
-		public string ControllerName { get; set; }
+        /// <summary>URL utilisée pour revenir à l’écran précédent.</summary>
+        public string? ReturnUrl { get; set; }
+        #endregion
 
-		/// <summary>
-		/// Identifiant unique de l’entité, pouvant être composite (concaténé par "|").
-		/// </summary>
-		public string EntityId { get; set; }
+        #region Affichage des boutons
+        public bool ShowDetails { get; set; } = true;
+        public bool ShowEdit { get; set; } = true;
+        public bool ShowDeactivate { get; set; } = true;
+        public bool ShowDelete { get; set; } = true;
+        #endregion
 
-		/// <summary>
-		/// Nom de l’entité, affiché dans les modales (ex.: "Institution", "Famille").
-		/// </summary>
-		public string EntityName { get; set; }
+        #region Callback JavaScript
+        public string? DeleteModalSuccessCallback { get; set; }
+        #endregion
 
-		/// <summary>
-		/// Identifiant humain de l’entité (nom, code, numéro), utilisé dans les modales.
-		/// </summary>
-		public string EntityIdentifier { get; set; }
+        #region Titres & messages localisés
+        public string DeactivateTitle =>
+            Popups.Confirm_Deactivate_Title_Entity
+                .Replace("{0}", EntityIdentifier)
+                .Replace("{1}", EntityName);
 
-		/// <summary>
-		/// URL de retour après une action.
-		/// </summary>
-		public string? ReturnUrl { get; set; }
-		#endregion
+        public string DeleteTitle =>
+            Popups.Confirm_Delete_Title_Entity
+                .Replace("{0}", EntityIdentifier)
+                .Replace("{1}", EntityName);
 
-		#region Affichage des boutons
-		public bool ShowDetails { get; set; } = true;
-		public bool ShowEdit { get; set; } = true;
-		public bool ShowDeactivate { get; set; } = true;
-		public bool ShowDelete { get; set; } = true;
-		#endregion
+        public string DeactivateMessage =>
+            _deactivateMessageTemplate
+                .Replace("{0}", EntityIdentifier)
+                .Replace("{1}", EntityName);
 
-		#region Callback JavaScript
-		/// <summary>
-		/// Fonction JavaScript à appeler en cas de suppression réussie.
-		/// </summary>
-		public string? DeleteModalSuccessCallback { get; set; }
-		#endregion
+        public string DeleteMessage =>
+            _deleteMessageTemplate
+                .Replace("{0}", EntityIdentifier)
+                .Replace("{1}", EntityName);
+        #endregion
 
-		#region Titres & messages localisés
-		/// <summary>
-		/// Titre localisé de la modale de désactivation.
-		/// </summary>
-		public string DeactivateTitle =>
-			Popups.Confirm_Deactivate_Title_Entity
-				.Replace("{0}", EntityIdentifier)
-				.Replace("{1}", EntityName);
+        #region Constructeurs
+        public EntityActionButtonsVM(
+            string controllerName,
+            string entityId,
+            string entityName,
+            string entityIdentifier,
+            string deactivateMessageTemplate,
+            string deleteMessageTemplate,
+            string? deleteModalSuccessCallback = null)
+        {
+            ControllerName = controllerName;
+            EntityId = entityId;
+            EntityName = entityName;
+            EntityIdentifier = entityIdentifier;
 
-		/// <summary>
-		/// Titre localisé de la modale de suppression.
-		/// </summary>
-		public string DeleteTitle =>
-			Popups.Confirm_Delete_Title_Entity
-				.Replace("{0}", EntityIdentifier)
-				.Replace("{1}", EntityName);
+            _deactivateMessageTemplate = deactivateMessageTemplate ?? string.Empty;
+            _deleteMessageTemplate = deleteMessageTemplate ?? string.Empty;
 
-		/// <summary>
-		/// Message localisé de la modale de désactivation.
-		/// </summary>
-		public string DeactivateMessage =>
-			_deactivateMessageTemplate
-				.Replace("{0}", EntityIdentifier)
-				.Replace("{1}", EntityName);
+            DeleteModalSuccessCallback = deleteModalSuccessCallback;
+        }
 
-		/// <summary>
-		/// Message localisé de la modale de suppression.
-		/// </summary>
-		public string DeleteMessage =>
-			_deleteMessageTemplate
-				.Replace("{0}", EntityIdentifier)
-				.Replace("{1}", EntityName);
-		#endregion
-
-		#region Constructeurs
-		/// <summary>
-		/// Constructeur complet.
-		/// </summary>
-		public EntityActionButtonsVM(
-			string controllerName,
-			string entityId,
-			string entityName,
-			string entityIdentifier,
-			string deactivateMessageTemplate,
-			string deleteMessageTemplate,
-			string? deleteModalSuccessCallback = null)
-		{
-			ControllerName = controllerName;
-			EntityId = entityId;
-			EntityName = entityName;
-			EntityIdentifier = entityIdentifier;
-			_deactivateMessageTemplate = deactivateMessageTemplate;
-			_deleteMessageTemplate = deleteMessageTemplate;
-			DeleteModalSuccessCallback = deleteModalSuccessCallback;
-		}
-
-		/// <summary>
-		/// Constructeur simplifié lorsque seule une action Supprimer est utilisée.
-		/// </summary>
-		public EntityActionButtonsVM(
-			string controllerName,
-			string entityId,
-			string entityName,
-			string entityIdentifier,
-			string deleteMessageTemplate)
-			: this(controllerName, entityId, entityName, entityIdentifier, string.Empty, deleteMessageTemplate)
-		{
-		}
-		#endregion
-	}
+        public EntityActionButtonsVM(
+            string controllerName,
+            string entityId,
+            string entityName,
+            string entityIdentifier,
+            string deleteMessageTemplate)
+            : this(controllerName, entityId, entityName, entityIdentifier, string.Empty, deleteMessageTemplate)
+        {
+        }
+        #endregion
+    }
 }

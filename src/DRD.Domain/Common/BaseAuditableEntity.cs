@@ -19,6 +19,7 @@
 //     - Applique les règles DRD : DateTime.UtcNow, IsActive=true.
 //
 // Modifications
+//     2025-12-09    Ajustements DRD (régions, résumés, en-tête).
 //     2025-12-07    Ajout des méthodes SetCreationAudit et SetModificationAudit
 //                   selon la norme DRD v10.
 //     2025-11-18    Ajout procédé Maj champs Metadata.
@@ -27,53 +28,68 @@
 
 namespace DRD.Domain.Common
 {
-	/// <summary>
-	/// Classe de base pour les entités auditables.
-	/// Gère automatiquement les dates et utilisateurs de création/modification.
-	/// </summary>
-	public abstract class BaseAuditableEntity : BaseEntity, IAuditableEntity
-	{
-		#region Propriétés d’audit
+    /// <summary>
+    /// Classe de base pour les entités auditables.
+    /// Gère automatiquement les dates et utilisateurs de création/modification.
+    /// </summary>
+    public abstract class BaseAuditableEntity : BaseEntity, IAuditableEntity
+    {
+        #region DRD – Propriétés
+        /// <summary>
+        /// Date de création de l'entité (UTC).
+        /// </summary>
+        public DateTime CreationDate { get; set; }
 
-		public DateTime CreationDate { get; set; }
-		public string? CreatedBy { get; set; }
-		public DateTime ModificationDate { get; set; }
-		public string? UpdatedBy { get; set; }
-		public bool IsActive { get; set; } = true;
+        /// <summary>
+        /// Nom de l'utilisateur ayant créé l'entité.
+        /// </summary>
+        public string? CreatedBy { get; set; }
 
-		#endregion
+        /// <summary>
+        /// Date de dernière modification de l'entité (UTC).
+        /// </summary>
+        public DateTime ModificationDate { get; set; }
 
-		#region Méthodes d’audit DRD v10
+        /// <summary>
+        /// Nom de l'utilisateur ayant modifié l'entité.
+        /// </summary>
+        public string? UpdatedBy { get; set; }
 
-		/// <summary>
-		/// Initialise les champs d’audit lors de la création d’une entité.
-		/// </summary>
-		/// <param name="userName">Nom de l’utilisateur courant (ou "Anonymous").</param>
-		public void SetCreationAudit(string? userName)
-		{
-			var user = string.IsNullOrWhiteSpace(userName) ? "Anonymous" : userName;
+        /// <summary>
+        /// Indique si l'entité est active.
+        /// </summary>
+        public bool IsActive { get; set; } = true;
+        #endregion
 
-			CreationDate = DateTime.UtcNow;
-			CreatedBy = user;
+        #region DRD – Méthodes d’audit
+        /// <summary>
+        /// Initialise les champs d’audit lors de la création d’une entité.
+        /// </summary>
+        /// <param name="userName">Nom de l’utilisateur courant (ou "Anonymous").</param>
+        public void SetCreationAudit(string? userName)
+        {
+            var user = string.IsNullOrWhiteSpace(userName) ? "Anonymous" : userName;
 
-			ModificationDate = DateTime.UtcNow;
-			UpdatedBy = user;
+            CreationDate = DateTime.UtcNow;
+            CreatedBy = user;
 
-			IsActive = true;
-		}
+            ModificationDate = DateTime.UtcNow;
+            UpdatedBy = user;
 
-		/// <summary>
-		/// Met à jour les champs d’audit lors d’une modification d’entité.
-		/// </summary>
-		/// <param name="userName">Nom de l’utilisateur courant (ou "Anonymous").</param>
-		public void SetModificationAudit(string? userName)
-		{
-			var user = string.IsNullOrWhiteSpace(userName) ? "Anonymous" : userName;
+            IsActive = true;
+        }
 
-			ModificationDate = DateTime.UtcNow;
-			UpdatedBy = user;
-		}
+        /// <summary>
+        /// Met à jour les champs d’audit lors d’une modification d’entité.
+        /// </summary>
+        /// <param name="userName">Nom de l’utilisateur courant (ou "Anonymous").</param>
+        public void SetModificationAudit(string? userName)
+        {
+            var user = string.IsNullOrWhiteSpace(userName) ? "Anonymous" : userName;
 
-		#endregion
-	}
+            ModificationDate = DateTime.UtcNow;
+            UpdatedBy = user;
+        }
+        #endregion
+    }
 }

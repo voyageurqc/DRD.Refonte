@@ -1,7 +1,7 @@
 ﻿// ============================================================================
 // Projet                         DRD.Web
 // Nom du fichier                 CdSetEditVM.cs
-// Type de fichier                Classe C#
+// Type de fichier                ViewModel
 // Classe                         CdSetEditVM
 // Emplacement                    Models/GrpSystemTables/CdSetVM
 // Entités concernées             CdSet (édition)
@@ -17,96 +17,91 @@
 //     - Affichage en lecture seule de la Famille et du Code.
 //     - Modification des descriptions FR/EN.
 //     - Activation / désactivation de l’entrée (IsActive).
-//     - Conversion vers l’entité Domain via mutateurs DRD v10.
 //     - Support d’un ReturnUrl pour une navigation cohérente.
+//     - Compatible avec les actions standard DRD (View/Edit/Delete).
 //
 // Modifications
+//     2025-12-09    Conformité DRD v10 : ressources strongly-typed + ajout UseActionButtons
+//                   + suppression ApplyToEntity.
 //     2025-12-07    Version initiale DRD v10.
 // ============================================================================
 
-using DRD.Domain.Entities.GrpSystemTables;
 using System.ComponentModel.DataAnnotations;
+using DRD.Resources.SystemTables;
+using DRD.Resources.FieldNames;
 
 namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 {
-	/// <summary>
-	/// ViewModel utilisé pour la modification d’un CdSet existant.
-	/// </summary>
-	public class CdSetEditVM
-	{
-		// --------------------------------------------------------------------
-		// REGION : Identification (lecture seule)
-		// --------------------------------------------------------------------
-		#region Identification
+    /// <summary>
+    /// ViewModel utilisé pour la modification d’un CdSet existant.
+    /// </summary>
+    public class CdSetEditVM
+    {
+        // --------------------------------------------------------------------
+        // REGION : Identification
+        // --------------------------------------------------------------------
+        /// <summary>Champs structuraux TypeCode et Code (lecture seule).</summary>
+        #region Identification
 
-		/// <summary>
-		/// Famille du code (TypeCode), affichée en lecture seule.
-		/// </summary>
-		[Display(Name = "CdSet_Family_Label")]
-		public string TypeCode { get; set; } = string.Empty;
+        [Display(Name = nameof(CdSet_Family_Label), ResourceType = typeof(SystemTables))]
+        public string TypeCode { get; set; } = string.Empty;
 
-		/// <summary>
-		/// Code unique dans la famille, affiché en lecture seule.
-		/// </summary>
-		[Display(Name = "CdSet_Code_Label")]
-		public string Code { get; set; } = string.Empty;
+        [Display(Name = nameof(CdSet_Code_Label), ResourceType = typeof(SystemTables))]
+        public string Code { get; set; } = string.Empty;
 
-		#endregion
+        #endregion
 
-		// --------------------------------------------------------------------
-		// REGION : Descriptions éditables
-		// --------------------------------------------------------------------
-		#region Descriptions
 
-		[Required]
-		[StringLength(50)]
-		[Display(Name = "CdSet_DescriptionFr_Label")]
-		public string DescriptionFr { get; set; } = string.Empty;
+        // --------------------------------------------------------------------
+        // REGION : Descriptions
+        // --------------------------------------------------------------------
+        /// <summary>Descriptions éditables FR/EN.</summary>
+        #region Descriptions
 
-		[StringLength(50)]
-		[Display(Name = "CdSet_DescriptionEn_Label")]
-		public string? DescriptionEn { get; set; }
+        [Required(ErrorMessageResourceName = nameof(Common.Validation_Required),
+                  ErrorMessageResourceType = typeof(Common.Common))]
+        [StringLength(50)]
+        [Display(Name = nameof(CdSet_DescriptionFr_Label), ResourceType = typeof(SystemTables))]
+        public string DescriptionFr { get; set; } = string.Empty;
 
-		#endregion
+        [StringLength(50)]
+        [Display(Name = nameof(CdSet_DescriptionEn_Label), ResourceType = typeof(SystemTables))]
+        public string? DescriptionEn { get; set; }
 
-		// --------------------------------------------------------------------
-		// REGION : Paramètres d’état
-		// --------------------------------------------------------------------
-		#region État
+        #endregion
 
-		[Display(Name = "CdSet_IsActive_Label")]
-		public bool IsActive { get; set; } = true;
 
-		#endregion
+        // --------------------------------------------------------------------
+        // REGION : État
+        // --------------------------------------------------------------------
+        /// <summary>Activation / désactivation du CdSet.</summary>
+        #region État
 
-		// --------------------------------------------------------------------
-		// REGION : Navigation
-		// --------------------------------------------------------------------
-		#region Navigation
+        [Display(Name = nameof(CdSet_IsActive_Label), ResourceType = typeof(SystemTables))]
+        public bool IsActive { get; set; } = true;
 
-		/// <summary>
-		/// Permet le retour à la bonne page après la sauvegarde.
-		/// </summary>
-		public string? ReturnUrl { get; set; }
+        #endregion
 
-		#endregion
 
-		// --------------------------------------------------------------------
-		// REGION : Mapping vers entité Domain
-		// --------------------------------------------------------------------
-		#region Mapping
+        // --------------------------------------------------------------------
+        // REGION : Navigation
+        // --------------------------------------------------------------------
+        /// <summary>URL de retour contrôlé.</summary>
+        #region Navigation
 
-		/// <summary>
-		/// Applique les modifications à une entité CdSet existante.
-		/// L’entité doit avoir été chargée depuis la base avant cet appel.
-		/// </summary>
-		/// <param name="entity">Entité existante à mettre à jour.</param>
-		public void ApplyToEntity(CdSet entity)
-		{
-			entity.SetDescriptions(DescriptionFr, DescriptionEn);
-			entity.IsActive = IsActive;
-		}
+        public string? ReturnUrl { get; set; }
 
-		#endregion
-	}
+        #endregion
+
+
+        // --------------------------------------------------------------------
+        // REGION : Actions DRD
+        // --------------------------------------------------------------------
+        /// <summary>Boutons standardisés Activer / Modifier / Supprimer.</summary>
+        #region Actions
+
+        public bool UseActionButtons { get; set; } = true;
+
+        #endregion
+    }
 }

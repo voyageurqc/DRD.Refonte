@@ -16,11 +16,12 @@
 //     - Récupération de tous les CdSet selon un TypeCode donné.
 //     - Récupération d'un CdSet précis via (TypeCode + Code).
 //     - Suppression physique d'un CdSet via sa clé composite.
+//     - Vérification d'existence d'un CdSet (clé composite).
 //     - Journalisation Serilog via ILogger.
 //
 // Modifications
-//     2025-12-07    Migration complète vers DRD v10. Correction des types,
-//                   ajout null-checks, logging, et conformité interface.
+//     2025-12-07    Migration complète vers DRD v10.
+//     2025-12-08    Ajout ExistsAsync pour alignement avec contrôleur.
 // ============================================================================
 
 using DRD.Application.Common.Interfaces.Repositories;
@@ -34,79 +35,96 @@ using System.Threading.Tasks;
 
 namespace DRD.Infrastructure.Data.Repositories.GrpSystemTables
 {
-	/// <summary>
-	/// Repository spécialisé pour la gestion des CdSet.
-	/// Fournit les opérations additionnelles liées à la clé composite.
-	/// </summary>
-	public class CdSetRepository : GenericRepository<CdSet>, ICdSetRepository
-	{
-		#region Constructeur
+    /// <summary>
+    /// Repository spécialisé pour la gestion des CdSet.
+    /// Fournit les opérations additionnelles liées à la clé composite.
+    /// </summary>
+    public class CdSetRepository : GenericRepository<CdSet>, ICdSetRepository
+    {
+        #region Constructeur
 
-		public CdSetRepository(
-			ApplicationDbContext context,
-			ILogger<CdSetRepository> logger)
-			: base(context, logger)
-		{
-		}
+        public CdSetRepository(
+            ApplicationDbContext context,
+            ILogger<CdSetRepository> logger)
+            : base(context, logger)
+        {
+        }
 
-		#endregion
+        #endregion
 
-		#region Méthodes spécialisées
+        #region Méthodes spécialisées
 
-		/// <inheritdoc />
-		public async Task<IEnumerable<CdSet>> GetByTypeCodeAsync(string typeCode)
-		{
-			if (string.IsNullOrWhiteSpace(typeCode))
-				throw new ArgumentNullException(nameof(typeCode));
+        /// <inheritdoc />
+        public async Task<IEnumerable<CdSet>> GetByTypeCodeAsync(string typeCode)
+        {
+            if (string.IsNullOrWhiteSpace(typeCode))
+                throw new ArgumentNullException(nameof(typeCode));
 
-			_logger.LogDebug("Récupération des CdSet pour TypeCode={TypeCode}", typeCode);
+            _logger.LogDebug("Récupération des CdSet pour TypeCode={TypeCode}", typeCode);
 
-			return await _dbSet
-				.AsNoTracking()
-				.Where(e => e.TypeCode == typeCode && e.IsActive)
-				.ToListAsync();
-		}
+            return await _dbSet
+                .AsNoTracking()
+                .Where(e => e.TypeCode == typeCode && e.IsActive)
+                .ToListAsync();
+        }
 
-		/// <inheritdoc />
-		public async Task<CdSet?> GetByTypeCodeAndCodeAsync(string typeCode, string code)
-		{
-			if (string.IsNullOrWhiteSpace(typeCode))
-				throw new ArgumentNullException(nameof(typeCode));
-			if (string.IsNullOrWhiteSpace(code))
-				throw new ArgumentNullException(nameof(code));
+        /// <inheritdoc />
+        public async Task<CdSet?> GetByTypeCodeAndCodeAsync(string typeCode, string code)
+        {
+            if (string.IsNullOrWhiteSpace(typeCode))
+                throw new ArgumentNullException(nameof(typeCode));
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentNullException(nameof(code));
 
-			_logger.LogDebug(
-				"Récupération d'un CdSet pour TypeCode={TypeCode}, Code={Code}",
-				typeCode, code);
+            _logger.LogDebug(
+                "Récupération d'un CdSet pour TypeCode={TypeCode}, Code={Code}",
+                typeCode, code);
 
-			return await _dbSet.FindAsync(typeCode, code);
-		}
+            return await _dbSet.FindAsync(typeCode, code);
+        }
 
-		/// <inheritdoc />
-		public async Task DeleteCdSetAsync(string typeCode, string code)
-		{
-			if (string.IsNullOrWhiteSpace(typeCode))
-				throw new ArgumentNullException(nameof(typeCode));
-			if (string.IsNullOrWhiteSpace(code))
-				throw new ArgumentNullException(nameof(code));
+        /// <inheritdoc />
+        public async Task<bool> ExistsAsync(string typeCode, string code)
+        {
+            if (string.IsNullOrWhiteSpace(typeCode))
+                throw new ArgumentNullException(nameof(typeCode));
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentNullException(nameof(code));
 
-			_logger.LogWarning(
-				"Suppression d'un CdSet via TypeCode={TypeCode}, Code={Code}",
-				typeCode, code);
+            _logger.LogDebug(
+                "Vérification d'existence CdSet TypeCode={TypeCode}, Code={Code}",
+                typeCode, code);
 
-			var entity = await _dbSet.FindAsync(typeCode, code);
+            return await _dbSet.AnyAsync(e =>
+                e.TypeCode == typeCode &&
+                e.Code == code);
+        }
 
-			if (entity == null)
-			{
-				_logger.LogWarning(
-					"Tentative de suppression d'un CdSet introuvable : {TypeCode}-{Code}",
-					typeCode, code);
-				return;
-			}
+        /// <inheritdoc />
+        public async Task DeleteCdSetAsync(string typeCode, string code)
+        {
+            if (string.IsNullOrWhiteSpace(typeCode))
+                throw new ArgumentNullException(nameof(typeCode));
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentNullException(nameof(code));
 
-			_dbSet.Remove(entity);
-		}
+            _logger.LogWarning(
+                "Suppression d'un CdSet via TypeCode={TypeCode}, Code={Code}",
+                typeCode, code);
 
-		#endregion
-	}
+            var entity = await _dbSet.FindAsync(typeCode, code);
+
+            if (entity == null)
+            {
+                _logger.LogWarning(
+                    "Tentative de suppression d'un CdSet introuvable : {TypeCode}-{Code}",
+                    typeCode, code);
+                return;
+            }
+
+            _dbSet.Remove(entity);
+        }
+
+        #endregion
+    }
 }

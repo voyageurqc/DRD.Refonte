@@ -19,6 +19,7 @@
 //       via ApplyConfigurationsFromAssembly.
 //
 // Modifications
+//     2025-12-09    Ajustements DRD (résumés des régions, validation CdSet).
 //     2025-12-02    Création initiale (clean start .NET 10, BD DRDv10).
 // ============================================================================
 
@@ -31,109 +32,106 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRD.Infrastructure.Data
 {
-	/// <summary>
-	/// Contexte EF Core principal de l'application DRD.
-	/// </summary>
-	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-	{
-		#region DRD – Constructeurs
-		/// <summary>
-		/// Initialise une nouvelle instance du contexte de base de données DRD.
-		/// </summary>
-		/// <param name="options">
-		/// Options de configuration du contexte, injectées par le conteneur DI.
-		/// </param>
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)
-		{
-		}
-		#endregion
+    /// <summary>
+    /// Contexte EF Core principal de l'application DRD.
+    /// </summary>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        #region DRD – Constructeurs
+        /// <summary>
+        /// Initialise une nouvelle instance du contexte de base de données DRD.
+        /// </summary>
+        /// <param name="options">Options de configuration du contexte.</param>
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+        #endregion
 
-		#region DRD – DbSet Domain
-		/// <summary>
-		/// Clients DRD (niveau maître).
-		/// </summary>
-		public DbSet<Client> Clients { get; set; } = null!;
+        #region DRD – DbSet Domain
+        /// <summary>
+        /// Jeu d'entités pour les clients maîtres DRD.
+        /// </summary>
+        public DbSet<Client> Clients { get; set; } = null!;
 
-		/// <summary>
-		/// Détails DRD par client.
-		/// </summary>
-		public DbSet<ClientDetail> ClientDetails { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les détails DRD associés aux clients.
+        /// </summary>
+        public DbSet<ClientDetail> ClientDetails { get; set; } = null!;
 
-		/// <summary>
-		/// Individus associés aux détails DRD.
-		/// </summary>
-		public DbSet<Individual> Individuals { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les individus associés aux détails DRD.
+        /// </summary>
+        public DbSet<Individual> Individuals { get; set; } = null!;
 
-		/// <summary>
-		/// Codes paramétriques génériques (CodeSet/CdSet).
-		/// </summary>
-		public DbSet<CdSet> CdSets { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les codes paramétriques (CdSet).
+        /// </summary>
+        public DbSet<CdSet> CdSets { get; set; } = null!;
 
-		/// <summary>
-		/// Table interne de suivi du nombre d’enregistrements par table.
-		/// </summary>
-		public DbSet<DatabaseTable> DatabaseTables { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour la table interne de suivi des tables.
+        /// </summary>
+        public DbSet<DatabaseTable> DatabaseTables { get; set; } = null!;
 
-		/// <summary>
-		/// Institutions financières.
-		/// </summary>
-		public DbSet<Institution> Institutions { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les institutions financières.
+        /// </summary>
+        public DbSet<Institution> Institutions { get; set; } = null!;
 
-		/// <summary>
-		/// Succursales des institutions financières.
-		/// </summary>
-		public DbSet<Branch> Branches { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les succursales financières.
+        /// </summary>
+        public DbSet<Branch> Branches { get; set; } = null!;
 
-		/// <summary>
-		/// Messages Web publiés aux usagers.
-		/// </summary>
-		public DbSet<WebMessage> WebMessages { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les messages Web affichés aux usagers.
+        /// </summary>
+        public DbSet<WebMessage> WebMessages { get; set; } = null!;
 
-		/// <summary>
-		/// Liens associés aux messages Web.
-		/// </summary>
-		public DbSet<WebMessageLink> WebMessageLinks { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les liens associés aux messages Web.
+        /// </summary>
+        public DbSet<WebMessageLink> WebMessageLinks { get; set; } = null!;
 
-		/// <summary>
-		/// Association messages Web ↔ usagers (lecture, actions).
-		/// </summary>
-		public DbSet<WebMessageUser> WebMessageUsers { get; set; } = null!;
-		#endregion
+        /// <summary>
+        /// Jeu d'entités pour les états individuels des messages Web.
+        /// </summary>
+        public DbSet<WebMessageUser> WebMessageUsers { get; set; } = null!;
+        #endregion
 
-		#region DRD – DbSet Identity complémentaires
-		/// <summary>
-		/// Types d'accès internes.
-		/// </summary>
-		public DbSet<AccessType> AccessTypes { get; set; } = null!;
+        #region DRD – DbSet Identity complémentaires
+        /// <summary>
+        /// Jeu d'entités pour les types d'accès internes.
+        /// </summary>
+        public DbSet<AccessType> AccessTypes { get; set; } = null!;
 
-		/// <summary>
-		/// Vues applicatives disponibles (contrôleur / action).
-		/// </summary>
-		public DbSet<ApplicationView> ApplicationViews { get; set; } = null!;
+        /// <summary>
+        /// Jeu d'entités pour les vues disponibles dans l'application.
+        /// </summary>
+        public DbSet<ApplicationView> ApplicationViews { get; set; } = null!;
 
-		/// <summary>
-		/// Droits d'accès par utilisateur et par vue.
-		/// </summary>
-		public DbSet<UserViewAccess> UserViewAccesses { get; set; } = null!;
-		#endregion
+        /// <summary>
+        /// Jeu d'entités pour les droits d'accès par utilisateur et par vue.
+        /// </summary>
+        public DbSet<UserViewAccess> UserViewAccesses { get; set; } = null!;
+        #endregion
 
-		#region DRD – Configuration EF Core
-		/// <summary>
-		/// Configure le modèle EF Core (mapping entités ↔ tables).
-		/// </summary>
-		/// <param name="modelBuilder">
-		/// Constructeur de modèle utilisé pour configurer les entités.
-		/// </param>
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			// Appel de la configuration Identity de base.
-			base.OnModelCreating(modelBuilder);
+        #region DRD – Configuration EF Core
+        /// <summary>
+        /// Configure le modèle EF Core (mapping entités ↔ tables).
+        /// Applique automatiquement toutes les configurations présentes
+        /// dans l'assembly DRD.Infrastructure.
+        /// </summary>
+        /// <param name="modelBuilder">Constructeur de modèle EF Core.</param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Appel obligatoire de la configuration Identity.
+            base.OnModelCreating(modelBuilder);
 
-			// Application automatique de toutes les configurations IEntityTypeConfiguration
-			// présentes dans l'assembly DRD.Infrastructure.
-			modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-		}
-		#endregion
-	}
+            // Application automatique des configurations IEntityTypeConfiguration<>
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
+        #endregion
+    }
 }

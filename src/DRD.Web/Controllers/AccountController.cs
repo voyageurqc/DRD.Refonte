@@ -29,15 +29,12 @@
 // ============================================================================
 
 using DRD.Infrastructure.Identity;
-using DRD.Resources.Common;
-using DRD.Resources.Toastr;
 using DRD.Web.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using System; // Nécessaire pour DateTime.UtcNow
-
+using System; 
 namespace DRD.Web.Controllers
 {
 	/// <summary>

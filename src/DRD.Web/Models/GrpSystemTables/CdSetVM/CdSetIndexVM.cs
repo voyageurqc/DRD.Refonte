@@ -20,6 +20,7 @@
 //     - Supporter les actions standardisées (Detail/Edit/Delete/Deactivate).
 //
 // Modifications
+//     2025-12-08    Ajout UseActionButtons (standard DRD v10).
 //     2025-12-07    Ajout EntityName + UseActionButtons (standard DRD v10).
 //     2025-12-07    Version initiale DRD v10 (DisplayOrder retiré).
 // ============================================================================
@@ -37,10 +38,12 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
         // REGION : Liste principale
         // --------------------------------------------------------------------
         #region Liste principale
+
         /// <summary>
         /// Liste des éléments CdSet à afficher (DataTables).
         /// </summary>
         public IEnumerable<CdSetRowVM> CdSets { get; set; } = new List<CdSetRowVM>();
+
         #endregion
 
 
@@ -91,7 +94,7 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 
 
         // --------------------------------------------------------------------
-        // REGION : Métadonnées pour Actions
+        // REGION : Actions DRD
         // --------------------------------------------------------------------
         #region Actions
 
@@ -101,4 +104,11 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
         public string EntityName { get; set; } = "CdSet";
 
         /// <summary>
-        /// Indique si les act
+        /// Indique si les boutons standardisés (View/Edit/Delete) doivent être affichés.
+        /// Conforme au standard DRD v10.
+        /// </summary>
+        public bool UseActionButtons { get; set; } = true;
+
+        #endregion
+    }
+}

@@ -33,6 +33,7 @@
     <Folder Include="Controllers\GrpClient\" />
     <Folder Include="Controllers\GrpSystemTables\" />
     <Folder Include="Controllers\GrpWebMessage\" />
+    <Folder Include="Helpers\" />
     <Folder Include="Models\GrpClient\ClientVM\" />
     <Folder Include="Models\GrpWebMessage\" />
     <Folder Include="Models\Shared\" />
@@ -56,6 +57,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
 </Project>

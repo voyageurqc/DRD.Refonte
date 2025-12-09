@@ -1,11 +1,12 @@
-﻿@* ============================================================================
+﻿@*
+===============================================================================
 Projet                         DRD.Web
-Nom du fichier                 Index.cshtml
-Type de fichier                Vue Razor (MVC)
+Fichier                        Index.cshtml
+Type                           Vue Razor (MVC)
 Classe                         CdSet – Index View
-Emplacement                    Views/GrpSystemTables/CdSet
-Entités concernées             CdSetIndexVM, CdSetRowVM
-Créé le                        2025-12-07
+Emplacement                   Views/GrpSystemTables/CdSet
+Entités concernées            CdSetIndexVM, CdSetRowVM
+Créé le                       2025-12-07
 
 Description
     Vue Index modernisée du module CdSet. Elle affiche la liste des familles et
@@ -21,20 +22,28 @@ Fonctionnalité
     - Respect du layout global (_Layout.cshtml).
 
 Modifications
-    2025-12-07    Version modernisée DRD v10 avec Bootstrap 5.
-============================================================================ *@
+    2025-12-09   Corrections mineures DRD v10 :
+                  - uniformisation input-3d
+                  - correctif Razor sur selected
+                  - appel partiel EntityActionButtons aligné
+                  - bouton Add conforme DRD
+===============================================================================
+*@
 
 @model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetIndexVM
 @using DRD.Web.Models.Shared
 @using DRD.Resources
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.Popups.Popups
 
 @{
-    ViewData["Title"] = "Liste des familles de codes";
+    ViewData["Title"] = Field_TypeCode_List_Title;
 }
 
 @section Styles {
     <style>
-        /* allège légèrement l'affichage */
         .filter-row .form-label {
             font-weight: 600;
         }
@@ -48,13 +57,13 @@ Modifications
     <a asp-controller="CdSet"
        asp-action="Create"
        asp-route-returnUrl="@Model.CurrentUrl"
-       class="btn btn-success btn-3d">
-        <i class="fas fa-plus-circle"></i>
-        @Buttons.Button_Add
+       class="btn btn-success btn-3d"
+       title="@Button_Add">
+        <i class="fa-solid fa-circle-plus"></i> @Button_Add
     </a>
 </div>
 
-<!-- Messages Toastr si applicable -->
+<!-- ======================= Toastr Messages ======================= -->
 @if (TempData["ToastrSuccess"] != null)
 {
     <div data-toastr-success="@TempData["ToastrSuccess"]"></div>
@@ -64,19 +73,16 @@ Modifications
     <div data-toastr-error="@TempData["ToastrError"]"></div>
 }
 
-@* ---------------------------------------------------------------------------
-   FILTRES HORIZONTAUX (Famille + Recherche)
---------------------------------------------------------------------------- *@
-
+<!-- ======================= FILTRES HORIZONTAUX ======================= -->
 <div class="row filter-row mb-3 g-3">
     <div class="col-md-3">
-        <label class="form-label">@SystemTables.Field_TypeCode</label>
+        <label class="form-label">@Field_TypeCode</label>
         <select id="typeCodeFilter" class="form-select">
-            <option value="">@SystemTables.Select_All</option>
+            <option value="">@Select_All</option>
 
             @foreach (var type in Model.AvailableTypeCodes)
             {
-                <option value="@type" selected="@(Model.SelectedTypeCode == type)">
+                <option value="@type" @(Model.SelectedTypeCode == type ? "selected" : "")>
                     @type
                 </option>
             }
@@ -84,23 +90,24 @@ Modifications
     </div>
 
     <div class="col-md-6">
-        <label class="form-label">@Common.Search</label>
-        <input id="searchBox" type="text" class="form-control" placeholder="@Common.Search" value="@Model.SearchQuery" />
+        <label class="form-label">@Search</label>
+        <input id="searchBox"
+               type="text"
+               class="form-control"
+               placeholder="@Search"
+               value="@Model.SearchQuery" />
     </div>
 </div>
 
-@* ---------------------------------------------------------------------------
-   TABLEAU DATATABLES
---------------------------------------------------------------------------- *@
-
+<!-- ======================= TABLEAU DATATABLES ======================= -->
 <table class="table table-striped table-bordered table-hover datatable-bilingual" id="cdset-table">
     <thead>
         <tr>
-            <th>@SystemTables.Field_TypeCode</th>
-            <th>@SystemTables.Field_Code</th>
-            <th>@SystemTables.Field_Description</th>
-            <th>@Common.IsActive</th>
-            <th>@Common.Actions</th>
+            <th>@Field_TypeCode</th>
+            <th>@Field_Code</th>
+            <th>@Field_Description</th>
+            <th>@IsActive</th>
+            <th>@Actions</th>
         </tr>
     </thead>
 
@@ -125,23 +132,24 @@ Modifications
 
                 <td class="text-center">
 
-                    @await Html.PartialAsync("_EntityActionButtons",
-                    new EntityActionButtonsVM(
-                    controllerName: "CdSet",
-                    entityId: row.CompositeKey,
-                    entityName: Localizer["CdSet_EntityName"],
-                    entityIdentifier: row.DescriptionLocalized,
-                    deactivateMessageTemplate: Popups.Confirm_Deactivate_Message_Entity,
-                    deleteMessageTemplate: Popups.Confirm_Delete_Message_Entity
+                    @await Html.PartialAsync(
+                        "_EntityActionButtons",
+                        new EntityActionButtonsVM(
+                            controllerName: "CdSet",
+                            entityId: $"{row.TypeCode}|{row.Code}",
+                            entityName: CdSet_EntityName,
+                            entityIdentifier: row.DescriptionLocalized,
+                            deactivateMessageTemplate: Confirm_Deactivate_Message_Entity,
+                            deleteMessageTemplate: Confirm_Delete_Message_Entity
+                        )
+                        {
+                            ReturnUrl = Model.CurrentUrl
+                        }
                     )
-                    {
-                        ReturnUrl = Model.CurrentUrl
-                    }
-                                )
 
-            </td>
-        </tr>
-                }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
@@ -150,7 +158,7 @@ Modifications
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
-            // --- Filtre Famille ---
+            // Filtre TypeCode
             document.getElementById("typeCodeFilter")?.addEventListener("change", function () {
                 const selected = this.value;
                 const url = new URL(window.location.href);
@@ -158,7 +166,7 @@ Modifications
                 window.location.href = url.toString();
             });
 
-            // --- Filtre Recherche ---
+            // Filtre Recherche (Enter → postback via URL)
             document.getElementById("searchBox")?.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     const text = this.value;

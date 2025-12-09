@@ -1,11 +1,11 @@
 ﻿@* ============================================================================
-Projet:      DRD.Web
-Fichier:     _NavLayout.cshtml
-Type:        Vue Razor (Partielle)
-Classe:      Navigation
-Emplacement: Views/Shared
-Entité(s):   SideBar (ressources)
-Créé le:     2025-12-04
+Projet                        	DRD.Web
+Nom du fichier                		_NavLayout.cshtml
+Type de fichier                		Razor View (Partielle)
+Classe                        		Navigation
+Emplacement                   		Views/Shared
+Entités concernées            		SideBar (ressources)
+Créé le                       		2025-12-04
 
 Description
     Menu latéral DRD v10 avec sections collapsibles. Utilise SideBar.resx pour
@@ -20,10 +20,11 @@ Fonctionnalité
     - Ajout d'une section Développement fixée en bas de la sidebar (DEV uniquement)
 
 Modifications
-    2025-12-06  Section Développement fixée bas-sidebar (flex, sans absolute).
-    2025-12-06  Ajout version marketing + compilation + build.
-    2025-12-05  Nettoyage complet.
-    2025-12-04  Version initiale DRD v10.
+    2025-12-09		Refonte de l'en-tête selon DRD v10 Option B (sans emoji, TAB alignés)
+    2025-12-06		Section Développement fixée bas-sidebar (flex, sans absolute)
+    2025-12-06		Ajout version marketing + compilation + build
+    2025-12-05		Nettoyage complet
+    2025-12-04		Version initiale DRD v10
 =============================================================================== *@
 
 @using static DRD.Resources.SideBar
@@ -133,6 +134,6 @@ Modifications
     </nav>
 
     <!-- SECTION DÉVELOPPEMENT FIXÉE EN BAS -->
-
     @await Html.PartialAsync("_DevInfo")
+
 </aside>

@@ -1,7 +1,7 @@
 ﻿// ============================================================================
 // Projet                         DRD.Web
 // Nom du fichier                 CdSetController.cs
-// Type de fichier                Contrôleur MVC
+// Type                           Contrôleur MVC
 // Classe                         CdSetController
 // Emplacement                    Controllers/GrpSystemTables
 // Entités concernées             CdSet, CdSetIndexVM, CdSetCreateVM, CdSetEditVM
@@ -10,316 +10,312 @@
 // Description
 //     Contrôleur MVC du module CdSet. Gère l’affichage de la liste via
 //     DataTables, la création, l’édition, l’affichage des détails et la
-//     suppression (via la modale universelle). Utilise Serilog, Toastr,
-//     ressources .resx et le pattern UnitOfWork.
+//     suppression via la modale universelle. Utilise Serilog, Toastr,
+//     ressources .resx fortement typées et le pattern UnitOfWork.
 //
 // Fonctionnalité
-//     - Index : filtre par famille et recherche textuelle.
-//     - Create : création d’un code de référence.
-//     - Edit : modification (réactivation possible).
-//     - Details : affichage en lecture seule.
-//     - Delete : suppression via modale universelle.
-//     - Gestion clé composite (TypeCode + Code).
-//     - Utilisation IUnitOfWork + Serilog + Toastr.
+//     Index : filtre par famille et recherche textuelle
+//     Create : création d’un code paramétrique
+//     Edit : modification (réactivation)
+//     Details : affichage en lecture seule
+//     Delete : suppression avec confirmation
+//     Gestion clé composite (TypeCode + Code)
+//     Utilisation IUnitOfWork + Serilog + Toastr
 //
 // Modifications
+//     2025-12-09    Révision DRD v10 : harmonisation de l’en-tête et des régions.
+//     2025-12-09    Ajustement Toastr / Serilog.
+//     2025-12-09    Validation DRD v10 sans changement logique.
+//     2025-12-08    Migration Toastr vers ressources fortement typées.
 //     2025-12-07    Version initiale DRD v10.
 // ============================================================================
 
 using DRD.Application.Common.Interfaces;
 using DRD.Domain.Entities.GrpSystemTables;
-using DRD.Resources;
+using DRD.Resources.Common;
+using DRD.Resources.MessagesMetier;
+using DRD.Resources.ToastrMessages;
 using DRD.Web.Models.GrpSystemTables.CdSetVM;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Serilog;
 
 namespace DRD.Web.Controllers.GrpSystemTables
 {
-	public class CdSetController : Controller
-	{
-		// --------------------------------------------------------------------
-		// REGION : Services
-		// --------------------------------------------------------------------
-		#region Services
+    public class CdSetController : Controller
+    {
+        // =====================================================================
+        // DRD – Services
+        // =====================================================================
+        #region Services
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger _logger;
 
-		private readonly IUnitOfWork _unitOfWork;
-		private readonly IStringLocalizer<ToastrMessages> _toastr;
-		private readonly IStringLocalizer<SystemTables> _systemLocalizer;
-		private readonly ILogger _logger;
+        /// <summary>
+        /// Injection du UnitOfWork et configuration du logger Serilog.
+        /// </summary>
+        public CdSetController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = Log.ForContext<CdSetController>();
+        }
+        #endregion
 
-		public CdSetController(
-			IUnitOfWork unitOfWork,
-			IStringLocalizer<ToastrMessages> toastr,
-			IStringLocalizer<SystemTables> systemLocalizer)
-		{
-			_unitOfWork = unitOfWork;
-			_toastr = toastr;
-			_systemLocalizer = systemLocalizer;
+        // =====================================================================
+        // DRD – Index
+        // =====================================================================
+        #region Index
+        /// <summary>
+        /// Affiche la liste filtrable des CodeSets (TypeCode / recherche).
+        /// </summary>
+        public async Task<IActionResult> Index(string? typeCode, string? search)
+        {
+            _logger.Information("CdSet - Index - Filtre TypeCode={TypeCode}, Search={Search}", typeCode, search);
 
-			// Serilog logger instancié pour cette classe
-			_logger = Log.ForContext<CdSetController>();
-		}
+            var all = await _unitOfWork.CdSetRepository.GetAllAsync();
 
-		#endregion
+            var allTypeCodes = all
+                .Select(x => x.TypeCode)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
 
-		// --------------------------------------------------------------------
-		// REGION : Index
-		// --------------------------------------------------------------------
-		#region Index
+            var filtered = all.AsQueryable();
 
-		/// <summary>
-		/// Affiche la liste des CdSet avec filtres (Famille + recherche).
-		/// </summary>
-		public async Task<IActionResult> Index(string? typeCode, string? search)
-		{
-			_logger.Information("CdSet - Index - Filtre TypeCode={TypeCode}, Search={Search}", typeCode, search);
+            if (!string.IsNullOrWhiteSpace(typeCode))
+                filtered = filtered.Where(x => x.TypeCode == typeCode);
 
-			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                filtered = filtered.Where(x =>
+                    x.TypeCode.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || x.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || x.DescriptionFr.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || (x.DescriptionEn ?? "").Contains(search, StringComparison.OrdinalIgnoreCase)
+                );
+            }
 
-			// Extraction unique de toutes les familles (TypeCodes)
-			var allTypeCodes = all
-				.Select(x => x.TypeCode)
-				.Distinct()
-				.OrderBy(x => x)
-				.ToList();
+            var rows = filtered
+                .OrderBy(x => x.TypeCode)
+                .ThenBy(x => x.Code)
+                .Select(x => new CdSetRowVM
+                {
+                    TypeCode = x.TypeCode,
+                    Code = x.Code,
+                    DescriptionFr = x.DescriptionFr,
+                    DescriptionEn = x.DescriptionEn,
+                    IsActive = x.IsActive
+                })
+                .ToList();
 
-			// Filtrage
-			var filtered = all.AsQueryable();
+            var vm = new CdSetIndexVM
+            {
+                CdSets = rows,
+                AvailableTypeCodes = allTypeCodes,
+                SelectedTypeCode = typeCode,
+                SearchQuery = search,
+                CurrentUrl = Request.Path + Request.QueryString,
+                ReferrerUrl = Request.Headers["Referer"].ToString()
+            };
 
-			if (!string.IsNullOrWhiteSpace(typeCode))
-			{
-				filtered = filtered.Where(x => x.TypeCode == typeCode);
-			}
+            return View(vm);
+        }
+        #endregion
 
-			if (!string.IsNullOrWhiteSpace(search))
-			{
-				filtered = filtered.Where(x =>
-					x.TypeCode.Contains(search, StringComparison.OrdinalIgnoreCase)
-					|| x.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
-					|| x.DescriptionFr.Contains(search, StringComparison.OrdinalIgnoreCase)
-					|| (x.DescriptionEn ?? "").Contains(search, StringComparison.OrdinalIgnoreCase)
-				);
-			}
+        // =====================================================================
+        // DRD – Create
+        // =====================================================================
+        #region Create
+        /// <summary>
+        /// Affiche la page de création d’un code.
+        /// </summary>
+        [HttpGet]
+        public IActionResult Create(string? returnUrl)
+        {
+            var vm = new CdSetCreateVM
+            {
+                ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
+            };
 
-			// Projection en RowVM
-			var rows = filtered
-				.OrderBy(x => x.TypeCode)
-				.ThenBy(x => x.Code)
-				.Select(x => new CdSetRowVM
-				{
-					TypeCode = x.TypeCode,
-					Code = x.Code,
-					DescriptionFr = x.DescriptionFr,
-					DescriptionEn = x.DescriptionEn,
-					IsActive = x.IsActive
-				})
-				.ToList();
+            return View(vm);
+        }
 
-			var vm = new CdSetIndexVM
-			{
-				CdSets = rows,
-				AvailableTypeCodes = allTypeCodes,
-				SelectedTypeCode = typeCode,
-				SearchQuery = search,
-				CurrentUrl = Request.Path + Request.QueryString,
-				ReferrerUrl = Request.Headers["Referer"].ToString()
-			};
+        /// <summary>
+        /// Enregistre un nouveau CdSet.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CdSetCreateVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_InvalidForm;
+                return View(vm);
+            }
 
-			return View(vm);
-		}
+            var exists = await _unitOfWork.CdSetRepository.ExistsAsync(vm.TypeCodeFinal, vm.Code);
+            if (exists)
+            {
+                TempData["ToastrError"] = CdSetMM.CdSetMM_Error_Duplicate;
+                return View(vm);
+            }
 
-		#endregion
+            var entity = vm.ToEntity();
 
-		// --------------------------------------------------------------------
-		// REGION : CREATE
-		// --------------------------------------------------------------------
-		#region Create
+            await _unitOfWork.CdSetRepository.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
-		[HttpGet]
-		public IActionResult Create(string? returnUrl)
-		{
-			var vm = new CdSetCreateVM
-			{
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
+            TempData["ToastrSuccess"] = CdSetToastr.Success_EntityCreated;
 
-			return View(vm);
-		}
+            _logger.Information("CdSet créé : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(CdSetCreateVM vm)
-		{
-			if (!ModelState.IsValid)
-			{
-				_logger.Warning("CdSet - Create - Validation échouée");
-				TempData["ToastrError"] = _toastr["Error_InvalidForm"];
-				return View(vm);
-			}
+            return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
+        }
+        #endregion
 
-			// Vérifier duplication
-			var exists = await _unitOfWork.CdSetRepository.ExistsAsync(vm.TypeCodeFinal, vm.Code);
-			if (exists)
-			{
-				ModelState.AddModelError("", _systemLocalizer["CdSet_Error_Duplicate"]);
-				TempData["ToastrError"] = _systemLocalizer["CdSet_Error_Duplicate"];
-				return View(vm);
-			}
+        // =====================================================================
+        // DRD – Edit
+        // =====================================================================
+        #region Edit
+        /// <summary>
+        /// Charge un CdSet existant pour édition.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id, string key2, string? returnUrl)
+        {
+            var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(id, key2);
 
-			var entity = vm.ToEntity();
+            if (entity == null)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-			await _unitOfWork.CdSetRepository.AddAsync(entity);
-			await _unitOfWork.SaveChangesAsync();
+            var vm = new CdSetEditVM
+            {
+                TypeCode = entity.TypeCode,
+                Code = entity.Code,
+                DescriptionFr = entity.DescriptionFr,
+                DescriptionEn = entity.DescriptionEn,
+                IsActive = entity.IsActive,
+                ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
+            };
 
-			TempData["ToastrSuccess"] = _toastr["Success_EntityCreated", entity.DescriptionFr];
+            return View(vm);
+        }
 
-			_logger.Information("CdSet créé : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
+        /// <summary>
+        /// Valide et applique la modification d’un CdSet.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CdSetEditVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_InvalidForm;
+                return View(vm);
+            }
 
-			return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
-		}
+            var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(vm.TypeCode, vm.Code);
+            if (entity == null)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-		#endregion
+            entity.ModifyFields(vm.DescriptionFr, vm.DescriptionEn, vm.IsActive);
 
-		// --------------------------------------------------------------------
-		// REGION : EDIT
-		// --------------------------------------------------------------------
-		#region Edit
+            await _unitOfWork.CdSetRepository.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
-		[HttpGet]
-		public async Task<IActionResult> Edit(string id, string key2, string? returnUrl)
-		{
-			var entity = await _unitOfWork.CdSetRepository.GetAsync(id, key2);
+            TempData["ToastrSuccess"] = CdSetToastr.Success_EntityUpdated;
 
-			if (entity == null)
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
+            _logger.Information("CdSet modifié : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
 
-			var vm = new CdSetEditVM
-			{
-				TypeCode = entity.TypeCode,
-				Code = entity.Code,
-				DescriptionFr = entity.DescriptionFr,
-				DescriptionEn = entity.DescriptionEn,
-				IsActive = entity.IsActive,
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
+            return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
+        }
+        #endregion
 
-			return View(vm);
-		}
+        // =====================================================================
+        // DRD – Details
+        // =====================================================================
+        #region Details
+        /// <summary>
+        /// Affiche les détails d’un CdSet.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> Details(string id, string key2, string? returnUrl)
+        {
+            var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(id, key2);
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(CdSetEditVM vm)
-		{
-			if (!ModelState.IsValid)
-			{
-				TempData["ToastrError"] = _toastr["Error_InvalidForm"];
-				return View(vm);
-			}
+            if (entity == null)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-			var entity = await _unitOfWork.CdSetRepository.GetAsync(vm.TypeCode, vm.Code);
-			if (entity == null)
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
+            var vm = new CdSetDetailsVM
+            {
+                TypeCode = entity.TypeCode,
+                Code = entity.Code,
+                DescriptionFr = entity.DescriptionFr,
+                DescriptionEn = entity.DescriptionEn,
+                IsActive = entity.IsActive,
+                CreationDate = entity.CreationDate,
+                ModificationDate = entity.ModificationDate,
+                CreatedBy = entity.CreatedBy,
+                UpdatedBy = entity.UpdatedBy,
+                ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
+            };
 
-			// Mise à jour
-			entity.ModifyFields(vm.DescriptionFr, vm.DescriptionEn, vm.IsActive);
+            return View(vm);
+        }
+        #endregion
 
-			await _unitOfWork.CdSetRepository.UpdateAsync(entity);
-			await _unitOfWork.SaveChangesAsync();
+        // =====================================================================
+        // DRD – Delete
+        // =====================================================================
+        #region Delete
+        /// <summary>
+        /// Supprime un CdSet via la modale universelle.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string entityId)
+        {
+            if (string.IsNullOrWhiteSpace(entityId))
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-			TempData["ToastrSuccess"] = _toastr["Success_EntityUpdated", entity.DescriptionFr];
+            var parts = entityId.Split('|');
+            if (parts.Length < 2)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-			_logger.Information("CdSet modifié : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
+            string typeCode = parts[0];
+            string code = parts[1];
 
-			return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
-		}
+            var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(typeCode, code);
 
-		#endregion
+            if (entity == null)
+            {
+                TempData["ToastrError"] = GenericToastr.Error_NotFound;
+                return RedirectToAction(nameof(Index));
+            }
 
-		// --------------------------------------------------------------------
-		// REGION : DETAILS
-		// --------------------------------------------------------------------
-		#region Details
+            await _unitOfWork.CdSetRepository.RemoveAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
-		[HttpGet]
-		public async Task<IActionResult> Details(string id, string key2, string? returnUrl)
-		{
-			var entity = await _unitOfWork.CdSetRepository.GetAsync(id, key2);
+            TempData["ToastrSuccess"] = CdSetToastr.Success_EntityDeleted;
 
-			if (entity == null)
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
+            _logger.Information("CdSet supprimé : {TypeCode}|{Code}", typeCode, code);
 
-			var vm = new CdSetDetailsVM
-			{
-				TypeCode = entity.TypeCode,
-				Code = entity.Code,
-				DescriptionFr = entity.DescriptionFr,
-				DescriptionEn = entity.DescriptionEn,
-				IsActive = entity.IsActive,
-				CreationDate = entity.CreationDate,
-				ModificationDate = entity.ModificationDate,
-				CreatedBy = entity.CreatedBy,
-				UpdatedBy = entity.UpdatedBy,
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
-
-			return View(vm);
-		}
-
-		#endregion
-
-		// --------------------------------------------------------------------
-		// REGION : DELETE (modal universelle)
-		// --------------------------------------------------------------------
-		#region Delete
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(string entityId)
-		{
-			if (string.IsNullOrWhiteSpace(entityId))
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
-
-			var parts = entityId.Split('|');
-			if (parts.Length < 2)
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
-
-			string typeCode = parts[0];
-			string code = parts[1];
-
-			var entity = await _unitOfWork.CdSetRepository.GetAsync(typeCode, code);
-
-			if (entity == null)
-			{
-				TempData["ToastrError"] = _toastr["Error_NotFound"];
-				return RedirectToAction(nameof(Index));
-			}
-
-			await _unitOfWork.CdSetRepository.RemoveAsync(entity);
-			await _unitOfWork.SaveChangesAsync();
-
-			TempData["ToastrSuccess"] = _toastr["Success_EntityDeleted", entity.DescriptionFr];
-
-			_logger.Information("CdSet supprimé : {TypeCode}|{Code}", typeCode, code);
-
-			return RedirectToAction(nameof(Index));
-		}
-
-		#endregion
-	}
+            return RedirectToAction(nameof(Index));
+        }
+        #endregion
+    }
 }

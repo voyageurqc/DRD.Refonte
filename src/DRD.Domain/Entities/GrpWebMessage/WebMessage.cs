@@ -2,9 +2,9 @@
 // Projet                         DRD.Domain
 // Nom du fichier                 WebMessage.cs
 // Type de fichier                Entity
-// Nature C#                      Class
+// Classe                         WebMessage
 // Emplacement                    Entities/GrpWebMessage/
-// Auteur                         Michel Gariépy
+// Entités concernées             WebMessage, WebMessageLink, WebMessageUser
 // Créé le                        2025-06-17
 //
 // Description
@@ -16,9 +16,10 @@
 //     - Définit le type de message et son caractère obligatoire ou non.
 //     - Peut exiger une confirmation de la part de l’usager.
 //     - Peut être limité à une période d’affichage (StartDate / EndDate).
-//     - Possède des relations vers WebMessageUser (état individuel) et WebMessageLink.
+//     - Possède des relations vers WebMessageUser et WebMessageLink.
 //
 // Modifications
+//     2025-12-09    Ajustements DRD (régions, résumés, en-tête).
 //     2025-11-30    Suppression de IsPersistent (gestion via WebMessageUser + période).
 //     2025-11-30    Version nettoyée Domain (suppression EF, nomenclature FR/EN).
 //     2025-07-14    Ajout du support FR/EN dans le contenu et le titre.
@@ -26,76 +27,84 @@
 // ============================================================================
 
 using DRD.Domain.Common;
-using DRD.Domain.Entities.GrpWebMessage;
 
 namespace DRD.Domain.Entities.GrpWebMessage
 {
-	/// <summary>
-	/// Représente un message système bilingue destiné à l'affichage aux utilisateurs.
-	/// </summary>
-	public class WebMessage : BaseAuditableEntity
-	{
-		#region Identification
-		/// <summary>
-		/// Numéro interne du message (clé naturelle).
-		/// </summary>
-		public int MessageNumber { get; private set; }
-		#endregion
+    /// <summary>
+    /// Représente un message système bilingue destiné à l'affichage aux utilisateurs.
+    /// </summary>
+    public class WebMessage : BaseAuditableEntity
+    {
+        #region DRD – Identification
+        /// <summary>
+        /// Numéro interne du message (clé naturelle).
+        /// </summary>
+        public int MessageNumber { get; private set; }
+        #endregion
 
+        #region DRD – Titres
+        /// <summary>
+        /// Titre français du message.
+        /// </summary>
+        public string TitleFr { get; private set; } = string.Empty;
 
-		#region Titles
-		public string TitleFr { get; private set; } = string.Empty;
-		public string TitleEn { get; private set; } = string.Empty;
-		#endregion
+        /// <summary>
+        /// Titre anglais du message.
+        /// </summary>
+        public string TitleEn { get; private set; } = string.Empty;
+        #endregion
 
+        #region DRD – Contenus
+        /// <summary>
+        /// Contenu français du message.
+        /// </summary>
+        public string ContentFr { get; private set; } = string.Empty;
 
-		#region Contents
-		public string ContentFr { get; private set; } = string.Empty;
-		public string ContentEn { get; private set; } = string.Empty;
-		#endregion
+        /// <summary>
+        /// Contenu anglais du message.
+        /// </summary>
+        public string ContentEn { get; private set; } = string.Empty;
+        #endregion
 
+        #region DRD – Paramètres du message
+        /// <summary>
+        /// Type métier du message (ex.: Maintenance, Update, Alert, Warning, etc.).
+        /// </summary>
+        public string MessageType { get; private set; } = string.Empty;
 
-		#region Message Settings
-		/// <summary>
-		/// Type métier du message (ex.: Maintenance, Update, Alert, Warning, etc.).
-		/// </summary>
-		public string MessageType { get; private set; } = string.Empty;
+        /// <summary>
+        /// Indique si l’usager doit obligatoirement agir/valider ce message.
+        /// </summary>
+        public bool IsMandatory { get; private set; }
 
-		/// <summary>
-		/// Indique si l’usager doit obligatoirement agir/valider ce message.
-		/// </summary>
-		public bool IsMandatory { get; private set; }
+        /// <summary>
+        /// Indique si l’usager doit confirmer explicitement la lecture du message.
+        /// </summary>
+        public bool RequiresConfirmation { get; private set; }
+        #endregion
 
-		/// <summary>
-		/// Indique si l’usager doit confirmer explicitement la lecture du message.
-		/// </summary>
-		public bool RequiresConfirmation { get; private set; }
-		#endregion
+        #region DRD – Période de validité
+        /// <summary>
+        /// Date de début d’affichage du message (UTC).
+        /// </summary>
+        public DateTime? StartDate { get; private set; }
 
+        /// <summary>
+        /// Date de fin d’affichage du message (UTC). Null = sans limite.
+        /// </summary>
+        public DateTime? EndDate { get; private set; }
+        #endregion
 
-		#region Validity Period
-		/// <summary>
-		/// Date de début d’affichage du message (nullable).
-		/// </summary>
-		public DateTime? StartDate { get; private set; }
+        #region DRD – Relations
+        /// <summary>
+        /// Liens associés à ce message (ciblage, contexte, etc.).
+        /// </summary>
+        public ICollection<WebMessageLink> Links { get; private set; } = new List<WebMessageLink>();
 
-		/// <summary>
-		/// Date de fin d’affichage du message (nullable). Null = sans limite de fin.
-		/// </summary>
-		public DateTime? EndDate { get; private set; }
-		#endregion
-
-
-		#region Relations
-		/// <summary>
-		/// Liens associés à ce message (ciblage, contexte, etc.).
-		/// </summary>
-		public ICollection<WebMessageLink> Links { get; private set; } = new List<WebMessageLink>();
-
-		/// <summary>
-		/// États individuels du message pour chaque usager.
-		/// </summary>
-		public ICollection<WebMessageUser> Users { get; private set; } = new List<WebMessageUser>();
-		#endregion
-	}
+        /// <summary>
+        /// États individuels du message pour chaque usager.
+        /// </summary>
+        public ICollection<WebMessageUser> Users { get; private set; } = new List<WebMessageUser>();
+        #endregion
+    }
 }

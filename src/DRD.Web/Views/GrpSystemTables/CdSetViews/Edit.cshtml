@@ -1,11 +1,12 @@
-﻿@* ============================================================================
+﻿@*
+===============================================================================
 Projet                         DRD.Web
-Nom du fichier                 Edit.cshtml
-Type de fichier                Razor View (MVC)
+Fichier                        Edit.cshtml
+Type                           Razor View (MVC)
 Classe                         CdSet Edit View
-Emplacement                    Views/GrpSystemTables/CdSetViews
-Entités concernées             CdSetEntity, EntityMetadataDto
-Créé le                        2025-12-08
+Emplacement                   Views/GrpSystemTables/CdSet
+Entités concernées            CdSetEditVM, EntityMetadataDto
+Créé le                       2025-12-08
 
 Description
     Vue d’édition d’un CdSet. Les clés (TypeCode + Code) sont affichées en
@@ -13,26 +14,35 @@ Description
     Inclut l’affichage des métadonnées système.
 
 Fonctionnalité
-    - Modification des champs DescriptionFr, DescriptionEn, IsActive
-    - Gestion ReturnUrl pour un retour contrôlé
-    - Bouton universel Métadonnées (ouvre _SystemMetadataPartial)
+    - Modification DescriptionFr, DescriptionEn, IsActive
+    - Gestion ReturnUrl
+    - Bouton Métadonnées DRD
     - Validation MVC + Toastr
     - Inputs readonly pour les clés
 
 Modifications
-    2025-12-08    Version initiale DRD v10 basée sur Create.cshtml.
-============================================================================ *@
+    2025-12-09   Correction complète DRD v10 :
+                 - changement du modèle → CdSetEditVM
+                 - import correct des ressources
+                 - uniformisation input-3d
+===============================================================================
+*@
 
-@using static DRD.Resources.Common
-@using static DRD.Resources.FieldNames.CdSetFieldNames
+@model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetEditVM
+
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.Popups.Popups
+@using static DRD.Resources.EntityTitles.CdSetTitle
+
+
 @using DRD.Application.Popup.Models
-@model DRD.Domain.Entities.GrpSystemTables.CdSet
 
 @{
-    ViewData["Title"] = SystemTables.Codeset_Edit;
+    ViewData["Title"] = Codeset_Edit;
 
-    var returnUrl = ViewData["ReturnUrl"] as string
-                    ?? Url.Action("Index", "CdSet");
+    var returnUrl = Model.ReturnUrl ?? Url.Action("Index", "CdSet");
 
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
 }
@@ -43,57 +53,55 @@ Modifications
 
     @Html.AntiForgeryToken()
 
-    <input type="hidden" name="returnUrl" value="@returnUrl" />
+    <input type="hidden" asp-for="ReturnUrl" />
 
     <div class="card shadow-sm p-4">
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label">@TypeCode</label>
-                <input class="form-control" value="@Model.TypeCode" readonly />
+                <label class="form-label">@Field_TypeCode</label>
+                <input class="form-control input-3d" value="@Model.TypeCode" readonly />
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">@Code</label>
-                <input class="form-control" value="@Model.Code" readonly />
+                <label class="form-label">@Field_Code</label>
+                <input class="form-control input-3d" value="@Model.Code" readonly />
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">@DescriptionFr</label>
-            <input asp-for="DescriptionFr" class="form-control" />
+            <label asp-for="DescriptionFr" class="form-label"></label>
+            <input asp-for="DescriptionFr" class="form-control input-3d" />
             <span asp-validation-for="DescriptionFr" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">@DescriptionEn</label>
-            <input asp-for="DescriptionEn" class="form-control" />
+            <label asp-for="DescriptionEn" class="form-label"></label>
+            <input asp-for="DescriptionEn" class="form-control input-3d" />
             <span asp-validation-for="DescriptionEn" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label class="form-label d-block">@IsActive</label>
+            <label class="form-label d-block">@Field_IsActive</label>
 
             <div class="form-check form-switch">
-                <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
-                <label class="form-check-label" for="IsActive">
-                    @(Model.IsActive? Common.Active: Common.Inactive)
+                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                <label class="form-check-label">
+                    @(Model.IsActive? Active : Inactive)
                 </label>
             </div>
-
-            <span asp-validation-for="IsActive" class="text-danger"></span>
         </div>
 
-        <!-- Boutons d’action -->
+        <!-- Boutons -->
         <div class="d-flex justify-content-between mt-4">
 
             <div>
-                <button type="submit" class="btn btn-primary btn-3d me-2">
-                    <i class="fas fa-save"></i> @Button_Save
+                <button type="submit" class="btn btn-primary btn-3d me-2" title="@Button_Save">
+                    <i class="fa-solid fa-floppy-disk"></i> @Button_Save
                 </button>
 
-                <a href="@returnUrl" class="btn btn-secondary btn-3d">
-                    <i class="fas fa-arrow-left"></i> @Button_Back
+                <a href="@returnUrl" class="btn btn-secondary btn-3d" title="@Button_Back">
+                    <i class="fa-solid fa-arrow-left"></i> @Button_Back
                 </a>
             </div>
 
@@ -103,8 +111,9 @@ Modifications
                 <button type="button"
                         class="btn btn-info btn-3d"
                         data-bs-toggle="modal"
-                        data-bs-target="#systemMetadataModal">
-                    <i class="fas fa-info-circle"></i> @Button_Metadata
+                        data-bs-target="#systemMetadataModal"
+                        title="@Button_Metadata">
+                    <i class="fa-solid fa-circle-info"></i> @Button_Metadata
                 </button>
             }
         </div>
@@ -112,7 +121,6 @@ Modifications
     </div>
 </form>
 
-<!-- Modale Métadonnées -->
 @if (metadata != null)
 {
     <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml" model="metadata" />

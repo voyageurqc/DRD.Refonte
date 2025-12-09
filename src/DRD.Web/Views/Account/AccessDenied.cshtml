@@ -1,53 +1,65 @@
-﻿@using static DRD.Resources.Common.Common
-@using static DRD.Resources.Menu.Menu
-@using static DRD.Resources.Buttons
-
-@*
+﻿@*
 ===============================================================================
-Projet        DRD.Web
-Fichier       AccessDenied.cshtml
-Type          View (Razor)
-Classe        n/a (Géré par AccountController)
-Emplacement   Views/Account
-Entité(s)     AccountController
-Créé le       2025-12-03
+Projet         DRD.Web
+Fichier        AccessDenied.cshtml
+Type           View (Razor)
+Classe         n/a (Géré par AccountController)
+Emplacement    Views/Account
+Entité(s)      AccountController
+Créé le        2025-12-03
 
 Description
-    Page d'accès refusé standard de l'application DRD. Affiche un message
-    bilingue et offre des options de redirection.
-    Le Layout est hérité du _ViewStart global.
+    Page d'accès refusé standard de l'application DRD. Affiche un message
+    bilingue et offre des options de redirection. Le Layout est hérité du
+    _ViewStart global.
 
 Fonctionnalité
-    - Affichage du message d'erreur d'accès via DRD.Resources.
-    - Redirection vers l'URL précédente (si disponible dans ViewBag).
-    - Redirection par défaut vers la page d'accueil.
-    - Utilisation de la règle de conception des boutons (icône seule + titre).
+    - Affichage du message d'erreur d'accès via DRD.Resources.
+    - Redirection vers l'URL précédente (si disponible).
+    - Redirection par défaut vers la page d'accueil.
+    - Boutons 3D DRD avec icônes FontAwesome et tooltip.
 
 Modifications
-    2025-12-05    Remplacement du contenu par la version v9 finalisée.
-                   Application de la règle de conception des boutons (icône/title).
+    2025-12-05    Mise à jour v9 → v10 et normalisation boutons.
 ===============================================================================
 *@
+
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.Buttons.Buttons
+
 
 @{
     ViewData["Title"] = AccessDenied_Title;
 }
 
+@* ============================================================
+   REGION : Contenu principal
+   ============================================================ *@
 <div class="container text-center mt-5">
-    <h1 class="text-danger">🚫 @AccessDenied_Title</h1>
-    <p class="lead">@AccessDenied_Description</p>
 
-    @* Région Boutons de redirection (Application de la règle de conception) *@
+    <h1 class="text-danger">🚫 @AccessDenied_Title</h1>
+
+    <p class="lead mb-4">
+        @AccessDenied_Description
+    </p>
+
+    @* ============================================================
+       REGION : Boutons de redirection (selon la règle DRD)
+       ============================================================ *@
     @if (ViewBag.ReturnUrl != null)
     {
-        <a href="@ViewBag.ReturnUrl" class="btn btn-3d btn-light mt-3" title="@Button_Previous">
-            ⬅️ <i class="fa fa-arrow-left"></i>
+        <a href="@ViewBag.ReturnUrl"
+           class="btn btn-3d btn-light mt-3"
+           title="@Button_Previous">
+            <i class="fa-solid fa-arrow-left"></i> ⬅️
         </a>
     }
     else
     {
-        <a href="@Url.Action("Index", "Home")" class="btn btn-3d btn-light mt-3" title="@Button_Home">
-            🏠 <i class="fa fa-home"></i>
+        <a href="@Url.Action("Index", "Home")"
+           class="btn btn-3d btn-light mt-3"
+           title="@Button_Home">
+            <i class="fa-solid fa-house"></i> 🏠
         </a>
     }
 </div>
