@@ -4,9 +4,9 @@ Projet                         DRD.Web
 Fichier                        Index.cshtml
 Type                           Vue Razor (MVC)
 Classe                         CdSet – Index View
-Emplacement                   Views/GrpSystemTables/CdSet
-Entités concernées            CdSetIndexVM, CdSetRowVM
-Créé le                       2025-12-07
+Emplacement                    Views/GrpSystemTables/CdSet
+Entités concernées             CdSetIndexVM, CdSetRowVM
+Créé le                        2025-12-07
 
 Description
     Vue Index modernisée du module CdSet. Elle affiche la liste des familles et
@@ -32,10 +32,11 @@ Modifications
 
 @model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetIndexVM
 @using DRD.Web.Models.Shared
-@using DRD.Resources
+
 @using static DRD.Resources.Buttons.Buttons
 @using static DRD.Resources.Common.Common
 @using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.EntityTitles.CdSetTitle
 @using static DRD.Resources.Popups.Popups
 
 @{
@@ -82,9 +83,9 @@ Modifications
 
             @foreach (var type in Model.AvailableTypeCodes)
             {
-                <option value="@type" @(Model.SelectedTypeCode == type ? "selected" : "")>
-                    @type
-                </option>
+                var IsSelected = Model.SelectedTypeCode == type ? "selected" : "";
+
+                <option value="@type" selected="@IsSelected">@type</option>
             }
         </select>
     </div>
@@ -133,23 +134,23 @@ Modifications
                 <td class="text-center">
 
                     @await Html.PartialAsync(
-                        "_EntityActionButtons",
-                        new EntityActionButtonsVM(
-                            controllerName: "CdSet",
-                            entityId: $"{row.TypeCode}|{row.Code}",
-                            entityName: CdSet_EntityName,
-                            entityIdentifier: row.DescriptionLocalized,
-                            deactivateMessageTemplate: Confirm_Deactivate_Message_Entity,
-                            deleteMessageTemplate: Confirm_Delete_Message_Entity
-                        )
-                        {
-                            ReturnUrl = Model.CurrentUrl
-                        }
-                    )
+                    "_EntityActionButtons",
+                                new EntityActionButtonsVM(
+                                controllerName: "CdSet",
+                                entityId: $"{row.TypeCode}|{row.Code}",
+                                entityName: CdSet_EntityName,
+                                entityIdentifier: row.DescriptionLocalized,
+                                deactivateMessageTemplate: Confirm_Deactivate_Message_Entity,
+                                deleteMessageTemplate: Confirm_Delete_Message_Entity
+                                )
+                                {
+                                    ReturnUrl = Model.CurrentUrl
+                                }
+                                )
 
-                </td>
-            </tr>
-        }
+            </td>
+        </tr>
+                }
     </tbody>
 </table>
 
@@ -166,7 +167,7 @@ Modifications
                 window.location.href = url.toString();
             });
 
-            // Filtre Recherche (Enter → postback via URL)
+            // Filtre Recherche (Enter → reload via URL)
             document.getElementById("searchBox")?.addEventListener("keypress", function (e) {
                 if (e.key === "Enter") {
                     const text = this.value;

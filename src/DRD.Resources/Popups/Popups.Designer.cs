@@ -79,6 +79,24 @@ namespace DRD.Resources.Popups {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voulez-vous désactiver {0} ({1}) ?.
+        /// </summary>
+        public static string Confirm_Deactivate_Message_Entity {
+            get {
+                return ResourceManager.GetString("Confirm_Deactivate_Message_Entity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voulez-vous supprimer {0} ({1}) ? Cette action est définitive..
+        /// </summary>
+        public static string Confirm_Delete_Message_Entity {
+            get {
+                return ResourceManager.GetString("Confirm_Delete_Message_Entity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Voulez-vous vraiment procéder à cette action ?.
         /// </summary>
         public static string ConfirmAction {

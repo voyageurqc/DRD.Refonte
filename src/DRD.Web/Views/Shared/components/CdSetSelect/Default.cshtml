@@ -26,9 +26,9 @@
                   - Fermeture automatique au changement ou blur
                   - Meilleure accessibilité et contrôle clavier (Escape)
 ============================================================================ -->
-@model DRD.Web.Models.ConfigurationTables.CdSetSelectVM
+@model DRD.Web.Models.GrpSystemTables.CdSetSelectVM
 @using DRD.Web.Helpers
-@using DRD.Resources
+@using DRD.Resources.Common
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 <div class="form-group">
@@ -36,7 +36,7 @@
         @Model.Label
         @if (string.IsNullOrWhiteSpace(Model.SelectedValue))
         {
-            <span class="text-danger ms-1" title="@Common.RequiredField">⚠️</span>
+            <span class="text-danger ms-1" title="@Common.Validation_Required">⚠️</span>
         }
     </label>
 

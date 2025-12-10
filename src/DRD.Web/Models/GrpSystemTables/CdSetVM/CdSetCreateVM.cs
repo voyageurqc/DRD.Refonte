@@ -1,134 +1,166 @@
 ﻿// ============================================================================
-// Projet                         DRD.Web
-// Nom du fichier                 CdSetCreateVM.cs
-// Type de fichier                ViewModel
-// Classe                         CdSetCreateVM
-// Emplacement                    Models/GrpSystemTables/CdSetVM
-// Entités concernées             CdSet (création)
-// Créé le                        2025-12-07
+// Projet:      DRD.Web
+// Fichier:     CdSetCreateVM.cs
+// Type:        ViewModel
+// Classe:      CdSetCreateVM
+// Emplacement: Models/GrpSystemTables/CdSetVM
+// Entité(s):   CdSet (création)
+// Créé le:     2025-12-07
 //
-// Description
+// Description:
 //     ViewModel utilisé pour la création d’un nouvel enregistrement CdSet.
-//     Permet de sélectionner une famille existante (TypeCode) ou d’en créer
-//     une nouvelle. Tous les labels sont entièrement localisés.
+//     Supporte la sélection d'une famille existante ou la création d'une nouvelle.
+//     Validation DRD v10 conditionnelle et bilingue via ressources strongly-typed.
 //
-// Fonctionnalité
-//     - Sélection d’une famille existante ou création d’une nouvelle.
-//     - Validation uniformisée DRD v10 via ressources strongly-typed.
-//     - Conversion vers l’entité Domain via mutateurs.
-//     - Navigation DRD + intégration actions standardisées.
+// Fonctionnalité:
+//     - Sélection d’une famille existante ou ajout d’une nouvelle.
+//     - Validation conditionnelle NewFamily obligatoire si NEW_OPTION sélectionné.
+//     - Normalisation (Trim) cohérente avec la validation Domain.
+//     - Conversion sécurisée vers l’entité Domain via mutateurs.
+//     - Support ReturnUrl et actions DRD dans les vues.
 //
-// Modifications
-//     2025-12-09    Conformité DRD v10 : ressources strongly-typed,
-//                   ajout EntityName/UseActionButtons, ReturnUrl public.
-//     2025-12-07    Mise à jour ToEntity() pour SetFamily/SetDescriptions.
-//     2025-12-07    Version initiale DRD v10.
+// Modifications:
+//     2025-12-11	Ajout interface IValidatableObject, validation conditionnelle,
+//					renommage NEW_OPTION, Trim(), ToEntity corrigé (IsActive).
+//     2025-12-09	Harmonisation AvailableFamilies/SelectedFamily/NewFamily.
+//     2025-12-09	Conformité DRD v10 : ressources strongly-typed + metadata actions.
+//     2025-12-07	Version initiale DRD v10.
 // ============================================================================
 
-using DRD.Domain.Entities.GrpSystemTables;
-using DRD.Resources.SystemTables;
-using DRD.Resources.Common;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DRD.Domain.Entities.GrpSystemTables;
+using DRD.Resources.Common;
+using DRD.Resources.LabelNames;
+using DRD.Resources.MessagesMetier.CdSet;
 
 namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 {
-    /// <summary>
-    /// ViewModel utilisé pour la création d’un nouvel enregistrement CdSet.
-    /// </summary>
-    public class CdSetCreateVM
-    {
-        // --------------------------------------------------------------------
-        // REGION : Famille (TypeCode UI)
-        // --------------------------------------------------------------------
-        /// <summary>
-        /// Gestion des familles existantes ou création d'une nouvelle.
-        /// </summary>
-        #region Famille
+	/// <summary>
+	/// ViewModel utilisé pour la création d’un nouvel enregistrement CdSet.
+	/// Intègre validation conditionnelle et normalisation DRD v10.
+	/// </summary>
+	public class CdSetCreateVM : IValidatableObject
+	{
+		/// <summary>
+		/// Valeur interne du dropdown permettant d’afficher la zone "Nouvelle famille".
+		/// </summary>
+		public const string NEW_OPTION = "_NEW_";
 
-        /// <summary>Liste des familles existantes.</summary>
-        public IEnumerable<string> AvailableTypeCodes { get; set; } = new List<string>();
+		// --------------------------------------------------------------------
+		// REGION : Famille
+		// --------------------------------------------------------------------
+		#region Famille
 
-        /// <summary>Famille sélectionnée dans la liste.</summary>
-        [Display(Name = nameof(SystemTables.CdSet_Family_Label), ResourceType = typeof(SystemTables))]
-        public string? SelectedTypeCode { get; set; }
+		/// <summary>Liste des familles existantes à afficher dans le dropdown.</summary>
+		public IEnumerable<string> AvailableFamilies { get; set; } = new List<string>();
 
-        /// <summary>Nouvelle famille si l’utilisateur choisit l’option dédiée.</summary>
-        [StringLength(20)]
-        [Display(Name = nameof(SystemTables.CdSet_Family_New_Label), ResourceType = typeof(SystemTables))]
-        public string? NewTypeCode { get; set; }
+		/// <summary>Famille sélectionnée par l’usager (existante ou NEW_OPTION).</summary>
+		[Display(Name = nameof(CdSetLN.Field_TypeCode), ResourceType = typeof(CdSetLN))]
+		public string? SelectedFamily { get; set; }
 
-        /// <summary>Choix final (nouvelle ou existante).</summary>
-        public string TypeCodeFinal =>
-            SelectedTypeCode == SystemTables.CdSet_Family_NewOption
-                ? NewTypeCode ?? string.Empty
-                : SelectedTypeCode ?? string.Empty;
+		/// <summary>Nouvelle famille saisie si l’usager choisit NEW_OPTION.</summary>
+		[StringLength(20)]
+		[Display(Name = nameof(CdSetLN.NewFamily), ResourceType = typeof(CdSetLN))]
+		public string? NewFamily { get; set; }
 
-        #endregion
+		/// <summary>
+		/// Détermine la valeur finale du TypeCode selon le choix de l’usager.
+		/// Trim systématique pour harmoniser avec la validation Domain.
+		/// </summary>
+		public string TypeCodeFinal =>
+			SelectedFamily == NEW_OPTION
+				? (NewFamily?.Trim() ?? string.Empty)
+				: (SelectedFamily?.Trim() ?? string.Empty);
 
+		#endregion
 
-        // --------------------------------------------------------------------
-        // REGION : Champs du Code
-        // --------------------------------------------------------------------
-        /// <summary>
-        /// Champs principaux du CdSet (Code + Descriptions).
-        /// </summary>
-        #region Code
+		// --------------------------------------------------------------------
+		// REGION : Champs du Code
+		// --------------------------------------------------------------------
+		#region Code
 
-        [Required(ErrorMessageResourceName = nameof(Common.Validation_Required), ErrorMessageResourceType = typeof(Common))]
-        [StringLength(20)]
-        [Display(Name = nameof(SystemTables.CdSet_Code_Label), ResourceType = typeof(SystemTables))]
-        public string Code { get; set; } = string.Empty;
+		[Required(ErrorMessageResourceName = nameof(Common.Validation_Required),
+				  ErrorMessageResourceType = typeof(Common))]
+		[StringLength(20)]
+		[Display(Name = nameof(CdSetLN.Field_Code), ResourceType = typeof(CdSetLN))]
+		public string Code { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceName = nameof(Common.Validation_Required), ErrorMessageResourceType = typeof(Common))]
-        [StringLength(50)]
-        [Display(Name = nameof(SystemTables.CdSet_DescriptionFr_Label), ResourceType = typeof(SystemTables))]
-        public string DescriptionFr { get; set; } = string.Empty;
+		[Required(ErrorMessageResourceName = nameof(Common.Validation_Required),
+				  ErrorMessageResourceType = typeof(Common))]
+		[StringLength(50)]
+		[Display(Name = nameof(CdSetLN.Field_DescriptionFr), ResourceType = typeof(CdSetLN))]
+		public string DescriptionFr { get; set; } = string.Empty;
 
-        [StringLength(50)]
-        [Display(Name = nameof(SystemTables.CdSet_DescriptionEn_Label), ResourceType = typeof(SystemTables))]
-        public string? DescriptionEn { get; set; }
+		[StringLength(50)]
+		[Display(Name = nameof(CdSetLN.Field_DescriptionEn), ResourceType = typeof(CdSetLN))]
+		public string? DescriptionEn { get; set; }
 
-        /// <summary>URL de retour DRD.</summary>
-        public string? ReturnUrl { get; set; }
+		/// <summary>État actif/inactif du CdSet.</summary>
+		public bool IsActive { get; set; } = true;
 
-        #endregion
+		/// <summary>URL de retour après création.</summary>
+		public string? ReturnUrl { get; set; }
 
+		#endregion
 
-        // --------------------------------------------------------------------
-        // REGION : Conversion vers entité Domain
-        // --------------------------------------------------------------------
-        /// <summary>
-        /// Conversion vers entité Domain via mutateurs DRD v10.
-        /// </summary>
-        #region Mapping
+		// --------------------------------------------------------------------
+		// REGION : Mapping Domain
+		// --------------------------------------------------------------------
+		#region Mapping
 
-        public CdSet ToEntity()
-        {
-            var entity = new CdSet();
+		/// <summary>
+		/// Convertit ce ViewModel vers une entité CdSet Domain avec mutateurs sécurisés.
+		/// </summary>
+		public CdSet ToEntity()
+		{
+			var entity = new CdSet();
 
-            entity.SetFamily(TypeCodeFinal);
-            entity.SetCodeValue(Code);
-            entity.SetDescriptions(DescriptionFr, DescriptionEn);
-            entity.IsActive = true;
+			entity.SetFamily(TypeCodeFinal);
+			entity.SetCodeValue(Code?.Trim() ?? string.Empty);
+			entity.SetDescriptions(DescriptionFr?.Trim() ?? string.Empty,
+								   DescriptionEn?.Trim());
+			entity.IsActive = IsActive;
 
-            return entity;
-        }
+			return entity;
+		}
 
-        #endregion
+		#endregion
 
+		// --------------------------------------------------------------------
+		// REGION : Validation conditionnelle
+		// --------------------------------------------------------------------
+		#region Validation
 
-        // --------------------------------------------------------------------
-        // REGION : Actions DRD
-        // --------------------------------------------------------------------
-        /// <summary>
-        /// Métadonnées UI pour intégration automatique des actions DRD.
-        /// </summary>
-        #region Actions
+		/// <summary>
+		/// Validation conditionnelle DRD : NewFamily obligatoire si NEW_OPTION est sélectionné.
+		/// </summary>
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			if (SelectedFamily == NEW_OPTION)
+			{
+				if (string.IsNullOrWhiteSpace(NewFamily))
+				{
+					yield return new ValidationResult(
+						CdSetMM.Validation_NewFamilyRequired,
+						new[] { nameof(NewFamily) }
+					);
+				}
+			}
+		}
 
-        public string EntityName { get; set; } = "CdSet";
-        public bool UseActionButtons { get; set; } = true;
+		#endregion
 
-        #endregion
-    }
+		// --------------------------------------------------------------------
+		// REGION : Actions DRD
+		// --------------------------------------------------------------------
+		#region Actions
+
+		/// <summary>Nom de l’entité affichée dans les boutons d’actions DRD.</summary>
+		public string EntityName { get; set; } = "CdSet";
+
+		/// <summary>Indique s’il faut afficher les boutons d’action DRD.</summary>
+		public bool UseActionButtons { get; set; } = true;
+
+		#endregion
+	}
 }

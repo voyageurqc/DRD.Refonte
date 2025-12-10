@@ -19,7 +19,7 @@ namespace DRD.Resources.EntityTitles {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CdSetTitle {
@@ -57,6 +57,33 @@ namespace DRD.Resources.EntityTitles {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ajouter un nouveau code.
+        /// </summary>
+        public static string CdSet_Create_Title {
+            get {
+                return ResourceManager.GetString("CdSet_Create_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code paramétrique.
+        /// </summary>
+        public static string CdSet_EntityName {
+            get {
+                return ResourceManager.GetString("CdSet_EntityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liste des Familles de code disponibles.
+        /// </summary>
+        public static string Field_TypeCode_List_Title {
+            get {
+                return ResourceManager.GetString("Field_TypeCode_List_Title", resourceCulture);
             }
         }
     }

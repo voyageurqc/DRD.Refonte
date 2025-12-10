@@ -19,7 +19,7 @@ namespace DRD.Resources.LabelNames {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CdSetLN {
@@ -57,6 +57,60 @@ namespace DRD.Resources.LabelNames {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        public static string Field_Code {
+            get {
+                return ResourceManager.GetString("Field_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Field_Description {
+            get {
+                return ResourceManager.GetString("Field_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description (Anglais).
+        /// </summary>
+        public static string Field_DescriptionEn {
+            get {
+                return ResourceManager.GetString("Field_DescriptionEn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description (Français).
+        /// </summary>
+        public static string Field_DescriptionFr {
+            get {
+                return ResourceManager.GetString("Field_DescriptionFr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Famille.
+        /// </summary>
+        public static string Field_TypeCode {
+            get {
+                return ResourceManager.GetString("Field_TypeCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nouvelle Famille de code.
+        /// </summary>
+        public static string NewFamily {
+            get {
+                return ResourceManager.GetString("NewFamily", resourceCulture);
             }
         }
     }

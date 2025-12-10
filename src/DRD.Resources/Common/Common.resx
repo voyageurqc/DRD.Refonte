@@ -139,7 +139,7 @@
     <value>Fermer</value>
   </data>
   <data name="ConnectedOn" xml:space="preserve">
-    <value>Connecté le</value>
+    <value>Connecté le:</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Une erreur est survenue</value>
@@ -179,5 +179,29 @@
   </data>
   <data name="UNI_Name" xml:space="preserve">
     <value>UNI Institution Financière</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Activité</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Select_All" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="CreatedOn" xml:space="preserve">
+    <value>Créé le :</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Créé par:</value>
+  </data>
+  <data name="ModifiedOn" xml:space="preserve">
+    <value>Modifié le:</value>
+  </data>
+  <data name="ModifiedBy" xml:space="preserve">
+    <value>Modifié par:</value>
   </data>
 </root>

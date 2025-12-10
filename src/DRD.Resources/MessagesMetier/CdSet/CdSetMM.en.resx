@@ -118,18 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CdSetMM_BusinessRule_XYZ" xml:space="preserve">
-    <value>Cette opération enfreint une règle métier propre au module CdSet.</value>
+    <value>This operation violates a business rule specific to the CdSet module.
+</value>
   </data>
   <data name="CdSetMM_Error_Duplicate" xml:space="preserve">
-    <value>Un CdSet avec cette clé existe déjà.</value>
+    <value>A CdSet with this key already exists.</value>
   </data>
   <data name="CdSetMM_Error_InUse" xml:space="preserve">
-    <value>Impossible de supprimer cet élément CdSet, car il est actuellement utilisé.</value>
+    <value>This CdSet entry cannot be deleted because it is currently in use.
+</value>
   </data>
   <data name="CdSetMM_Validation_CodeRequired" xml:space="preserve">
-    <value>Le champ Code est requis.</value>
+    <value>The Code field is required.
+</value>
   </data>
   <data name="CdSetMM_Validation_TypeCodeRequired" xml:space="preserve">
-    <value>Le champ TypeCode est requis.</value>
+    <value>The TypeCode field is required.
+</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>Choose Category</value>
+  </data>
+  <data name="Validation_NewFamilyRequired" xml:space="preserve">
+    <value>This field is required</value>
   </data>
 </root>

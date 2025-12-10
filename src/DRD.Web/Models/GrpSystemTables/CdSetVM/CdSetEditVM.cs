@@ -3,7 +3,7 @@
 // Nom du fichier                 CdSetEditVM.cs
 // Type de fichier                ViewModel
 // Classe                         CdSetEditVM
-// Emplacement                    Models/GrpSystemTables/CdSetVM
+// Emplacement                    Models/GrpCdSetLN/CdSetVM
 // Entités concernées             CdSet (édition)
 // Créé le                        2025-12-07
 //
@@ -21,87 +21,121 @@
 //     - Compatible avec les actions standard DRD (View/Edit/Delete).
 //
 // Modifications
-//     2025-12-09    Conformité DRD v10 : ressources strongly-typed + ajout UseActionButtons
-//                   + suppression ApplyToEntity.
+//     2025-12-11    DRD v10 : correction CS1587 (summary de région → commentaire régulier)
+//                   et maintien CS1591 (XML sur propriétés uniquement).
+//     2025-12-11    DRD v10 : ajout des commentaires XML requis pour CS1591.
+//     2025-12-09    Conformité DRD v10 : ressources strongly-typed + ajout UseActionButtons.
 //     2025-12-07    Version initiale DRD v10.
 // ============================================================================
 
 using System.ComponentModel.DataAnnotations;
-using DRD.Resources.SystemTables;
-using DRD.Resources.FieldNames;
+using DRD.Resources.Common;
+using DRD.Resources.LabelNames;
 
-namespace DRD.Web.Models.GrpSystemTables.CdSetVM
+namespace DRD.Web.Models.GrpCdSetLN.CdSetVM
 {
-    /// <summary>
-    /// ViewModel utilisé pour la modification d’un CdSet existant.
-    /// </summary>
-    public class CdSetEditVM
-    {
-        // --------------------------------------------------------------------
-        // REGION : Identification
-        // --------------------------------------------------------------------
-        /// <summary>Champs structuraux TypeCode et Code (lecture seule).</summary>
-        #region Identification
+	/// <summary>
+	/// ViewModel utilisé pour la modification d’un enregistrement CdSet existant.
+	/// Contient les champs structuraux non modifiables et les champs éditables.
+	/// </summary>
+	public class CdSetEditVM
+	{
+		// --------------------------------------------------------------------
+		// REGION : Identification
+		// --------------------------------------------------------------------
+		// <summary>
+		//     Informations d’identification de la clé composite TypeCode + Code (lecture seule).
+		// </summary>
+		#region Identification
 
-        [Display(Name = nameof(CdSet_Family_Label), ResourceType = typeof(SystemTables))]
-        public string TypeCode { get; set; } = string.Empty;
+		/// <summary>
+		/// Famille du code paramétrique. Non modifiable afin de préserver la clé composite.
+		/// </summary>
+		[Display(Name = nameof(CdSetLN.Field_TypeCode), ResourceType = typeof(CdSetLN))]
+		public string TypeCode { get; set; } = string.Empty;
 
-        [Display(Name = nameof(CdSet_Code_Label), ResourceType = typeof(SystemTables))]
-        public string Code { get; set; } = string.Empty;
+		/// <summary>
+		/// Code unique dans la famille. Non modifiable.
+		/// </summary>
+		[Display(Name = nameof(CdSetLN.Field_Code), ResourceType = typeof(CdSetLN))]
+		public string Code { get; set; } = string.Empty;
 
-        #endregion
-
-
-        // --------------------------------------------------------------------
-        // REGION : Descriptions
-        // --------------------------------------------------------------------
-        /// <summary>Descriptions éditables FR/EN.</summary>
-        #region Descriptions
-
-        [Required(ErrorMessageResourceName = nameof(Common.Validation_Required),
-                  ErrorMessageResourceType = typeof(Common.Common))]
-        [StringLength(50)]
-        [Display(Name = nameof(CdSet_DescriptionFr_Label), ResourceType = typeof(SystemTables))]
-        public string DescriptionFr { get; set; } = string.Empty;
-
-        [StringLength(50)]
-        [Display(Name = nameof(CdSet_DescriptionEn_Label), ResourceType = typeof(SystemTables))]
-        public string? DescriptionEn { get; set; }
-
-        #endregion
+		#endregion
 
 
-        // --------------------------------------------------------------------
-        // REGION : État
-        // --------------------------------------------------------------------
-        /// <summary>Activation / désactivation du CdSet.</summary>
-        #region État
+		// --------------------------------------------------------------------
+		// REGION : Descriptions
+		// --------------------------------------------------------------------
+		// <summary>
+		//     Descriptions bilingues modifiables (FR / EN).
+		// </summary>
+		#region Descriptions
 
-        [Display(Name = nameof(CdSet_IsActive_Label), ResourceType = typeof(SystemTables))]
-        public bool IsActive { get; set; } = true;
+		/// <summary>
+		/// Description française. Champ requis.
+		/// </summary>
+		[Required(ErrorMessageResourceName = nameof(Common.Validation_Required),
+				  ErrorMessageResourceType = typeof(Common))]
+		[StringLength(50)]
+		[Display(Name = nameof(CdSetLN.Field_DescriptionFr), ResourceType = typeof(CdSetLN))]
+		public string DescriptionFr { get; set; } = string.Empty;
 
-        #endregion
+		/// <summary>
+		/// Description anglaise. Optionnelle.
+		/// </summary>
+		[StringLength(50)]
+		[Display(Name = nameof(CdSetLN.Field_DescriptionEn), ResourceType = typeof(CdSetLN))]
+		public string? DescriptionEn { get; set; }
+
+		#endregion
 
 
-        // --------------------------------------------------------------------
-        // REGION : Navigation
-        // --------------------------------------------------------------------
-        /// <summary>URL de retour contrôlé.</summary>
-        #region Navigation
+		// --------------------------------------------------------------------
+		// REGION : État
+		// --------------------------------------------------------------------
+		// <summary>
+		//     Indicateur d’activation ou de désactivation du CdSet.
+		// </summary>
+		#region État
 
-        public string? ReturnUrl { get; set; }
+		/// <summary>
+		/// True si l’entrée est active, False si désactivée.
+		/// </summary>
+		[Display(Name = nameof(Common.IsActive), ResourceType = typeof(Common))]
+		public bool IsActive { get; set; } = true;
 
-        #endregion
+		#endregion
 
 
-        // --------------------------------------------------------------------
-        // REGION : Actions DRD
-        // --------------------------------------------------------------------
-        /// <summary>Boutons standardisés Activer / Modifier / Supprimer.</summary>
-        #region Actions
+		// --------------------------------------------------------------------
+		// REGION : Navigation
+		// --------------------------------------------------------------------
+		// <summary>
+		//     Paramètre de navigation permettant un retour contrôlé vers la page précédente.
+		// </summary>
+		#region Navigation
 
-        public bool UseActionButtons { get; set; } = true;
+		/// <summary>
+		/// URL de retour après l'édition.
+		/// </summary>
+		public string? ReturnUrl { get; set; }
 
-        #endregion
-    }
+		#endregion
+
+
+		// --------------------------------------------------------------------
+		// REGION : Actions DRD
+		// --------------------------------------------------------------------
+		// <summary>
+		//     Paramètres activant les boutons DRD standardisés (View / Edit / Delete).
+		// </summary>
+		#region Actions
+
+		/// <summary>
+		/// Indique si les boutons d’action standard DRD doivent être affichés.
+		/// </summary>
+		public bool UseActionButtons { get; set; } = true;
+
+		#endregion
+	}
 }

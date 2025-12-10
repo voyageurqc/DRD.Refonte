@@ -21,16 +21,24 @@ Fonctionnalité
     - Prend en charge ReturnUrl et Toastr
 
 Modifications
+    2025-12-11    Version DRD : correction option NEW, suppression doublons,
+                  correction ReturnUrl, harmonisation BS5, script NEW_OPTION dynamique.
     2025-12-07    Version initiale DRD v10.
 ============================================================================ *@
 
-@using static DRD.Resources.FieldNames.CdSetFieldNames
-@using static DRD.Resources.Common
 @using DRD.Web.Models.GrpSystemTables.CdSetVM
 @model CdSetCreateVM
 
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.MessagesMetier.CdSet.CdSetMM
+@using static DRD.Resources.EntityTitles.CdSetTitle
+@using static DRD.Resources.Popups.Popups
+
 @{
-    ViewData["Title"] = CdSet_Create;
+    ViewData["Title"] = CdSet_Create_Title;
+
     var families = Model.AvailableFamilies ?? new List<string>();
 }
 
@@ -39,15 +47,15 @@ Modifications
 <form asp-action="Create" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
 
-    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+    @* Use asp-for instead of manual hidden field *@
+    <input asp-for="ReturnUrl" type="hidden" />
 
     <!-- ================================
          Famille (TypeCode) Dropdown
          ================================ -->
     <div class="row mb-3">
-        <label class="col-sm-3 col-form-label">@TypeCode</label>
+        <label class="col-sm-3 col-form-label">@Field_TypeCode</label>
         <div class="col-sm-6">
-
             <select asp-for="SelectedFamily" class="form-select" id="familySelect">
                 <option value="">-- @Common_Select --</option>
 
@@ -55,8 +63,6 @@ Modifications
                 {
                     <option value="@fam">@fam</option>
                 }
-
-                <option value="_NEW_">@NewFamily</option>
             </select>
 
             <span asp-validation-for="SelectedFamily" class="text-danger"></span>
@@ -78,7 +84,7 @@ Modifications
          Code
          ======================== -->
     <div class="row mb-3">
-        <label class="col-sm-3 col-form-label">@Code</label>
+        <label class="col-sm-3 col-form-label">@Field_Code</label>
         <div class="col-sm-6">
             <input asp-for="Code" class="form-control" />
             <span asp-validation-for="Code" class="text-danger"></span>
@@ -89,7 +95,7 @@ Modifications
          DescriptionFr
          ======================== -->
     <div class="row mb-3">
-        <label class="col-sm-3 col-form-label">@DescriptionFr</label>
+        <label class="col-sm-3 col-form-label">@Field_DescriptionFr</label>
         <div class="col-sm-6">
             <input asp-for="DescriptionFr" class="form-control" />
             <span asp-validation-for="DescriptionFr" class="text-danger"></span>
@@ -100,7 +106,7 @@ Modifications
          DescriptionEn
          ======================== -->
     <div class="row mb-3">
-        <label class="col-sm-3 col-form-label">@DescriptionEn</label>
+        <label class="col-sm-3 col-form-label">@Field_DescriptionEn</label>
         <div class="col-sm-6">
             <input asp-for="DescriptionEn" class="form-control" />
             <span asp-validation-for="DescriptionEn" class="text-danger"></span>
@@ -152,7 +158,7 @@ Modifications
             const newFamilyRow = document.getElementById("newFamilyRow");
 
             function updateFamilyUI() {
-                if (familySelect.value === "_NEW_") {
+                if (familySelect.value === "@CdSetCreateVM.NEW_OPTION") {
                     newFamilyRow.style.display = "flex";
                 } else {
                     newFamilyRow.style.display = "none";

@@ -135,4 +135,10 @@
   <data name="Warning" xml:space="preserve">
     <value>Attention</value>
   </data>
+  <data name="Confirm_Deactivate_Message_Entity" xml:space="preserve">
+    <value>Voulez-vous désactiver {0} ({1}) ?</value>
+  </data>
+  <data name="Confirm_Delete_Message_Entity" xml:space="preserve">
+    <value>Voulez-vous supprimer {0} ({1}) ? Cette action est définitive.</value>
+  </data>
 </root>

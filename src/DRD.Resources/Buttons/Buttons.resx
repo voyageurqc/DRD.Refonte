@@ -201,4 +201,7 @@
   <data name="Button_Metadata" xml:space="preserve">
     <value>Afficher les champs Audit</value>
   </data>
+  <data name="Button_Save_And_Continue" xml:space="preserve">
+    <value>Sauve et Continue</value>
+  </data>
 </root>

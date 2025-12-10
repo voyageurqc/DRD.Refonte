@@ -78,7 +78,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Menu.resx</DependentUpon>
     </Compile>
-    <Compile Update="MessagesMetier\CdSetMM.Designer.cs">
+    <Compile Update="MessagesMetier\CdSet\CdSetMM.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>CdSetMM.resx</DependentUpon>
@@ -108,11 +108,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CdSetToastr.resx</DependentUpon>
     </Compile>
-    <Compile Update="ToastrMessages\ClientToastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ClientToastr.resx</DependentUpon>
-    </Compile>
     <Compile Update="ToastrMessages\GenericToastr.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -122,11 +117,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IdentityEntityToastr.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ToastrMessages\InstitutionToastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>InstitutionToastr.resx</DependentUpon>
     </Compile>
     <Compile Update="Toastr\Toastr.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -196,7 +186,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Menu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="MessagesMetier\CdSetMM.resx">
+    <EmbeddedResource Update="MessagesMetier\CdSet\CdSetMM.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CdSetMM.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -232,10 +222,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CdSetToastr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="ToastrMessages\ClientToastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ClientToastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="ToastrMessages\GenericToastr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GenericToastr.Designer.cs</LastGenOutput>
@@ -243,10 +229,6 @@
     <EmbeddedResource Update="ToastrMessages\IdentityEntityToastr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IdentityEntityToastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ToastrMessages\InstitutionToastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>InstitutionToastr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Toastr\Toastr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

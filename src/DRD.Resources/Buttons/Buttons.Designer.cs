@@ -268,6 +268,15 @@ namespace DRD.Resources.Buttons {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sauve et Continue.
+        /// </summary>
+        public static string Button_Save_And_Continue {
+            get {
+                return ResourceManager.GetString("Button_Save_And_Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rechercher.
         /// </summary>
         public static string Button_Search {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DRD.Resources.MessagesMetier {
+namespace DRD.Resources.MessagesMetier.CdSet {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace DRD.Resources.MessagesMetier {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CdSetMM {
@@ -39,7 +39,7 @@ namespace DRD.Resources.MessagesMetier {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.MessagesMetier.CdSetMM", typeof(CdSetMM).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.MessagesMetier.CdSet.CdSetMM", typeof(CdSetMM).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -102,6 +102,24 @@ namespace DRD.Resources.MessagesMetier {
         public static string CdSetMM_Validation_TypeCodeRequired {
             get {
                 return ResourceManager.GetString("CdSetMM_Validation_TypeCodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choisir la Famille.
+        /// </summary>
+        public static string Common_Select {
+            get {
+                return ResourceManager.GetString("Common_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ce Champs est requis.
+        /// </summary>
+        public static string Validation_NewFamilyRequired {
+            get {
+                return ResourceManager.GetString("Validation_NewFamilyRequired", resourceCulture);
             }
         }
     }

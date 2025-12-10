@@ -163,7 +163,7 @@ try
     // Région DRD – Logging Dependency Injection
     // ============================================================================
     /// <summary>
-    /// Enables dependency injection for ILogger<T> across the DRD solution.
+    /// Enables dependency injection for ILogger&lt;T&gt; across the DRD solution.
     /// </summary>
     builder.Services.AddLogging();
 
