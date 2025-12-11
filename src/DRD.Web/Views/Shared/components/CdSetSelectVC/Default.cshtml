@@ -1,0 +1,61 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Fichier                        Default.cshtml
+Type                           Razor View (MVC)
+Classe                         CdSetSelect ViewComponent
+Emplacement                    Views/Shared/Components/CdSetSelect
+Entités concernées             CdSetSelectVM, CdSetSelectItemVM
+Créé le                        2025-12-11
+
+Description
+    Vue Razor DRDv10 utilisée pour rendre un champ de sélection basé
+    sur un CdSet. Le composant génère automatiquement :
+      - un label localisé basé sur asp-for
+      - un select Bootstrap + input-3d
+      - les options “CODE - DescriptionLocalized”
+      - un placeholder si fourni
+      - la validation MVC
+
+Fonctionnalité
+    - Sélecteur Bootstrap 5 stable et lisible
+    - Compatibilité totale MVC (asp-for, asp-validation-for)
+    - Support multilingue via DisplayText (fr/en)
+    - Style uniforme DRDv10 (input-3d)
+
+Modifications
+    2025-12-11    Version initiale DRDv10.
+============================================================================ *@
+
+@model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetSelectVM
+@using static DRD.Resources.Common.Common
+
+<div class="mb-3">
+
+    <!-- Label automatique basé sur asp-for -->
+    <label asp-for="@Model.SelectedCode" class="form-label fw-bold"></label>
+
+    <!-- Champ sélection -->
+    <select asp-for="@Model.SelectedCode"
+            class="form-select input-3d"
+            aria-label="@Model.Placeholder">
+
+        @* Placeholder option *@
+        @if (!string.IsNullOrWhiteSpace(Model.Placeholder))
+        {
+            <option value="">-- @Model.Placeholder --</option>
+        }
+
+        @* Elements du CdSet *@
+        @foreach (var item in Model.Items)
+        {
+            <option value="@item.Code"
+                    selected="@(item.Code == Model.SelectedCode ? "selected" : null)">
+                @item.DisplayText
+            </option>
+        }
+    </select>
+
+    <!-- Zone de validation MVC -->
+    <span asp-validation-for="@Model.SelectedCode" class="text-danger"></span>
+
+</div>

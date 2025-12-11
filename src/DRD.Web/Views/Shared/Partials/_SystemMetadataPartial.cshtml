@@ -1,37 +1,32 @@
-﻿@* ============================================================================
-Projet                         DRD.Web
-Nom du fichier                 _SystemMetadataPartial.cshtml
-Type de fichier                Vue partielle (Razor)
-Classe                         SystemMetadataPartial
-Emplacement                    Views/Shared/Partials
-Entité(s) concernées           EntityMetadataDto
-Créé le                        2025-12-08
+﻿// ============================================================================
+// Projet                         DRD.Application
+// Nom du fichier                 EntityMetadataMapper.cs
+// Type                           Classe utilitaire (Mapper)
+// Classe                         Class
+// Emplacement                    Popup/Mappers
+// Entité(s) concernées           EntityMetadataDto, IAuditableEntity
+// Créé le                        2025-12-12
+//
+// Description
+//     Mapper responsable de convertir une entité auditable Domain en DTO
+//     EntityMetadataDto pour affichage dans les vues DRD (Details, Edit,
+//     modale _SystemMetadataPartial).
+//
+// Fonctionnalité
+//     - Extrait et mappe les dates et identifiants d’audit.
+//     - Mappe l’état actif et le niveau de sécurité DRD.
+//     - Prépare l’enrichissement futur des noms complets via services.
+//
+// Modifications
+//     2025-12-12    Création DRD v10 complète : header, XML, mappage intégral.
+// ============================================================================
 
-Description
-    Modale Bootstrap affichant les métadonnées système d’une entité auditable.
-    Les informations proviennent de EntityMetadataDto et sont utilisées dans
-    les vues Details et Edit.
-
-Fonctionnalité
-    Affiche les dates et utilisateurs de création et modification.
-    Utilise les ressources DRD bilingues.
-    Compatible avec le système DRD de modales et boutons 3D.
-
-Modifications
-    2025-12-08    Version initiale.
-    2025-12-09    Conversion complète au standard DRDv10 (header, TAB, régions).
-============================================================================ *@
-
-@using DRD.Resources
 @using System.Globalization
+@using DRD.Application.Popup.Models
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.Popups.Popups
 @model DRD.Application.Popup.Models.EntityMetadataDto
-
-@{
-    #region DRD – Préparation du modèle
-    // Aucune logique supplémentaire nécessaire : la partial reçoit un EntityMetadataDto complet.
-    #endregion
-
-}
 
 <div class="modal fade"
      id="systemMetadataModal"
@@ -42,49 +37,45 @@ Modifications
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-3">
 
-            @* ============================================================
-               HEADER
-               ============================================================ *@
+            <!-- HEADER -->
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="systemMetadataLabel">
-                    <i class="fas fa-database"></i> @SystemTables.SystemInfoTitle
+                    <i class="fas fa-database"></i> @SystemInfoTitle      <!-- FIX -->
                 </h5>
 
                 <button type="button"
                         class="btn-close btn-close-white"
                         data-bs-dismiss="modal"
-                        aria-label="@Common.Button_Close">
+                        aria-label="@Button_Close">
                 </button>
             </div>
 
-            @* ============================================================
-               BODY
-               ============================================================ *@
+            <!-- BODY -->
             <div class="modal-body">
 
                 <ul class="list-group list-group-flush">
 
                     <li class="list-group-item">
                         <i class="fa-solid fa-calendar-plus"></i>
-                        @Common.CreatedOn
+                        @CreatedOn
                         <strong>@Model.CreationDate.ToString(CultureInfo.CurrentCulture)</strong>
                     </li>
 
                     <li class="list-group-item">
                         <i class="fa-solid fa-user"></i>
-                        @Common.CreatedBy
+                        @CreatedBy
                         <strong>@(Model.CreatedByName ?? Model.CreatedBy ?? "N/A")</strong>
                     </li>
 
                     <li class="list-group-item">
                         <i class="fa-solid fa-calendar-pen"></i>
-                        @Common.ModifiedOn
+                        @ModifiedOn
                         <strong>@Model.ModificationDate.ToString(CultureInfo.CurrentCulture)</strong>
                     </li>
 
                     <li class="list-group-item">
                         <i class="fa-solid fa-user-pen"></i>
-                        @Common.ModifiedBy
+                        @ModifiedBy
                         <strong>@(Model.UpdatedByName ?? Model.UpdatedBy ?? "N/A")</strong>
                     </li>
 

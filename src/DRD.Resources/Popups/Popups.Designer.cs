@@ -70,6 +70,15 @@ namespace DRD.Resources.Popups {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ville.
+        /// </summary>
+        public static string ApplicationUser_City {
+            get {
+                return ResourceManager.GetString("ApplicationUser_City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Êtes-vous certain ?.
         /// </summary>
         public static string AreYouSure {
@@ -120,6 +129,15 @@ namespace DRD.Resources.Popups {
         public static string Reject {
             get {
                 return ResourceManager.GetString("Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information autogéré.
+        /// </summary>
+        public static string SystemInfoTitle {
+            get {
+                return ResourceManager.GetString("SystemInfoTitle", resourceCulture);
             }
         }
         

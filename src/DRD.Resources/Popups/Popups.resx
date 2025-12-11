@@ -141,4 +141,10 @@
   <data name="Confirm_Delete_Message_Entity" xml:space="preserve">
     <value>Voulez-vous supprimer {0} ({1}) ? Cette action est définitive.</value>
   </data>
+  <data name="ApplicationUser_City" xml:space="preserve">
+    <value>Ville</value>
+  </data>
+  <data name="SystemInfoTitle" xml:space="preserve">
+    <value>Information autogéré</value>
+  </data>
 </root>

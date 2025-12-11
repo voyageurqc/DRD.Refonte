@@ -204,4 +204,13 @@
   <data name="ModifiedBy" xml:space="preserve">
     <value>Modified by:</value>
   </data>
+  <data name="Manage_Account" xml:space="preserve">
+    <value>Manage my account:</value>
+  </data>
+  <data name="TextActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="TextInactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
 </root>

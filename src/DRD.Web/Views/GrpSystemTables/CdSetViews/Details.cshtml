@@ -1,12 +1,13 @@
-﻿@*
+﻿@using DRD.Application.Popup.Models
+@*
 ===============================================================================
 Projet                         DRD.Web
 Fichier                        Details.cshtml
 Type                           Razor View (MVC)
 Classe                         CdSet Details View
-Emplacement                   Views/GrpSystemTables/CdSet
-Entités concernées            CdSetDetailsVM, EntityMetadataDto
-Créé le                       2025-12-08
+Emplacement                    Views/GrpSystemTables/CdSet
+Entités concernées             CdSetDetailsVM, EntityMetadataDto
+Créé le                        2025-12-08
 
 Description
     Vue présentant les détails d’un CdSet en mode lecture seule. Les clés
@@ -18,6 +19,7 @@ Fonctionnalité
     - Badge actif/inactif
     - Boutons Retour / Modifier
     - Modale Métadonnées
+
 Modifications
     2025-12-09   Conversion complète DRD v10 :
                  - utilisation CdSetDetailsVM
@@ -34,10 +36,8 @@ Modifications
 @using static DRD.Resources.Popups.Popups
 @using static DRD.Resources.EntityTitles.CdSetTitle
 
-@using DRD.Application.Popup.Models
-
 @{
-    ViewData["Title"] = Codeset_Details;
+    ViewData["Title"] = string.Format(CdSet_Detail_Title, Model.TypeCode, Model.Code);
 
     var returnUrl = Model.ReturnUrl ?? Url.Action("Index", "CdSet");
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
@@ -73,15 +73,15 @@ Modifications
 
     <!-- ACTIF / INACTIF -->
     <div class="mb-3">
-        <label class="form-label">@Field_IsActive</label><br />
+        <label class="form-label">@IsActive</label><br />
 
         @if (Model.IsActive)
         {
-            <span class="badge bg-success">@Active</span>
+            <span class="badge bg-success">@TextActive</span>
         }
         else
         {
-            <span class="badge bg-danger">@Inactive</span>
+            <span class="badge bg-danger">@TextInactive</span>
         }
     </div>
 
@@ -89,7 +89,9 @@ Modifications
     <div class="d-flex justify-content-between mt-4">
 
         <div>
-            <a href="@returnUrl" class="btn btn-secondary btn-3d me-2" title="@Button_Back">
+            <a href="@returnUrl"
+               class="btn btn-secondary btn-3d me-2"
+               title="@Button_Back">
                 <i class="fa-solid fa-arrow-left"></i> @Button_Back
             </a>
 
@@ -119,7 +121,8 @@ Modifications
 
 @if (metadata != null)
 {
-    <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml" model="metadata" />
+    <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml"
+             model="metadata" />
 }
 
 @section Scripts {

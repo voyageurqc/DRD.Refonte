@@ -2,9 +2,6 @@
 # GITIGNORE POUR DRD.Refonte (.NET 10 + MVC + DRD Standards)
 # =====================================================================
 
-# DRD convention: constants use SCREAMING_SNAKE_CASE with underscores
-dotnet_diagnostic.CA1707.severity = none
-
 ############################################
 # VISUAL STUDIO
 ############################################

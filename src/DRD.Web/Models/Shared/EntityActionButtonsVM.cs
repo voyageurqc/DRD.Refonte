@@ -28,7 +28,6 @@
 // ============================================================================
 
 using DRD.Resources;
-using DRD.Resources.Popup;
 using DRD.Resources.Popups;
 
 namespace DRD.Web.Models.Shared
@@ -68,13 +67,13 @@ namespace DRD.Web.Models.Shared
 
         #region Titres & messages localisés
         public string DeactivateTitle =>
-            Popups.Confirm_Deactivate_Title_Entity
-                .Replace("{0}", EntityIdentifier)
+            Popups.Confirm_Deactivate_Message_Entity
+				.Replace("{0}", EntityIdentifier)
                 .Replace("{1}", EntityName);
 
         public string DeleteTitle =>
-            Popups.Confirm_Delete_Title_Entity
-                .Replace("{0}", EntityIdentifier)
+            Popups.Confirm_Delete_Message_Entity
+				.Replace("{0}", EntityIdentifier)
                 .Replace("{1}", EntityName);
 
         public string DeactivateMessage =>

@@ -1,0 +1,62 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Default.cshtml
+Type                           Razor View (ViewComponent)
+Classe                         CdSetGroupRetrievalVC (vue)
+Emplacement                    Views/Shared/Components/CdSetGroupRetrieval
+Entités concernées             CdSetGroupRetrievalVM
+Créé le                        2025-12-11
+
+Description
+    Vue Razor associée au ViewComponent CdSetGroupRetrievalVC.
+    Affiche une liste groupée de CdSet sous forme de sections visuelles.
+    Conforme aux règles DRD v10 : Bootstrap 5, classes 3D, localisation via VM.
+
+Fonctionnalité
+    - Affichage des groupes avec titres localisés.
+    - Affichage des éléments (code + description).
+    - Support des listes dynamiques selon VM.
+    - Structure simple et réutilisable.
+
+Modifications
+    2025-12-11    Version initiale DRDv10.
+============================================================================ *@
+
+@model DRD.Web.Models.GrpSystemTables.CdSetVM.CdSetGroupFetchVM
+
+<div class="cdset-group-container">
+
+    @* Affichage des groupes *@
+    @foreach (var group in Model.Groups)
+    {
+        <div class="cdset-group-section mb-4">
+
+            @* Titre du groupe *@
+            <h5 class="fw-bold text-primary mb-2">
+                @group.GroupName
+            </h5>
+
+            @if (group.Items != null && group.Items.Any())
+            {
+                <ul class="list-group">
+
+                    @foreach (var item in group.Items)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <strong>@item.Code</strong> — @item.DescriptionLocalized
+                            </span>
+                        </li>
+                    }
+
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted fst-italic">
+                    @Model.NoItemsMessage
+                </p>
+            }
+        </div>
+    }
+</div>

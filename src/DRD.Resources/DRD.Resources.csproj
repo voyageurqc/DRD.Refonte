@@ -1,239 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 
-	<RootNamespace>DRD.Resources</RootNamespace>
-	<AssemblyName>DRD.Resources</AssemblyName>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Title>DRD Shared Localization Resources</Title>
+		<RootNamespace>DRD.Resources</RootNamespace>
+		<AssemblyName>DRD.Resources</AssemblyName>
+	</PropertyGroup>
 
-  </PropertyGroup>
+	<!-- Designer seulement pour les fichiers .resx principaux -->
+	<ItemGroup>
+		<!-- Génère Designer.cs UNIQUEMENT pour les .resx principaux -->
+		<EmbeddedResource Update="**\*.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>%(Filename).Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 
-  <ItemGroup>
-    <Compile Update="Buttons\Buttons.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Buttons.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Common\Common.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Common.resx</DependentUpon>
-    </Compile>
-    <Compile Update="EntityTitles\CdSetTitle.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CdSetTitle.resx</DependentUpon>
-    </Compile>
-    <Compile Update="EntityTitles\ClientTitle.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ClientTitle.resx</DependentUpon>
-    </Compile>
-    <Compile Update="EntityTitles\IdentityEntityTitle.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IdentityEntityTitle.resx</DependentUpon>
-    </Compile>
-    <Compile Update="EntityTitles\InstitutionTitle.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>InstitutionTitle.resx</DependentUpon>
-    </Compile>
-    <Compile Update="FieldNames\FieldNames.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>FieldNames.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Informations\Informations.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Informations.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LabelNames\CdSetLN.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CdSetLN.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LabelNames\ClientLN.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ClientLN.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LabelNames\IdentityEntityLN.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IdentityEntityLN.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LabelNames\InstitutionLN.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>InstitutionLN.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Menu\Menu.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Menu.resx</DependentUpon>
-    </Compile>
-    <Compile Update="MessagesMetier\CdSet\CdSetMM.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CdSetMM.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Popups\Popups.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Popups.resx</DependentUpon>
-    </Compile>
-    <Compile Update="RS_Layout\Layout.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Layout.resx</DependentUpon>
-    </Compile>
-    <Compile Update="RS_Layout\NavBar.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>NavBar.resx</DependentUpon>
-    </Compile>
-    <Compile Update="RS_Layout\SideBar.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SideBar.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ToastrMessages\CdSetToastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CdSetToastr.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ToastrMessages\GenericToastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GenericToastr.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ToastrMessages\IdentityEntityToastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IdentityEntityToastr.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Toastr\Toastr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Toastr.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+		<!-- Désactive le générateur pour les fichiers .en.resx -->
+		<EmbeddedResource Update="**\*.en.resx">
+			<Generator></Generator>
+		</EmbeddedResource>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Buttons.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Buttons.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Buttons\Buttons.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Buttons.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Common\Common.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Common.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="EntityTitles\CdSetTitle.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>CdSetTitle.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="EntityTitles\ClientTitle.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ClientTitle.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="EntityTitles\IdentityEntityTitle.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>IdentityEntityTitle.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="EntityTitles\InstitutionTitle.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>InstitutionTitle.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="FieldNames\FieldNames.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>FieldNames.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Informations.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Informations.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Informations\Informations.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Informations.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LabelNames\CdSetLN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>CdSetLN.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LabelNames\ClientLN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ClientLN.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LabelNames\IdentityEntityLN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>IdentityEntityLN.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LabelNames\InstitutionLN.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>InstitutionLN.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Menu\Menu.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="MessagesMetier\CdSet\CdSetMM.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>CdSetMM.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="NavBar.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>NavBar.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Popups\Popups.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Popups.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Popup\Popup.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Popup.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="RS_Layout\Layout.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Layout.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="RS_Layout\NavBar.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>NavBar.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="RS_Layout\SideBar.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SideBar.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SideBar.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SideBar.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ToastrMessages\CdSetToastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>CdSetToastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ToastrMessages\GenericToastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>GenericToastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ToastrMessages\IdentityEntityToastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>IdentityEntityToastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Toastr\Toastr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Toastr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+		<!-- Lier chaque Designer à son .resx -->
+		<Compile Update="**\*.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>%(Filename).resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
 </Project>

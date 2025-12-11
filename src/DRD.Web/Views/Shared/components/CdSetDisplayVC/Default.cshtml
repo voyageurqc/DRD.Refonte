@@ -1,0 +1,32 @@
+﻿@* ============================================================================
+Projet                         DRD.Web
+Nom du fichier                 Default.cshtml
+Type                           Razor View
+Classe                         CdSetDisplayVC (ViewComponent View)
+Emplacement                    Views/Shared/Components/CdSetDisplayVC
+Entités concernées             CdSet
+Créé le                        2025-12-11
+
+Description
+    Vue du ViewComponent CdSetDisplayVC. Affiche un texte readonly représentant
+    un code paramétrique sous forme : « CODE — DescriptionLocale ».
+
+Fonctionnalité
+    - Aucun style imposé, adaptable par la vue appelante.
+    - Protection valeur vide ou null.
+    - Utilisé dans : Details / Summaries / ReadOnly Blocks.
+
+Modifications
+    2025-12-11    Version initiale conforme DRD v10.
+============================================================================ *@
+
+@model string
+
+@if (string.IsNullOrWhiteSpace(Model))
+{
+    <span class="text-muted">—</span>
+}
+else
+{
+    <span>@Model</span>
+}

@@ -41,15 +41,15 @@ namespace DRD.Web.Controllers
         /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
 
-        /// <summary>
-        /// Logger Serilog (diagnostic uniquement, messages toujours en anglais).
-        /// </summary>
-        private readonly ILogger _logger;
+		/// <summary>
+		/// Logger Serilog (diagnostic uniquement, messages toujours en anglais).
+		/// </summary>
+		private readonly Serilog.ILogger _logger;
 
-        /// <summary>
-        /// Constructeur du contrôleur Home.
-        /// </summary>
-        public HomeController(UserManager<ApplicationUser> userManager)
+		/// <summary>
+		/// Constructeur du contrôleur Home.
+		/// </summary>
+		public HomeController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _logger = Log.ForContext<HomeController>();

@@ -117,34 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Accept" xml:space="preserve">
-    <value>Accept</value>
+  <data name="Login_Title" xml:space="preserve">
+    <value>Connexion au système DRD</value>
   </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+  <data name="Not_Registered" xml:space="preserve">
+    <value>Pas de compte? Veuillex vous enregistrer.</value>
   </data>
-  <data name="ConfirmDelete" xml:space="preserve">
-    <value>Do you really want to delete this item?</value>
-  </data>
-  <data name="Reject" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="ConfirmAction" xml:space="preserve">
-    <value>Do you really want to proceed with this action?</value>
-  </data>
-  <data name="Warning" xml:space="preserve">
-    <value>Warning</value>
-  </data>
-  <data name="Confirm_Deactivate_Message_Entity" xml:space="preserve">
-    <value>Do you want to deactivate {0} ({1})?</value>
-  </data>
-  <data name="Confirm_Delete_Message_Entity" xml:space="preserve">
-    <value>Do you want to delete {0} ({1})? This action is permanent.</value>
-  </data>
-  <data name="ApplicationUser_City" xml:space="preserve">
-    <value>City</value>
-  </data>
-  <data name="SystemInfoTitle" xml:space="preserve">
-    <value>System controled Data</value>
+  <data name="Register_Title" xml:space="preserve">
+    <value>Enregistrement</value>
   </data>
 </root>

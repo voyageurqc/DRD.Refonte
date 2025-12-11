@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DRD.Resources.LabelNames {
+namespace DRD.Resources.ToastrMessages {
     using System;
     
     
@@ -19,17 +19,17 @@ namespace DRD.Resources.LabelNames {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class IdentityEntityLN {
+    public class AccountToastr {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal IdentityEntityLN() {
+        internal AccountToastr() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DRD.Resources.LabelNames {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.LabelNames.IdentityEntityLN", typeof(IdentityEntityLN).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DRD.Resources.ToastrMessages.AccountToastr", typeof(AccountToastr).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,60 @@ namespace DRD.Resources.LabelNames {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Informations de connexion invalides. Veuillez réessayer..
+        /// </summary>
+        public static string LoginInvalid {
+            get {
+                return ResourceManager.GetString("LoginInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connexion réussie. Bienvenue !.
+        /// </summary>
+        public static string LoginSuccess {
+            get {
+                return ResourceManager.GetString("LoginSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Déconnexion effectuée avec succès..
+        /// </summary>
+        public static string LogoutSuccess {
+            get {
+                return ResourceManager.GetString("LogoutSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compte créé avec succès. Bienvenue !.
+        /// </summary>
+        public static string RegisterInvalid {
+            get {
+                return ResourceManager.GetString("RegisterInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compte créé avec succès. Bienvenue !.
+        /// </summary>
+        public static string RegisterSuccess {
+            get {
+                return ResourceManager.GetString("RegisterSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aucun utilisateur ne correspond à cette adresse courriel..
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
     }

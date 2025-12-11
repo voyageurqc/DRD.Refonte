@@ -70,6 +70,24 @@ namespace DRD.Resources.EntityTitles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Détails du code {0}-{1}.
+        /// </summary>
+        public static string CdSet_Detail_Title {
+            get {
+                return ResourceManager.GetString("CdSet_Detail_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mise à jour  du Code Set {0} -{1} .
+        /// </summary>
+        public static string CdSet_Edit_Title {
+            get {
+                return ResourceManager.GetString("CdSet_Edit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code paramétrique.
         /// </summary>
         public static string CdSet_EntityName {

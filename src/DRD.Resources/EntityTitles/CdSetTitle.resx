@@ -120,8 +120,14 @@
   <data name="CdSet_Create_Title" xml:space="preserve">
     <value>Ajouter un nouveau code</value>
   </data>
+  <data name="CdSet_Edit_Title" xml:space="preserve">
+    <value>Mise à jour  du Code Set {0} -{1} </value>
+  </data>
   <data name="CdSet_EntityName" xml:space="preserve">
     <value>Code paramétrique</value>
+  </data>
+  <data name="CdSet_Detail_Title" xml:space="preserve">
+    <value>Détails du code {0}-{1}</value>
   </data>
   <data name="Field_TypeCode_List_Title" xml:space="preserve">
     <value>Liste des Familles de code disponibles</value>

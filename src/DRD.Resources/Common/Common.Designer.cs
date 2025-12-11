@@ -196,6 +196,15 @@ namespace DRD.Resources.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gérer mon compte:.
+        /// </summary>
+        public static string Manage_Account {
+            get {
+                return ResourceManager.GetString("Manage_Account", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modifié par:.
         /// </summary>
         public static string ModifiedBy {
@@ -264,6 +273,24 @@ namespace DRD.Resources.Common {
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actif.
+        /// </summary>
+        public static string TextActive {
+            get {
+                return ResourceManager.GetString("TextActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactif.
+        /// </summary>
+        public static string TextInactive {
+            get {
+                return ResourceManager.GetString("TextInactive", resourceCulture);
             }
         }
         

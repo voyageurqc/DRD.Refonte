@@ -25,7 +25,7 @@
 // ============================================================================
 
 using DRD.Resources.Common;
-using DRD.Resources.FieldNames;
+using DRD.Resources.LabelNames;
 using System.ComponentModel.DataAnnotations;
 
 namespace DRD.Web.Models.Account
@@ -36,16 +36,16 @@ namespace DRD.Web.Models.Account
 				 ErrorMessageResourceType = typeof(Common))]
 		[EmailAddress(ErrorMessageResourceName = "Validation_Email",
 					 ErrorMessageResourceType = typeof(Common))]
-		[Display(Name = "Email", ResourceType = typeof(FieldNames))]
+		[Display(Name = "Email", ResourceType = typeof(EntityLN))]
 		public string Email { get; set; } = string.Empty;
 
 		[Required(ErrorMessageResourceName = "Validation_Required",
 				 ErrorMessageResourceType = typeof(Common))]
 		[DataType(DataType.Password)]
-		[Display(Name = "Password", ResourceType = typeof(FieldNames))]
+		[Display(Name = "Password", ResourceType = typeof(EntityLN))]
 		public string Password { get; set; } = string.Empty;
 
-		[Display(Name = "RememberMe", ResourceType = typeof(FieldNames))]
+		[Display(Name = "RememberMe", ResourceType = typeof(EntityLN))]
 		public bool RememberMe { get; set; }
 	}
 }

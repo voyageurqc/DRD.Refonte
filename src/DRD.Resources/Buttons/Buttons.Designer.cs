@@ -124,6 +124,15 @@ namespace DRD.Resources.Buttons {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Désactiver.
+        /// </summary>
+        public static string Button_Deactivate {
+            get {
+                return ResourceManager.GetString("Button_Deactivate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Supprimer.
         /// </summary>
         public static string Button_Delete {

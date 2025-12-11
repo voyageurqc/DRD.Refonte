@@ -32,7 +32,7 @@ using System.Globalization;
 using DRD.Resources.Common;
 using DRD.Resources.LabelNames;
 
-namespace DRD.Web.Models.GrpCdSetLN.CdSetVM
+namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 {
 	/// <summary>
 	/// ViewModel en lecture seule utilisé pour l’affichage détaillé d’un CdSet.

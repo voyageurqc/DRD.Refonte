@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations;
 using DRD.Resources.Common;
 using DRD.Resources.LabelNames;
 
-namespace DRD.Web.Models.GrpCdSetLN.CdSetVM
+namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 {
 	/// <summary>
 	/// ViewModel utilisé pour la modification d’un enregistrement CdSet existant.

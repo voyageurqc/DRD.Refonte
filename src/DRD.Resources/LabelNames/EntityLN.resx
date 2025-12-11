@@ -117,34 +117,79 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Accept" xml:space="preserve">
-    <value>Accept</value>
+  <data name="AccessType_AccessTypeCode" xml:space="preserve">
+    <value>Code du type d’accès</value>
   </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+  <data name="AccessType_DescriptionEn" xml:space="preserve">
+    <value>Description (EN)</value>
   </data>
-  <data name="ConfirmDelete" xml:space="preserve">
-    <value>Do you really want to delete this item?</value>
+  <data name="AccessType_DescriptionFr" xml:space="preserve">
+    <value>Description (FR)</value>
   </data>
-  <data name="Reject" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="AccessType_Users" xml:space="preserve">
+    <value>Utilisateurs</value>
   </data>
-  <data name="ConfirmAction" xml:space="preserve">
-    <value>Do you really want to proceed with this action?</value>
+  <data name="ApplicationUser_AddressLine" xml:space="preserve">
+    <value>Adresse</value>
   </data>
-  <data name="Warning" xml:space="preserve">
-    <value>Warning</value>
+  <data name="ApplicationUser_FirstName" xml:space="preserve">
+    <value>Prénom</value>
   </data>
-  <data name="Confirm_Deactivate_Message_Entity" xml:space="preserve">
-    <value>Do you want to deactivate {0} ({1})?</value>
+  <data name="ApplicationUser_LastName" xml:space="preserve">
+    <value>Nom de famille</value>
   </data>
-  <data name="Confirm_Delete_Message_Entity" xml:space="preserve">
-    <value>Do you want to delete {0} ({1})? This action is permanent.</value>
+  <data name="ApplicationUser_Province" xml:space="preserve">
+    <value>Province</value>
   </data>
-  <data name="ApplicationUser_City" xml:space="preserve">
-    <value>City</value>
+  <data name="ApplicationUser_PostalCode" xml:space="preserve">
+    <value>Code postal</value>
   </data>
-  <data name="SystemInfoTitle" xml:space="preserve">
-    <value>System controled Data</value>
+  <data name="ApplicationUser_DefaultPrinter" xml:space="preserve">
+    <value>Imprimante par défaut</value>
+  </data>
+  <data name="ApplicationUser_LaserPrinter" xml:space="preserve">
+    <value>Imprimante laser</value>
+  </data>
+  <data name="ApplicationUser_SectorCode" xml:space="preserve">
+    <value>Code secteur</value>
+  </data>
+  <data name="ApplicationUser_AccessTypeCode" xml:space="preserve">
+    <value>Code du type d’accès</value>
+  </data>
+  <data name="ApplicationUser_MenuCode" xml:space="preserve">
+    <value>Code du menu</value>
+  </data>
+  <data name="ApplicationUser_ViewAccesses" xml:space="preserve">
+    <value>Droits d’accès</value>
+  </data>
+  <data name="ApplicationUser_AccessType" xml:space="preserve">
+    <value>Type d’accès</value>
+  </data>
+  <data name="ApplicationUser_CreationDate" xml:space="preserve">
+    <value>Créé le:</value>
+  </data>
+  <data name="ApplicationUser_CreatedBy" xml:space="preserve">
+    <value>Créé par:</value>
+  </data>
+  <data name="ApplicationUser_ModificationDate" xml:space="preserve">
+    <value>Modifié le:</value>
+  </data>
+  <data name="ApplicationUser_UpdatedBy" xml:space="preserve">
+    <value>Modifié par:</value>
+  </data>
+  <data name="ApplicationUser_IsActive" xml:space="preserve">
+    <value>Activité</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Courriel</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Se souvenir de moi</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmer le mot de passe</value>
   </data>
 </root>

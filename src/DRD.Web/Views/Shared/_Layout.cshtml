@@ -20,47 +20,47 @@ Fonctionnalité
     - Ressources .resx pour tout le texte visible.
 
 Modifications
+    2025-12-11  Version DRD v10 finalisée (suppression using invalides, structure DRD).
     2025-12-06  Ajout footer DRD sticky avec logo, ©, version dynamique.
     2025-12-06  Intégration bilingue ressources Footer_*.
     2025-12-05  Nettoyage flex + correction disparition footer.
     2025-12-04  Version DRD v10.
-=============================================================================== *@
+============================================================================ *@}
 
 @using System.Globalization
 @using System.Reflection
-@using Microsoft.AspNetCore.Hosting
 @using DRD.Infrastructure.Identity
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Hosting
 
+@* ⚠️ IMPORTANT : Ajuster toi-même les namespaces des ressources ici *@
 @using static DRD.Resources.Common.Common
-@using static DRD.Resources.Menu.Menu
-@using static DRD.Resources.Buttons
-@using static DRD.Resources.NavBar
-@using static DRD.Resources.SideBar
+@using static DRD.Resources.RS_Layout.Layout
+@using static DRD.Resources.Buttons.Buttons
+@* @using static DRD.Resources.______  ← pour AppName, Footer_Text, Footer_Version *@
 
 @model object
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IWebHostEnvironment Env
+
 @{
-    // Récupère la version de l’assembly en cours (DRD.Web)
     var assembly = Assembly.GetExecutingAssembly();
     var rawVersion = assembly.GetName().Version;
 
-    // formate version : 10.0.1.0 → "10.0.1"
     string version = rawVersion != null
         ? $"{rawVersion.Major}.{rawVersion.Minor}.{rawVersion.Build}"
         : "1.0.0";
 }
-
-
 
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentCulture.Name">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    @* ⚠️ Ajuster AppName selon ton .resx *@
     <title>@AppName</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -73,9 +73,9 @@ Modifications
 </head>
 
 <body class="@ViewData["BodyClass"]">
-
     @{
         bool userIsAuthenticated = SignInManager.IsSignedIn(User);
+
         string? fullName = null;
         DateTime? connectionTime = null;
 
@@ -87,7 +87,11 @@ Modifications
         }
     }
 
+    @* =======================================================
+       HEADER FIXE DRD v10
+       ======================================================= *@
     <header class="app-header-fixed shadow d-flex justify-content-between align-items-center px-3">
+
         <div class="d-flex align-items-center">
             <img src="~/images/UNI/unilogo.png" alt="Logo DRD" style="height: 40px;" />
             <span class="ms-3 fs-5 fw-bold text-white d-none d-md-block">@AppName</span>
@@ -98,25 +102,33 @@ Modifications
             @if (userIsAuthenticated)
             {
                 <div class="d-flex align-items-center gap-3 text-white">
+
                     <i class="fa-solid fa-user-check fa-lg"></i>
+
                     <div class="small text-end">
                         <div class="fw-bold">@fullName</div>
+                        @* Ajuster Manage_Account *@
                         <a asp-controller="User" asp-action="Manage" class="text-white-50">@Manage_Account</a>
                     </div>
+
                     <div class="vr"></div>
+
                     <div class="small text-end">
-                        <div>@Date_Connected</div>
+                        @* Ajuster Date_Connected *@
+                        <div>@ConnectedOn</div>
                         <strong>@connectionTime?.ToString("dd MMMM, HH:mm")</strong>
                     </div>
                 </div>
             }
 
+            @* ========= TOGGLE LANGUE ========= *@
             <form asp-controller="Localization" asp-action="ToggleLanguage" method="post" class="m-0">
                 <button type="submit" class="btn btn-info text-dark btn-sm btn-3d" title="@Button_Toggle_Culture">
                     🌍 @(CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToUpper() == "FR" ? "English" : "Français")
                 </button>
             </form>
 
+            @* ========= BOUTON LOGOUT / LOGIN ========= *@
             @if (userIsAuthenticated)
             {
                 <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
@@ -135,6 +147,9 @@ Modifications
         </div>
     </header>
 
+    @* =======================================================
+       BODY + SIDEBAR
+       ======================================================= *@
     <div class="app-body-wrapper">
 
         @if (userIsAuthenticated)
@@ -146,11 +161,13 @@ Modifications
 
         <div class="main-content-area d-flex flex-column flex-grow-1">
 
-            <main class="p-4" style="flex: 1 0 auto" ;>
+            <main class="p-4" style="flex: 1 0 auto">
                 @RenderBody()
             </main>
 
-            @* === FOOTER DRD v10 — Logo Mini + © + Texte Bilingue + Version Dynamique === *@
+            @* =======================================================
+               FOOTER DRD v10
+               ======================================================= *@
             <footer class="app-footer-fixed d-flex align-items-center justify-content-center shadow text-white py-2 px-3">
 
                 <img src="~/images/UNI/unilogo.png" alt="Logo DRD" class="footer-logo me-2" />
@@ -158,9 +175,7 @@ Modifications
                 <i class="fa-regular fa-copyright me-1"></i>
 
                 <span class="fw-bold">
-                    <span class="fw-bold">
-                        @DateTime.Now.Year — @Footer_Text — @Footer_Version @($"v{version}")
-                    </span>
+                    @DateTime.Now.Year — ™ @UNI_Name — @Footer_Text — @Footer_Version @($"v{version}")
                 </span>
 
             </footer>
