@@ -213,4 +213,7 @@
   <data name="TextInactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="Generic_Error" xml:space="preserve">
+    <value>An error has occurred. Please try again or contact support if the problem continues</value>
+  </data>
 </root>

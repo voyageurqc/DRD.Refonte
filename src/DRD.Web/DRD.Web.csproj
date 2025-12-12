@@ -42,9 +42,7 @@
     <Folder Include="Models\GrpClient\ClientVM\" />
     <Folder Include="Models\GrpWebMessage\" />
     <Folder Include="Models\Shared\" />
-    <Folder Include="Views\GrpClient\" />
-    <Folder Include="Views\GrpSystemTables\CdSetViews\" />
-    <Folder Include="Views\GrpWebMessage\" />
+    <Folder Include="Views\CdSet\" />
     <Folder Include="Views\Shared\components\ClientSelectionModal\" />
     <Folder Include="wwwroot\lib\datatables\i18n\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
@@ -58,6 +56,9 @@
 		<FileVersion>2.0.0.0</FileVersion>
 		<InformationalVersion>2.0.0 (Build)</InformationalVersion>
   </PropertyGroup>
+	<PropertyGroup>
+		<ShowAllRazorBuildServerFiles>false</ShowAllRazorBuildServerFiles>
+	</PropertyGroup>
 
 	<PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

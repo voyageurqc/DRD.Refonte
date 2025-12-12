@@ -169,6 +169,15 @@ namespace DRD.Resources.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Une erreur est survenue. Veuillez réessayer ou contacter le support si le problème persiste..
+        /// </summary>
+        public static string Generic_Error {
+            get {
+                return ResourceManager.GetString("Generic_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activité.
         /// </summary>
         public static string IsActive {

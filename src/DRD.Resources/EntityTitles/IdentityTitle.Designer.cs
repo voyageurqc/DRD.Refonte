@@ -70,7 +70,7 @@ namespace DRD.Resources.EntityTitles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pas de compte? Veuillex vous enregistrer..
+        ///   Looks up a localized string similar to Pas de compte? Veuillexz vous enregistrer..
         /// </summary>
         public static string Not_Registered {
             get {

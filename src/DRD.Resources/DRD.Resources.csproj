@@ -29,5 +29,16 @@
 			<DependentUpon>%(Filename).resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Buttons\Buttons.Designer.cs">
+	    <DependentUpon>Buttons.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Common\Common.Designer.cs">
+	    <DependentUpon>Common.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="EntityTitles\IdentityTitle.Designer.cs">
+	    <DependentUpon>IdentityTitle.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 
 </Project>

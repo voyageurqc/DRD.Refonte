@@ -1,58 +1,58 @@
 // ============================================================================
-// Projet                         DRD.Web
-// Nom du fichier                 Program.cs
-// Type de fichier                Point d'entrée
-// Classe                         (Top-level statements)
-// Emplacement                    /
-// Entités concernées             ApplicationUser, ApplicationDbContext
-// Créé le                        2025-12-02
+// Projet:      DRD.Web
+// Fichier:     Program.cs
+// Type:        Point d'entrée
+// Classe:      (Top-level statements)
+// Emplacement: /
+// Entité(s):   ApplicationUser, ApplicationDbContext
+// Créé le:     2025-12-02
 //
 // Description
-//     Point d'entrée principal de l'application Web DRD. Configure Serilog,
-//     la base de données, Identity, la localisation bilingue, MVC, la
-//     politique d'autorisation globale et le pipeline HTTP. Exécute aussi
-//     le seeding Identity (rôles, types d’accès, administrateur système).
+//     Point d’entrée principal de l’application web DRD v10. Configure Serilog,
+//     SQL Server, Identity, la localisation bilingue fr-CA/en-CA, MVC, Razor,
+//     les filtres d’autorisation, ainsi que le pipeline HTTP complet.
 //
 // Fonctionnalité
-//     - Initialiser la journalisation Serilog (console + fichiers).
-//     - Configurer ApplicationDbContext.
-//     - Configurer ASP.NET Identity (ApplicationUser).
-//     - Activer fr-CA et en-CA; culture par défaut : fr-CA.
-//     - Ajouter MVC avec localisation et AuthorizeFilter global.
-//     - Exécuter le seeding Identity au démarrage.
-//     - Configurer le pipeline HTTP complet.
+//     - Configurer Serilog (console + fichiers journaliers).
+//     - Enregistrer ApplicationDbContext (SQL Server).
+//     - Configurer ASP.NET Identity avec ApplicationUser et roles.
+//     - Définir la culture par défaut (fr-CA).
+//     - Ajouter MVC + Razor Pages + localisation.
+//     - Activer AuthorizeFilter global (sécurité).
+//     - Configurer le pipeline HTTP DRD.
+//     - Démarrer et journaliser l’application.
 //
 // Modifications
-//     2025-12-11    Correction avertissement CA1305 (analyse : localisation / IFormatProvider).
-//     2025-12-04    Serilog ajusté (messages en anglais, unilingue).
-//     2025-12-03    Ajout obligatoire AddLogging() pour injection ILogger<T>.
+//     2025-12-11    Version DRD v10 complète (SQL Server + Identity + Serilog).
+//     2025-12-10    Correction DI Identity (ApplicationDbContext manquant).
 //     2025-12-03    Régions DRD + résumés.
-//     2025-12-03    Ajout AuthorizeFilter global (Option B).
-//     2025-12-03    Nettoyage Identity (retrait DefaultIdentity).
 //     2025-12-02    Création initiale DRD v10.
 // ============================================================================
 
-
-using DRD.Infrastructure;
-using DRD.Application;
+using DRD.Application;              
+using DRD.Infrastructure;           
+using DRD.Infrastructure.Data;
+using DRD.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================================================
-// REGION : Configuration Serilog
+// REGION : Serilog
 // ============================================================================
 #region Serilog
 /// <summary>
-/// Configuration du logger Serilog avec séparation DEV/PROD.
+/// Configure Serilog avec logs journaliers conservés 7 jours.
 /// </summary>
 Log.Logger = new LoggerConfiguration()
 	.Enrich.FromLogContext()
 	.WriteTo.Console()
 	.WriteTo.File(
-		path: $"Logs/log-{DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}.txt",
+		path: $"Logs/log-{DateTime.UtcNow:yyyy-MM-dd}.txt",
 		rollingInterval: RollingInterval.Day,
 		retainedFileCountLimit: 7)
 	.CreateLogger();
@@ -61,12 +61,34 @@ builder.Host.UseSerilog();
 #endregion
 
 // ============================================================================
-// REGION : Configuration Services (DI)
+// REGION : Services (DI)
 // ============================================================================
 #region Services
 
 /// <summary>
-/// Configuration MVC + localisation.
+/// Configure ApplicationDbContext (SQL Server).
+/// </summary>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+	options.UseSqlServer(
+		builder.Configuration.GetConnectionString("DefaultConnection"),
+		sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)
+	);
+});
+
+/// <summary>
+/// Configure Identity (ApplicationUser + Roles).
+/// </summary>
+builder.Services
+	.AddIdentity<ApplicationUser, IdentityRole>(options =>
+	{
+		options.SignIn.RequireConfirmedAccount = false;
+	})
+	.AddEntityFrameworkStores<ApplicationDbContext>()
+	.AddDefaultTokenProviders();
+
+/// <summary>
+/// MVC, Razor Pages et Localisation.
 /// </summary>
 builder.Services.AddControllersWithViews()
 	.AddViewLocalization()
@@ -74,15 +96,22 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
+/// <summary>
+/// Enregistre les services Application et Infrastructure DRD v10.
+/// IMPORTANT : Ces lignes doivent être AVANT builder.Build() !!!
+/// </summary>
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
 #endregion
 
 // ============================================================================
-// REGION : Configuration Localisation
+// REGION : Localisation
 // ============================================================================
 #region Localisation
 
 /// <summary>
-/// Cultures supportées par DRD v10.
+/// Configure la culture par défaut fr-CA et support en-CA.
 /// </summary>
 var supportedCultures = new[]
 {
@@ -92,7 +121,7 @@ var supportedCultures = new[]
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-	options.DefaultRequestCulture = new RequestCulture("fr-CA", "fr-CA");
+	options.DefaultRequestCulture = new RequestCulture("fr-CA");
 	options.SupportedCultures = supportedCultures;
 	options.SupportedUICultures = supportedCultures;
 });
@@ -100,14 +129,15 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 #endregion
 
 // ============================================================================
-// REGION : Build + Pipeline HTTP
+// REGION : Pipeline HTTP
 // ============================================================================
 #region Pipeline
 
-var app = builder.Build();
+var app = builder.Build();   // ← À partir d’ici, les services deviennent READ-ONLY
+							 // ← Donc plus aucun builder.Services.AddXxx() possible
 
 /// <summary>
-/// Activation localisation.
+/// Active la localisation.
 /// </summary>
 app.UseRequestLocalization();
 
@@ -118,31 +148,32 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
+/// <summary>
+/// Route par défaut DRD.
+/// </summary>
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapRazorPages();
+
 #endregion
 
 // ============================================================================
-// REGION : Lancement
+// REGION : Run
 // ============================================================================
 #region Run
 
 /// <summary>
-/// Lancement de l’application.
+/// Démarre l’application.
 /// </summary>
-Log.Information("DRD v10 - Application démarrée à {UtcTime}",
-	DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
-
+Log.Information("DRD v10 — Application démarrée à {UtcTime}", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
 app.Run();
 
 #endregion

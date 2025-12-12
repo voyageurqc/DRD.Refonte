@@ -24,6 +24,7 @@
 
 using DRD.Infrastructure.Identity;
 using DRD.Web.Models.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -33,6 +34,7 @@ namespace DRD.Web.Controllers
     /// <summary>
     /// Contrôleur principal affichant la page d’accueil du système DRD.
     /// </summary>
+	[Authorize]
     public class HomeController : Controller
     {
         #region DRD – Services
