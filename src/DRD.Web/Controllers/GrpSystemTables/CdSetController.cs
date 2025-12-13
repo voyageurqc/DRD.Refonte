@@ -237,7 +237,9 @@ namespace DRD.Web.Controllers.GrpSystemTables
 				return View(vm);
 			}
 
-			var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(vm.TypeCode, vm.Code);
+			var entity = await _unitOfWork.CdSetRepository
+				.GetByTypeCodeAndCodeAsync(vm.TypeCode, vm.Code);
+
 			if (entity == null)
 			{
 				TempData["ToastrError"] = GenericToastr.Error_NotFound;
@@ -249,15 +251,18 @@ namespace DRD.Web.Controllers.GrpSystemTables
 			await _unitOfWork.CdSetRepository.UpdateAsync(entity);
 			await _unitOfWork.SaveChangesAsync();
 
-			TempData["ToastrSuccess"] = CdSetToastr.Success_EntityUpdated;
-			_logger.Information("CdSet modifié : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
+			TempData["ToastrSuccess"] = string.Format(
+				CdSetToastr.Success_EntityUpdated,
+				vm.TypeCode,
+				vm.Code
+			);
 
-			return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
+			_logger.Information("CdSet modifié : {TypeCode}|{Code}", vm.TypeCode, vm.Code);
+
+			// 🔒 RÈGLE FINALE : Edit retourne toujours à Index
+			return RedirectToAction(nameof(Index));
 		}
-
 		#endregion
-
-
 		// =====================================================================
 		// DRD – Details
 		// =====================================================================

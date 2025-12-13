@@ -19,9 +19,11 @@ Fonctionnalité
     - Bouton Métadonnées DRD
     - Validation MVC + Toastr
     - Inputs readonly pour les clés
+    - Champs hidden pour la clé composite (POST sécurisé)
 
 Modifications
-    2025-12-12   DRD v10 : Ajout bandeau bleu (boutons Save / Back / Metadata)
+    2025-12-12   DRD v10 : Correction clé composite POST (TypeCode + Code)
+    2025-12-12   DRD v10 : Bandeau bleu (Save / Back / Metadata)
     2025-12-09   Correction DRD v10 complète.
 ===============================================================================
 *@
@@ -38,14 +40,12 @@ Modifications
 
 @{
     ViewData["Title"] = string.Format(CdSet_Edit_Title, Model.TypeCode, Model.Code);
-
     var returnUrl = Model.ReturnUrl ?? Url.Action("Index", "CdSet");
-
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
 }
 
 @* ============================================================================
-   ==== DÉBUT MODIFICATION DRD 2025-12-12 — Bandeau bleu Edition ====
+   ==== BANDEAU BLEU — EDIT ====
    ============================================================================ *@
 <div class="d-flex justify-content-between align-items-center mb-4 p-3"
      style="background-color:#0d6efd; color:white; border-radius:8px;">
@@ -61,14 +61,14 @@ Modifications
             <i class="fas fa-check"></i>
         </button>
 
-        @* CANCEL / RETURN *@
+        @* BACK *@
         <a href="@returnUrl"
            class="btn btn-secondary btn-circle btn-3d"
            title="@Button_Back">
             <i class="fas fa-arrow-left"></i>
         </a>
 
-        @* METADATA (si défini) *@
+        @* METADATA *@
         @if (metadata != null)
         {
             <button type="button"
@@ -82,15 +82,14 @@ Modifications
 
     </div>
 </div>
-@* ============================================================================
-   ==== FIN MODIFICATION DRD 2025-12-12 — Bandeau bleu Edition ====
-   ============================================================================ *@
-
 
 <form id="editForm" asp-action="Edit" method="post">
 
     @Html.AntiForgeryToken()
 
+    @* 🔒 CLÉS COMPOSITES — OBLIGATOIRES POUR LE POST *@
+    <input type="hidden" asp-for="TypeCode" />
+    <input type="hidden" asp-for="Code" />
     <input type="hidden" asp-for="ReturnUrl" />
 
     <div class="card shadow-sm p-4">
@@ -98,12 +97,16 @@ Modifications
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">@Field_TypeCode</label>
-                <input class="form-control input-3d" value="@Model.TypeCode" readonly />
+                <input class="form-control input-3d"
+                       value="@Model.TypeCode"
+                       readonly />
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">@Field_Code</label>
-                <input class="form-control input-3d" value="@Model.Code" readonly />
+                <input class="form-control input-3d"
+                       value="@Model.Code"
+                       readonly />
             </div>
         </div>
 
@@ -135,10 +138,10 @@ Modifications
 
 @if (metadata != null)
 {
-    <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml" model="metadata" />
+    <partial name="~/Views/Shared/Partials/_SystemMetadataPartial.cshtml"
+             model="metadata" />
 }
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <partial name="_Toastr" />
 }
