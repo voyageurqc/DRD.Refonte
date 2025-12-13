@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Success_EntityCreated" xml:space="preserve">
-    <value>CdSet “{0}” has been successfully created.</value>
+    <value>CdSet « {0} - {1}  &gt;has been successfully created.</value>
   </data>
   <data name="Success_EntityDeleted" xml:space="preserve">
-    <value>CdSet “{0}” has been successfully deleted.</value>
+    <value>CdSet « {0} - {1}  &gt; has been successfully deleted.</value>
   </data>
   <data name="Success_EntityUpdated" xml:space="preserve">
-    <value>CdSet “{0}” has been successfully updated.</value>
+    <value>CdSet « {0} - {1} ” &gt; has been successfully updated.</value>
   </data>
 </root>

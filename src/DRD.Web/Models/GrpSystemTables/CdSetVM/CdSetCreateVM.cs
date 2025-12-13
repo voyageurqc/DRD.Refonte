@@ -52,7 +52,8 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 		#region Famille
 
 		/// <summary>Liste des familles existantes à afficher dans le dropdown.</summary>
-		public IEnumerable<string> AvailableFamilies { get; set; } = new List<string>();
+		/// <summary>Liste des familles existantes à afficher dans le dropdown.</summary>
+		public IEnumerable<string> AvailableFamilies { get; set; } = [];
 
 		/// <summary>Famille sélectionnée par l’usager (existante ou NEW_OPTION).</summary>
 		[Display(Name = nameof(CdSetLN.Field_TypeCode), ResourceType = typeof(CdSetLN))]
@@ -142,7 +143,7 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 				{
 					yield return new ValidationResult(
 						CdSetMM.Validation_NewFamilyRequired,
-						new[] { nameof(NewFamily) }
+						[nameof(NewFamily)]   // ← Correction IDE0300 / IDE0301
 					);
 				}
 			}

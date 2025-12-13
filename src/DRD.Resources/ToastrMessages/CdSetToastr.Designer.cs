@@ -61,7 +61,7 @@ namespace DRD.Resources.ToastrMessages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to L’élément CdSet « {0} » a été créé avec succès..
+        ///   Looks up a localized string similar to L’élément CdSet « {0}  - {1} » a été créé avec succès..
         /// </summary>
         public static string Success_EntityCreated {
             get {
@@ -70,7 +70,7 @@ namespace DRD.Resources.ToastrMessages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to L’élément CdSet « {0} » a été supprimé avec succès..
+        ///   Looks up a localized string similar to L’élément CdSet « {0} - {1} » a été supprimé avec succès..
         /// </summary>
         public static string Success_EntityDeleted {
             get {
@@ -79,7 +79,7 @@ namespace DRD.Resources.ToastrMessages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to L’élément CdSet « {0} » a été mis à jour avec succès..
+        ///   Looks up a localized string similar to L’élément CdSet « {0} -{1} » a été mis à jour avec succès..
         /// </summary>
         public static string Success_EntityUpdated {
             get {

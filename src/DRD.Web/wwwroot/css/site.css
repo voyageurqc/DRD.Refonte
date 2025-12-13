@@ -236,8 +236,24 @@ main {
     }
 
 /* ==========================================================================
-   7. BOUTONS 3D
+   7. BOUTONS 
    ========================================================================== */
+/* Save & Continue */
+.btn-save-continue {
+    background-color: #20c997; /* Teal Bootstrap */
+    border-color: #20c997;
+    color: #fff;
+}
+
+    .btn-save-continue:hover {
+        background-color: #17b38a;
+        border-color: #17b38a;
+    }
+    .btn-save-continue:active {
+        background-color: green;
+        border-color: #58d68d;
+        color: #0b3d1e;
+    }
 
 .btn-3d {
     color: white;

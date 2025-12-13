@@ -86,17 +86,6 @@ Modifications
 </div>
 
 
-<!-- ======================= TOASTR ======================= -->
-@if (TempData["ToastrSuccess"] != null)
-{
-    <div data-toastr-success="@TempData["ToastrSuccess"]"></div>
-}
-@if (TempData["ToastrError"] != null)
-{
-    <div data-toastr-error="@TempData["ToastrError"]"></div>
-}
-
-
 <!-- ======================= CARD FILTRES ======================= -->
 <div class="card shadow-sm mb-4" style="border-radius:10px;">
     <div class="card-body">
@@ -186,8 +175,8 @@ Modifications
                              }
                              )
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
 
             <!-- FORMULAIRES INVISIBLES (hors <td>) -->
             <form id="deleteForm-@row.TypeCode-@row.Code"
@@ -209,8 +198,7 @@ Modifications
                   class="d-none">
                 @Html.AntiForgeryToken()
             </form>
-
-                        }
+        }
         </tbody>
 
     </table>
@@ -218,6 +206,9 @@ Modifications
 
 
 @section Scripts {
+    <partial name="_Toastr" />
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
@@ -232,4 +223,5 @@ Modifications
 
         });
     </script>
+
 }

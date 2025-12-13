@@ -27,6 +27,9 @@ Modifications
 =============================================================================== *@
 
 @using Serilog
+@{
+    Log.Warning("🧪 TEST TOASTR — _Toastr.cshtml exécuté");
+}
 
 @functions {
     /// <summary>
@@ -50,16 +53,16 @@ Modifications
     var toastScript = string.Empty;
 
     if (!string.IsNullOrWhiteSpace(successMessage))
-        toastScript += $"toastr.success('{successMessage}');\n";
+        toastScript += $"toastr.success(`{successMessage}`);\n";
 
     if (!string.IsNullOrWhiteSpace(errorMessage))
-        toastScript += $"toastr.error('{errorMessage}');\n";
+        toastScript += $"toastr.error(`{errorMessage}`);\n";
 
     if (!string.IsNullOrWhiteSpace(infoMessage))
-        toastScript += $"toastr.info('{infoMessage}');\n";
+        toastScript += $"toastr.info(`{infoMessage}`);\n";
 
     if (!string.IsNullOrWhiteSpace(warningMessage))
-        toastScript += $"toastr.warning('{warningMessage}');\n";
+        toastScript += $"toastr.warning(`{warningMessage}`);\n";
 
     Log.Information("_Toastr.cshtml script generated: {Script}", toastScript);
     #endregion

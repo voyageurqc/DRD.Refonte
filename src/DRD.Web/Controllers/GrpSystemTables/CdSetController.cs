@@ -23,13 +23,11 @@
 //     - Utilisation IUnitOfWork + Serilog + Toastr
 //
 // Modifications
-//     2025-12-11    DRD v10 : ajout commentaires XML (summary/param/returns) requis
-//                   par les règles DRD (#90-#91) et suppression warning CS1591.
-//     2025-12-11    DRD v10 : familles dans Create GET, NEW_OPTION, reload familles,
-//                   normalisation Exists, logs Serilog supplémentaires.
+//     2025-12-12    DRD v10 : correctif ToastrSuccess (finalType/finalCode)
+//     2025-12-11    DRD v10 : commentaires XML, familles Create GET, logs.
 //     2025-12-09    Harmonisation DRD v10 : régions & en-tête.
 //     2025-12-08    Migration Toastr vers ressources strongly typed.
-//     2025-12-07    Version initiale DRD v10.
+//     2025-12-07    Version initiale.
 // ============================================================================
 
 using DRD.Application.Common.Interfaces;
@@ -41,11 +39,6 @@ using Serilog;
 
 namespace DRD.Web.Controllers.GrpSystemTables
 {
-	/// <summary>
-	/// Contrôleur MVC gérant toutes les opérations CRUD du module CdSet,
-	/// incluant l’affichage, la création, la modification, les détails
-	/// et la suppression via modale universelle. Conforme DRD v10.
-	/// </summary>
 	public class CdSetController : Controller
 	{
 		// =====================================================================
@@ -56,10 +49,6 @@ namespace DRD.Web.Controllers.GrpSystemTables
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly Serilog.ILogger _logger;
 
-		/// <summary>
-		/// Initialise le contrôleur CdSet avec le UnitOfWork et le logger Serilog.
-		/// </summary>
-		/// <param name="unitOfWork">Service d'accès aux dépôts métier.</param>
 		public CdSetController(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
@@ -68,17 +57,12 @@ namespace DRD.Web.Controllers.GrpSystemTables
 
 		#endregion
 
+
 		// =====================================================================
 		// DRD – Index
 		// =====================================================================
 		#region Index
 
-		/// <summary>
-		/// Affiche la liste des CdSet avec filtres (TypeCode, recherche).
-		/// </summary>
-		/// <param name="typeCode">Filtre sur la famille.</param>
-		/// <param name="search">Recherche textuelle dans descriptions ou code.</param>
-		/// <returns>Vue Index avec liste filtrée.</returns>
 		public async Task<IActionResult> Index(string? typeCode, string? search)
 		{
 			_logger.Information("CdSet - Index - Filtre TypeCode={TypeCode}, Search={Search}", typeCode, search);
@@ -134,17 +118,12 @@ namespace DRD.Web.Controllers.GrpSystemTables
 
 		#endregion
 
+
 		// =====================================================================
 		// DRD – Create
 		// =====================================================================
 		#region Create
 
-		/// <summary>
-		/// Affiche la vue de création d’un nouvel enregistrement CdSet.
-		/// Injecte aussi les familles existantes + l’option NEW_OPTION.
-		/// </summary>
-		/// <param name="returnUrl">URL de retour après la création.</param>
-		/// <returns>Vue Create initialisée.</returns>
 		[HttpGet]
 		public async Task<IActionResult> Create(string? returnUrl)
 		{
@@ -167,29 +146,20 @@ namespace DRD.Web.Controllers.GrpSystemTables
 			return View(vm);
 		}
 
-		/// <summary>
-		/// Traite la création d’un CdSet après soumission du formulaire.
-		/// Valide ModelState, vérifie existence, appelle le Domain puis sauvegarde.
-		/// </summary>
-		/// <param name="vm">ViewModel contenant les données à créer.</param>
-		/// <returns>Redirect vers ReturnUrl ou vue Create si invalide.</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CdSetCreateVM vm)
 		{
-			// Toujours recharger les familles (DRD)
+			// Détection du bouton Save & Continue
+			bool saveAndContinue = Request.Form.ContainsKey("continue");
+
+			// Toujours recharger les familles
 			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
-			var distinctFamilies = all
-				.Select(x => x.TypeCode)
-				.Distinct()
-				.OrderBy(x => x)
-				.ToList();
 			vm.AvailableFamilies = new List<string> { CdSetCreateVM.NEW_OPTION }
-				.Concat(distinctFamilies);
+				.Concat(all.Select(x => x.TypeCode).Distinct().OrderBy(x => x));
 
 			if (!ModelState.IsValid)
 			{
-				_logger.Warning("CdSet - Create - ModelState invalide. Données : {@VM}", vm);
 				TempData["ToastrError"] = GenericToastr.Error_InvalidForm;
 				return View(vm);
 			}
@@ -197,38 +167,42 @@ namespace DRD.Web.Controllers.GrpSystemTables
 			var finalType = vm.TypeCodeFinal?.Trim() ?? "";
 			var finalCode = vm.Code?.Trim() ?? "";
 
-			var exists = await _unitOfWork.CdSetRepository.ExistsAsync(finalType, finalCode);
-			if (exists)
+			if (await _unitOfWork.CdSetRepository.ExistsAsync(finalType, finalCode))
 			{
 				TempData["ToastrError"] = CdSetMM.CdSetMM_Error_Duplicate;
 				return View(vm);
 			}
 
 			var entity = vm.ToEntity();
-
 			await _unitOfWork.CdSetRepository.AddAsync(entity);
 			await _unitOfWork.SaveChangesAsync();
 
-			TempData["ToastrSuccess"] = CdSetToastr.Success_EntityCreated;
+			// Message success
+			TempData["ToastrSuccess"] = string.Format(
+				CdSetToastr.Success_EntityCreated,
+				finalType,
+				finalCode
+			);
+
 			_logger.Information("CdSet créé : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
 
+			// ---------- SAVE & CONTINUE ----------
+			if (saveAndContinue)
+			{
+				return RedirectToAction(nameof(Create), new { returnUrl = vm.ReturnUrl });
+			}
+
+			// ---------- SAVE NORMAL ----------
 			return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
 		}
-
 		#endregion
+
 
 		// =====================================================================
 		// DRD – Edit
 		// =====================================================================
 		#region Edit
 
-		/// <summary>
-		/// Charge un CdSet existant afin de permettre son édition.
-		/// </summary>
-		/// <param name="id">TypeCode composite (clé partie 1).</param>
-		/// <param name="key2">Code composite (clé partie 2).</param>
-		/// <param name="returnUrl">URL de retour après modification.</param>
-		/// <returns>Vue Edit préremplie ou redirection si introuvable.</returns>
 		[HttpGet]
 		public async Task<IActionResult> Edit(string id, string key2, string? returnUrl)
 		{
@@ -253,11 +227,6 @@ namespace DRD.Web.Controllers.GrpSystemTables
 			return View(vm);
 		}
 
-		/// <summary>
-		/// Traite la modification d’un CdSet existant.
-		/// </summary>
-		/// <param name="vm">Données éditées provenant de la vue.</param>
-		/// <returns>Vue Edit ou redirection vers ReturnUrl.</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(CdSetEditVM vm)
@@ -288,18 +257,12 @@ namespace DRD.Web.Controllers.GrpSystemTables
 
 		#endregion
 
+
 		// =====================================================================
 		// DRD – Details
 		// =====================================================================
 		#region Details
 
-		/// <summary>
-		/// Affiche les détails d’un enregistrement CdSet.
-		/// </summary>
-		/// <param name="id">TypeCode (clé 1).</param>
-		/// <param name="key2">Code (clé 2).</param>
-		/// <param name="returnUrl">URL de retour.</param>
-		/// <returns>Vue Details ou redirection si introuvable.</returns>
 		[HttpGet]
 		public async Task<IActionResult> Details(string id, string key2, string? returnUrl)
 		{
@@ -330,16 +293,12 @@ namespace DRD.Web.Controllers.GrpSystemTables
 
 		#endregion
 
+
 		// =====================================================================
 		// DRD – Delete
 		// =====================================================================
 		#region Delete
 
-		/// <summary>
-		/// Supprime un enregistrement CdSet via modale universelle.
-		/// </summary>
-		/// <param name="entityId">Clé composite au format TypeCode|Code.</param>
-		/// <returns>Redirection vers Index.</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(string entityId)

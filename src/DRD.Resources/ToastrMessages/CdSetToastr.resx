@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Success_EntityCreated" xml:space="preserve">
-    <value>L’élément CdSet « {0} » a été créé avec succès.</value>
+    <value>L’élément CdSet « {0}  - {1} » a été créé avec succès.</value>
   </data>
   <data name="Success_EntityDeleted" xml:space="preserve">
-    <value>L’élément CdSet « {0} » a été supprimé avec succès.</value>
+    <value>L’élément CdSet « {0} - {1} » a été supprimé avec succès.</value>
   </data>
   <data name="Success_EntityUpdated" xml:space="preserve">
-    <value>L’élément CdSet « {0} » a été mis à jour avec succès.</value>
+    <value>L’élément CdSet « {0} -{1} » a été mis à jour avec succès.</value>
   </data>
 </root>

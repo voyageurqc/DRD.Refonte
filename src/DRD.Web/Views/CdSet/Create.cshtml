@@ -21,7 +21,10 @@ Fonctionnalité
     - Prend en charge ReturnUrl et Toastr
 
 Modifications
-    2025-12-11    Version DRD : correction option NEW, suppression doublons,
+    2025-12-12    Ajustement bandeau : boutons Create (Save, Save & Continue, Cancel)
+    2025-12-12    Version DRD : Intégration Toastr (messages à compléter dans le controller)
+    2025-12-11    Version DRD : bandeau supérieur uniforme (style Index)
+    2025-12-11    Correction option NEW, suppression doublons,
                   correction ReturnUrl, harmonisation BS5, script NEW_OPTION dynamique.
     2025-12-07    Version initiale DRD v10.
 ============================================================================ *@
@@ -42,12 +45,49 @@ Modifications
     var families = Model.AvailableFamilies ?? new List<string>();
 }
 
-<h1 class="mb-4">@ViewData["Title"]</h1>
+@* ============================================================================
+   ==== DÉBUT MODIFICATION DRD 2025-12-12 — Bandeau bleu + boutons Create ====
+   ============================================================================ *@
+<div class="d-flex justify-content-between align-items-center mb-4 p-3"
+     style="background-color:#0d6efd; color:white; border-radius:8px;">
 
-<form asp-action="Create" method="post" class="form-horizontal">
+    <h2 class="m-0 fw-bold">@ViewData["Title"]</h2>
+
+    <div class="d-flex gap-3">
+
+        @* SAVE *@
+        <button type="submit" form="cdsetForm"
+                class="btn btn-success btn-circle btn-3d"
+                title="@Button_Save">
+            <i class="fas fa-check"></i>
+        </button>
+
+        @* SAVE & CONTINUE *@
+        <button type="submit"
+                name="continue"
+                form="cdsetForm"
+                class="btn  btn-save-continue btn-3d"
+                title="@Button_Save_And_Continue">
+            <i class="bi bi-save"></i> <i class="bi bi-arrow-clockwise ms-1"></i>
+        </button>
+
+        @* CANCEL *@
+        <a href="@Model.ReturnUrl"
+           class="btn btn-secondary btn-circle btn-3d"
+           title="@Button_Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+    </div>
+</div>
+@* ============================================================================
+   ==== FIN MODIFICATION DRD 2025-12-12 — Bandeau bleu + boutons Create ====
+   ============================================================================ *@
+
+
+<form id="cdsetForm" asp-action="Create" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
 
-    @* Use asp-for instead of manual hidden field *@
     <input asp-for="ReturnUrl" type="hidden" />
 
     <!-- ================================
@@ -61,7 +101,9 @@ Modifications
 
                 @foreach (var fam in families)
                 {
-                    <option value="@fam">@fam</option>
+                    <option value="@fam">
+                        @(fam == CdSetCreateVM.NEW_OPTION ? NewFamily : fam)
+                    </option>
                 }
             </select>
 
@@ -125,31 +167,10 @@ Modifications
         </div>
     </div>
 
-    <!-- ========================
-         BUTTONS 3D
-         ======================== -->
-    <div class="row">
-        <div class="col-sm-9 offset-sm-3">
-
-            <button type="submit" class="btn btn-success btn-3d me-2">
-                <i class="fas fa-check"></i> @Button_Save
-            </button>
-
-            <button type="submit" name="continue" value="true" class="btn btn-primary btn-3d me-2">
-                <i class="fas fa-plus-circle"></i> @Button_Save_And_Continue
-            </button>
-
-            <a href="@Model.ReturnUrl" class="btn btn-secondary btn-3d" title="@Button_Cancel">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        </div>
-    </div>
-
 </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <partial name="_Toastr" />
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -167,6 +188,7 @@ Modifications
 
             familySelect.addEventListener("change", updateFamilyUI);
             updateFamilyUI();
+
         });
     </script>
 }

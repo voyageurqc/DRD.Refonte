@@ -21,6 +21,7 @@ Fonctionnalité
     - Inputs readonly pour les clés
 
 Modifications
+    2025-12-12   DRD v10 : Ajout bandeau bleu (boutons Save / Back / Metadata)
     2025-12-09   Correction DRD v10 complète.
 ===============================================================================
 *@
@@ -43,9 +44,50 @@ Modifications
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
 }
 
-<h1 class="mb-4">@ViewData["Title"]</h1>
+@* ============================================================================
+   ==== DÉBUT MODIFICATION DRD 2025-12-12 — Bandeau bleu Edition ====
+   ============================================================================ *@
+<div class="d-flex justify-content-between align-items-center mb-4 p-3"
+     style="background-color:#0d6efd; color:white; border-radius:8px;">
 
-<form asp-action="Edit" method="post">
+    <h2 class="m-0 fw-bold">@ViewData["Title"]</h2>
+
+    <div class="d-flex gap-3">
+
+        @* SAVE *@
+        <button type="submit" form="editForm"
+                class="btn btn-success btn-circle btn-3d"
+                title="@Button_Save">
+            <i class="fas fa-check"></i>
+        </button>
+
+        @* CANCEL / RETURN *@
+        <a href="@returnUrl"
+           class="btn btn-secondary btn-circle btn-3d"
+           title="@Button_Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        @* METADATA (si défini) *@
+        @if (metadata != null)
+        {
+            <button type="button"
+                    class="btn btn-info btn-circle btn-3d"
+                    data-bs-toggle="modal"
+                    data-bs-target="#systemMetadataModal"
+                    title="@Button_Metadata">
+                <i class="fa-solid fa-circle-info"></i>
+            </button>
+        }
+
+    </div>
+</div>
+@* ============================================================================
+   ==== FIN MODIFICATION DRD 2025-12-12 — Bandeau bleu Edition ====
+   ============================================================================ *@
+
+
+<form id="editForm" asp-action="Edit" method="post">
 
     @Html.AntiForgeryToken()
 
@@ -86,31 +128,6 @@ Modifications
                     @(Model.IsActive? TextActive : TextInactive)
                 </label>
             </div>
-        </div>
-
-        <!-- Boutons -->
-        <div class="d-flex justify-content-between mt-4">
-
-            <div>
-                <button type="submit" class="btn btn-primary btn-3d me-2" title="@Button_Save">
-                    <i class="fa-solid fa-floppy-disk"></i> @Button_Save
-                </button>
-
-                <a href="@returnUrl" class="btn btn-secondary btn-3d" title="@Button_Back">
-                    <i class="fa-solid fa-arrow-left"></i> @Button_Back
-                </a>
-            </div>
-
-            @if (metadata != null)
-            {
-                <button type="button"
-                        class="btn btn-info btn-3d"
-                        data-bs-toggle="modal"
-                        data-bs-target="#systemMetadataModal"
-                        title="@Button_Metadata">
-                    <i class="fa-solid fa-circle-info"></i> @Button_Metadata
-                </button>
-            }
         </div>
 
     </div>
