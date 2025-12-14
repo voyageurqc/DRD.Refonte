@@ -20,6 +20,9 @@
 //     - Support ReturnUrl et actions DRD dans les vues.
 //
 // Modifications:
+//	   2025-12-13    Suppression définitive de _NEW_ :
+//					- aucune valeur technique exposée
+//					- nouvelle famille déclenchée par SelectedFamily vide
 //     2025-12-11	Ajout interface IValidatableObject, validation conditionnelle,
 //					renommage NEW_OPTION, Trim(), ToEntity corrigé (IsActive).
 //     2025-12-09	Harmonisation AvailableFamilies/SelectedFamily/NewFamily.
@@ -44,7 +47,6 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 		/// <summary>
 		/// Valeur interne du dropdown permettant d’afficher la zone "Nouvelle famille".
 		/// </summary>
-		public const string NEW_OPTION = "_NEW_";
 
 		// --------------------------------------------------------------------
 		// REGION : Famille
@@ -69,9 +71,9 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 		/// Trim systématique pour harmoniser avec la validation Domain.
 		/// </summary>
 		public string TypeCodeFinal =>
-			SelectedFamily == NEW_OPTION
-				? (NewFamily?.Trim() ?? string.Empty)
-				: (SelectedFamily?.Trim() ?? string.Empty);
+			!string.IsNullOrWhiteSpace(SelectedFamily)
+				? SelectedFamily.Trim()
+				: (NewFamily?.Trim() ?? string.Empty);
 
 		#endregion
 
@@ -137,15 +139,14 @@ namespace DRD.Web.Models.GrpSystemTables.CdSetVM
 		/// </summary>
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
-			if (SelectedFamily == NEW_OPTION)
+			// Aucune famille sélectionnée → nouvelle famille obligatoire
+			if (string.IsNullOrWhiteSpace(SelectedFamily)
+				&& string.IsNullOrWhiteSpace(NewFamily))
 			{
-				if (string.IsNullOrWhiteSpace(NewFamily))
-				{
-					yield return new ValidationResult(
-						CdSetMM.Validation_NewFamilyRequired,
-						[nameof(NewFamily)]   // ← Correction IDE0300 / IDE0301
-					);
-				}
+				yield return new ValidationResult(
+					CdSetMM.Validation_NewFamilyRequired,
+					[nameof(NewFamily)]
+				);
 			}
 		}
 

@@ -356,5 +356,14 @@ namespace DRD.Resources.Common {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -- Votre sélection --.
+        /// </summary>
+        public static string YourChoice {
+            get {
+                return ResourceManager.GetString("YourChoice", resourceCulture);
+            }
+        }
     }
 }

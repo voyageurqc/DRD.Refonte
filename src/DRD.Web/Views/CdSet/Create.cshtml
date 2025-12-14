@@ -21,6 +21,9 @@ Fonctionnalité
     - Prend en charge ReturnUrl et Toastr
 
 Modifications
+    2025-12-13    Alignement UX sans valeur technique :
+                  - suppression totale de _NEW_
+                  - affichage "Nouvelle famille" si aucune famille sélectionnée
     2025-12-12    Ajustement bandeau : boutons Create (Save, Save & Continue, Cancel)
     2025-12-12    Version DRD : Intégration Toastr (messages à compléter dans le controller)
     2025-12-11    Version DRD : bandeau supérieur uniforme (style Index)
@@ -38,7 +41,7 @@ Modifications
 @using static DRD.Resources.MessagesMetier.CdSet.CdSetMM
 @using static DRD.Resources.EntityTitles.CdSetTitle
 @using static DRD.Resources.Popups.Popups
-
+@using static DRD.Resources.Informations.Informations
 @{
     ViewData["Title"] = CdSet_Create_Title;
 
@@ -93,17 +96,20 @@ Modifications
     <!-- ================================
          Famille (TypeCode) Dropdown
          ================================ -->
+    <div class="alert alert-info py-2 mb-2">
+        <i class="fa-solid fa-circle-info me-2"></i>
+        @FamilySelection_Help
+    </div>
     <div class="row mb-3">
         <label class="col-sm-3 col-form-label">@Field_TypeCode</label>
         <div class="col-sm-6">
             <select asp-for="SelectedFamily" class="form-select" id="familySelect">
-                <option value="">-- @Common_Select --</option>
-
+                <option value="">
+                    @YourChoice
+                </option>
                 @foreach (var fam in families)
                 {
-                    <option value="@fam">
-                        @(fam == CdSetCreateVM.NEW_OPTION ? NewFamily : fam)
-                    </option>
+                    <option value="@fam">@fam</option>
                 }
             </select>
 
@@ -179,16 +185,14 @@ Modifications
             const newFamilyRow = document.getElementById("newFamilyRow");
 
             function updateFamilyUI() {
-                if (familySelect.value === "@CdSetCreateVM.NEW_OPTION") {
-                    newFamilyRow.style.display = "flex";
-                } else {
-                    newFamilyRow.style.display = "none";
-                }
+                newFamilyRow.style.display =
+                    familySelect.value === ""
+                        ? "flex"
+                        : "none";
             }
 
             familySelect.addEventListener("change", updateFamilyUI);
-            updateFamilyUI();
-
+            updateFamilyUI(); // état initial au chargement
         });
     </script>
 }

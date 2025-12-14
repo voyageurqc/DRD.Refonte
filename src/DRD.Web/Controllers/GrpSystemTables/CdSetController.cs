@@ -23,6 +23,9 @@
 //     - Utilisation IUnitOfWork + Serilog + Toastr
 //
 // Modifications
+//     2025-12-13    Alignement Create sans _NEW_ :
+//					-familles métier uniquement
+//					- TypeCodeFinal basé sur SelectedFamily ou NewFamily
 //     2025-12-12    DRD v10 : correctif ToastrSuccess (finalType/finalCode)
 //     2025-12-11    DRD v10 : commentaires XML, familles Create GET, logs.
 //     2025-12-09    Harmonisation DRD v10 : régions & en-tête.
@@ -140,8 +143,11 @@ namespace DRD.Web.Controllers.GrpSystemTables
 				.OrderBy(x => x)
 				.ToList();
 
-			vm.AvailableFamilies = new List<string> { CdSetCreateVM.NEW_OPTION }
-				.Concat(distinctFamilies);
+			vm.AvailableFamilies = all
+				.Select(x => x.TypeCode)
+				.Distinct()
+				.OrderBy(x => x)
+				.ToList();
 
 			return View(vm);
 		}
@@ -155,8 +161,6 @@ namespace DRD.Web.Controllers.GrpSystemTables
 
 			// Toujours recharger les familles
 			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
-			vm.AvailableFamilies = new List<string> { CdSetCreateVM.NEW_OPTION }
-				.Concat(all.Select(x => x.TypeCode).Distinct().OrderBy(x => x));
 
 			if (!ModelState.IsValid)
 			{

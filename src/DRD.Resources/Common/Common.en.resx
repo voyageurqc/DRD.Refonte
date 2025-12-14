@@ -216,4 +216,7 @@
   <data name="Generic_Error" xml:space="preserve">
     <value>An error has occurred. Please try again or contact support if the problem continues</value>
   </data>
+  <data name="YourChoice" xml:space="preserve">
+    <value>-- Your Choice --</value>
+  </data>
 </root>

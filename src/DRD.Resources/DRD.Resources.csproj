@@ -39,6 +39,9 @@
 	  <Compile Update="EntityTitles\IdentityTitle.Designer.cs">
 	    <DependentUpon>IdentityTitle.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Informations\Informations.Designer.cs">
+	    <DependentUpon>Informations.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="ToastrMessages\CdSetToastr.Designer.cs">
 	    <DependentUpon>CdSetToastr.resx</DependentUpon>
 	  </Compile>
