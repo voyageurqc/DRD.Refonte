@@ -1,7 +1,8 @@
-﻿@* ============================================================================
+﻿@*
+===============================================================================
 Projet                         DRD.Web
-Nom du fichier                 _EntityActionButtons.cshtml
-Type de fichier                Vue partielle (MVC)
+Fichier                        _EntityActionButtons.cshtml
+Type                           Vue partielle (MVC)
 Classe                         _EntityActionButtons (Partial View)
 Emplacement                    Views/Shared
 Entités concernées             Générique (toutes les entités via EntityActionButtonsVM)
@@ -9,26 +10,19 @@ Créé le                        2025-10-24
 
 Description
     Vue partielle responsable de générer un groupe standardisé de boutons
-    d’action (Détails, Modifier, Désactiver, Supprimer). Supporte les clés
-    simples et composites, l’internationalisation, et les callbacks JS pour
-    la suppression ou la désactivation.
+    d’action (Détails, Modifier, Désactiver, Supprimer).
 
 Fonctionnalité
     - Boutons d’action 3D DRD standard.
-    - Support des clés multiples via EntityId concaténé “|”.
-    - Messages et titres entièrement localisés (.resx).
-    - Support d’un callback JS configurable.
-    - Gestion d’ID sécurisés pour les formulaires dynamiques.
-    - Conformité totale DRD v10.
+    - Support des clés composites TypeCode|Code.
+    - Suppression via callback JS universel.
+    - Désactivation via soumission directe de formulaire (DRD rule).
 
 Modifications
-    2025-12-07    Mise à niveau complète DRD v10 (en-tête, structure, régions).
-    2025-11-07    Correction bug ID 0 (data-item-id dynamique sécurisé).
-    2025-11-05    Correction CS8602 (opérateur ?? string.Empty).
-    2025-10-24    Version initiale.
-============================================================================ *@
+    2025-12-14    Correction DRD v10 : désactivation via submitFormById explicite
+===============================================================================
+*@
 
-@using DRD.Resources
 @using static DRD.Resources.Common.Common
 @using static DRD.Resources.Buttons.Buttons
 @using static DRD.Resources.Popups.Popups
@@ -37,59 +31,22 @@ Modifications
 
 @if (Model != null)
 {
-    // ------------------------------------------------------------------------
-    // REGION : Préparation des clés
-    // ------------------------------------------------------------------------
     #region Préparation des clés
 
-    // Clés séparées (TypeCode|Code, Id1|Id2|Id3, etc.)
     string[] keys = (Model.EntityId ?? string.Empty)
         .Split('|', StringSplitOptions.RemoveEmptyEntries);
 
     var routeValues = new Dictionary<string, string>();
     if (keys.Length >= 1) routeValues["id"] = keys[0];
     if (keys.Length >= 2) routeValues["key2"] = keys[1];
-    if (keys.Length >= 3) routeValues["key3"] = keys[2];
 
-    // ID sécurisé pour formulaires (deleteForm-XYZ)
     string safeEntityId = (Model.EntityId ?? string.Empty).Replace("|", "-");
 
     #endregion
 
-
-    // ------------------------------------------------------------------------
-    // REGION : Détermination du callback JS
-    // ------------------------------------------------------------------------
-    #region Callback
-
-    // Nom du callback JS utilisé par la modal
-    var callbackName = string.IsNullOrEmpty(Model.DeleteModalSuccessCallback)
-        ? "submitFormById"
-        : Model.DeleteModalSuccessCallback;
-
-    // ID utilisé pour la désactivation
-    var itemIdToPassDeactivate =
-        (callbackName == "submitFormById")
-            ? $"deactivateForm-{safeEntityId}"
-            : Model.EntityId;
-
-    // ID utilisé pour la suppression
-    var itemIdToPassDelete =
-        (callbackName == "submitFormById")
-            ? $"deleteForm-{safeEntityId}"
-            : Model.EntityId;
-
-    #endregion
-
-
-    // ------------------------------------------------------------------------
-    // REGION : Rendu des boutons
-    // ------------------------------------------------------------------------
-    #region Boutons
-
     <div class="btn-group" role="group">
 
-        @* --- Bouton DÉTAILS --- *@
+        @* DETAILS *@
         @if (Model.ShowDetails)
         {
             <a asp-controller="@Model.ControllerName"
@@ -102,7 +59,7 @@ Modifications
             </a>
         }
 
-        @* --- Bouton MODIFIER --- *@
+        @* EDIT *@
         @if (Model.ShowEdit)
         {
             <a asp-controller="@Model.ControllerName"
@@ -115,7 +72,7 @@ Modifications
             </a>
         }
 
-        @* --- Bouton DÉSACTIVER --- *@
+        @* DEACTIVATE — FORME DRD STABLE *@
         @if (Model.ShowDeactivate)
         {
             <button type="button"
@@ -126,13 +83,13 @@ Modifications
                     data-modal-title="@Model.DeactivateTitle"
                     data-modal-message="@Model.DeactivateMessage"
                     data-modal-confirm-text="@Button_Confirm"
-                    data-modal-success-callback="@callbackName"
-                    data-item-id="@itemIdToPassDeactivate">
+                    data-modal-success-callback="submitFormById"
+                    data-item-id="deactivateForm-@safeEntityId">
                 <i class="fa fa-power-off"></i>
             </button>
         }
 
-        @* --- Bouton SUPPRIMER --- *@
+        @* DELETE — CALLBACK UNIVERSEL *@
         @if (Model.ShowDelete)
         {
             <button type="button"
@@ -143,13 +100,11 @@ Modifications
                     data-modal-title="@Model.DeleteTitle"
                     data-modal-message="@Model.DeleteMessage"
                     data-modal-confirm-text="@Button_Confirm"
-                    data-modal-success-callback="@callbackName"
-                    data-item-id="@itemIdToPassDelete">
+                    data-modal-success-callback="submitFormById"
+                    data-item-id="deleteForm-@safeEntityId">
                 <i class="fas fa-trash"></i>
             </button>
         }
 
     </div>
-
-    #endregion
 }

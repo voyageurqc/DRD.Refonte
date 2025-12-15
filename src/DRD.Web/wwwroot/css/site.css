@@ -502,3 +502,13 @@ main {
     font-weight: bold;
     margin-bottom: 4px;
 }
+/* ============================================================
+   DRD – Modale de confirmation
+   ------------------------------------------------------------
+   Permet l'interprétation des retours à la ligne (\n)
+   dans les messages injectés via JS (textContent).
+   ============================================================ */
+#confirmationModal .modal-body p {
+    white-space: pre-line;
+}
+

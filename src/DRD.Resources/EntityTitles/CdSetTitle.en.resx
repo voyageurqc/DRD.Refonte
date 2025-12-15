@@ -124,12 +124,36 @@
     <value>Update Code Set {0} - {1}</value>
   </data>
   <data name="CdSet_EntityName" xml:space="preserve">
-    <value>Parameter code</value>
+    <value>Code Set</value>
   </data>
   <data name="CdSet_Detail_Title" xml:space="preserve">
     <value>Detail for code {0} - {1}</value>
   </data>
   <data name="Field_TypeCode_List_Title" xml:space="preserve">
     <value>Available Family of code</value>
+  </data>
+  <data name="DeactivateFamily_Button" xml:space="preserve">
+    <value>Deactivate family</value>
+  </data>
+  <data name="DeactivateFamily_Tooltip" xml:space="preserve">
+    <value>Deactivate all codes in this family</value>
+  </data>
+  <data name="DeactivateFamily_Title" xml:space="preserve">
+    <value>Code family deactivation</value>
+  </data>
+  <data name="ReactivateFamily_Button" xml:space="preserve">
+    <value>Reactivate family</value>
+  </data>
+  <data name="ReactivateFamily_Tooltip" xml:space="preserve">
+    <value>Reactivate all codes in this family</value>
+  </data>
+  <data name="ReactivateFamily_Title" xml:space="preserve">
+    <value>Code family reactivation</value>
+  </data>
+  <data name="CdSet_FamilyInactive_Badge" xml:space="preserve">
+    <value>Inactive family</value>
+  </data>
+  <data name="FamilyInactive_Tooltip" xml:space="preserve">
+    <value>This family is inactive</value>
   </data>
 </root>

@@ -135,6 +135,21 @@
   <data name="Common_Select" xml:space="preserve">
     <value>Choisir la Famille</value>
   </data>
+  <data name="DeactivateFamily_Confirm" xml:space="preserve">
+    <value>⚠️ Cette action désactivera tous les codes de la famille « {0} ».
+Les codes ne seront plus disponibles à l’utilisation,
+mais l’historique sera conservé.
+
+Voulez-vous continuer ?
+</value>
+  </data>
+  <data name="ReactivateFamily_Confirm" xml:space="preserve">
+    <value>⚠️ Cette action réactivera tous les codes de la famille « {0} ».
+Les codes redeviendront disponibles à l’utilisation.
+
+Voulez-vous continuer ?
+</value>
+  </data>
   <data name="Validation_NewFamilyRequired" xml:space="preserve">
     <value>Ce Champs est requis</value>
   </data>

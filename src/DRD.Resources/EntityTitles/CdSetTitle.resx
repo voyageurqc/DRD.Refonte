@@ -124,12 +124,36 @@
     <value>Mise à jour  du Code Set {0} -{1} </value>
   </data>
   <data name="CdSet_EntityName" xml:space="preserve">
-    <value>Code paramétrique</value>
+    <value>Code Set</value>
   </data>
   <data name="CdSet_Detail_Title" xml:space="preserve">
     <value>Détails du code {0}-{1}</value>
   </data>
   <data name="Field_TypeCode_List_Title" xml:space="preserve">
     <value>Liste des Familles de code disponibles</value>
+  </data>
+  <data name="DeactivateFamily_Button" xml:space="preserve">
+    <value>Désactiver la famille</value>
+  </data>
+  <data name="DeactivateFamily_Tooltip" xml:space="preserve">
+    <value>Désactiver tous les codes de cette famille</value>
+  </data>
+  <data name="DeactivateFamily_Title" xml:space="preserve">
+    <value>Désactivation d’une famille de codes</value>
+  </data>
+  <data name="ReactivateFamily_Button" xml:space="preserve">
+    <value>Réactiver la famille</value>
+  </data>
+  <data name="ReactivateFamily_Tooltip" xml:space="preserve">
+    <value>Réactiver tous les codes de cette famille</value>
+  </data>
+  <data name="ReactivateFamily_Title" xml:space="preserve">
+    <value>Réactivation d’une famille de codes</value>
+  </data>
+  <data name="CdSet_FamilyInactive_Badge" xml:space="preserve">
+    <value>Famille inactive</value>
+  </data>
+  <data name="FamilyInactive_Tooltip" xml:space="preserve">
+    <value>Cette famille est désactivée</value>
   </data>
 </root>

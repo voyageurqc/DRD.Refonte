@@ -139,6 +139,20 @@
   <data name="Common_Select" xml:space="preserve">
     <value>Choose Category</value>
   </data>
+  <data name="DeactivateFamily_Confirm" xml:space="preserve">
+    <value>⚠️ This action will deactivate all codes in the “{0}” family.
+The codes will no longer be available for use,
+but the history will be preserved.
+
+Do you want to continue?</value>
+  </data>
+  <data name="ReactivateFamily_Confirm" xml:space="preserve">
+    <value>⚠️ This action will reactivate all codes in the “{0}” family.
+The codes will become available for use again.
+
+Do you want to continue?
+</value>
+  </data>
   <data name="Validation_NewFamilyRequired" xml:space="preserve">
     <value>This field is required</value>
   </data>

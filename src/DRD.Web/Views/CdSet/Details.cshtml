@@ -43,7 +43,47 @@ Modifications
     var metadata = ViewData["Metadata"] as EntityMetadataDto;
 }
 
-<h1 class="mb-4">@ViewData["Title"]</h1>
+@* ============================================================================
+   ==== BANDEAU BLEU — EDIT ====
+   ============================================================================ *@
+<div class="d-flex justify-content-between align-items-center mb-4 p-3"
+     style="background-color:#0d6efd; color:white; border-radius:8px;">
+
+    <h2 class="m-0 fw-bold">@ViewData["Title"]</h2>
+
+    <div class="d-flex gap-3">
+
+        <a asp-controller="CdSet"
+           asp-action="Edit"
+           asp-route-id="@Model.TypeCode"
+           asp-route-key2="@Model.Code"
+           asp-route-returnUrl="@returnUrl"
+           class="btn btn-info btn-circle btn-3d"
+           title="@Button_Edit">
+            <i class="fas fa-pen"></i>
+        </a>
+
+        @* BACK *@
+        <a href="@returnUrl"
+           class="btn btn-secondary btn-circle btn-3d"
+           title="@Button_Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        @* METADATA *@
+        @if (metadata != null)
+        {
+            <button type="button"
+                    class="btn btn-info btn-circle btn-3d"
+                    data-bs-toggle="modal"
+                    data-bs-target="#systemMetadataModal"
+                    title="@Button_Metadata">
+                <i class="fa-solid fa-circle-info"></i>
+            </button>
+        }
+
+    </div>
+</div>
 
 <div class="card shadow-sm p-4">
 
@@ -85,37 +125,6 @@ Modifications
         }
     </div>
 
-    <!-- BOUTONS -->
-    <div class="d-flex justify-content-between mt-4">
-
-        <div>
-            <a href="@returnUrl"
-               class="btn btn-secondary btn-3d me-2"
-               title="@Button_Back">
-                <i class="fa-solid fa-arrow-left"></i> @Button_Back
-            </a>
-
-            <a asp-action="Edit"
-               asp-route-id="@Model.TypeCode"
-               asp-route-key2="@Model.Code"
-               asp-route-returnUrl="@returnUrl"
-               class="btn btn-primary btn-3d"
-               title="@Button_Edit">
-                <i class="fa-solid fa-pen"></i> @Button_Edit
-            </a>
-        </div>
-
-        @if (metadata != null)
-        {
-            <button type="button"
-                    class="btn btn-info btn-3d"
-                    data-bs-toggle="modal"
-                    data-bs-target="#systemMetadataModal"
-                    title="@Button_Metadata">
-                <i class="fa-solid fa-circle-info"></i> @Button_Metadata
-            </button>
-        }
-    </div>
 
 </div>
 

@@ -16,24 +16,25 @@
 // Fonctionnalité
 //     - Index : filtre par famille et recherche textuelle
 //     - Create : création d’un code paramétrique
-//     - Edit : modification (réactivation)
+//     - Edit : modification (réactivation individuelle)
 //     - Details : affichage en lecture seule
-//     - Delete : suppression via modale universelle
+//     - Deactivate : désactivation individuelle
+//     - DeactivateFamily : désactivation logique d’une famille complète
+//     - ReactivateFamily : réactivation logique d’une famille complète
+//     - Delete : suppression physique (cas exceptionnel)
 //     - Gestion clé composite (TypeCode + Code)
-//     - Utilisation IUnitOfWork + Serilog + Toastr
+//     - Utilisation ICdSetService + Serilog + Toastr
 //
 // Modifications
-//     2025-12-13    Alignement Create sans _NEW_ :
-//					-familles métier uniquement
-//					- TypeCodeFinal basé sur SelectedFamily ou NewFamily
-//     2025-12-12    DRD v10 : correctif ToastrSuccess (finalType/finalCode)
-//     2025-12-11    DRD v10 : commentaires XML, familles Create GET, logs.
-//     2025-12-09    Harmonisation DRD v10 : régions & en-tête.
-//     2025-12-08    Migration Toastr vers ressources strongly typed.
-//     2025-12-07    Version initiale.
+//     2025-12-15    Ajout ReactivateFamilyConfirmed (réactivation par TypeCode)
+//     2025-12-15    Ajout DeactivateFamilyConfirmed (désactivation par TypeCode)
+//     2025-12-14    Ajustement Create/Edit pour audit via CdSetService
+//     2025-12-14    Ajout action GetMetadata (AJAX, PartialView métadonnées)
 // ============================================================================
 
 using DRD.Application.Common.Interfaces;
+using DRD.Application.IServices.SystemTables;
+using DRD.Application.Popup.Mappers;
 using DRD.Resources.MessagesMetier.CdSet;
 using DRD.Resources.ToastrMessages;
 using DRD.Web.Models.GrpSystemTables.CdSetVM;
@@ -44,31 +45,32 @@ namespace DRD.Web.Controllers.GrpSystemTables
 {
 	public class CdSetController : Controller
 	{
-		// =====================================================================
-		// DRD – Services
-		// =====================================================================
 		#region Services
 
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly ICdSetService _cdSetService;
 		private readonly Serilog.ILogger _logger;
 
-		public CdSetController(IUnitOfWork unitOfWork)
+		public CdSetController(
+			IUnitOfWork unitOfWork,
+			ICdSetService cdSetService)
 		{
 			_unitOfWork = unitOfWork;
+			_cdSetService = cdSetService;
 			_logger = Log.ForContext<CdSetController>();
 		}
 
 		#endregion
 
 
-		// =====================================================================
-		// DRD – Index
-		// =====================================================================
 		#region Index
 
 		public async Task<IActionResult> Index(string? typeCode, string? search)
 		{
-			_logger.Information("CdSet - Index - Filtre TypeCode={TypeCode}, Search={Search}", typeCode, search);
+			_logger.Information(
+				"CdSet - Index - Filtre TypeCode={TypeCode}, Search={Search}",
+				typeCode,
+				search);
 
 			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
 
@@ -122,227 +124,212 @@ namespace DRD.Web.Controllers.GrpSystemTables
 		#endregion
 
 
-		// =====================================================================
-		// DRD – Create
-		// =====================================================================
-		#region Create
-
-		[HttpGet]
-		public async Task<IActionResult> Create(string? returnUrl)
-		{
-			var vm = new CdSetCreateVM
-			{
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
-
-			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
-
-			var distinctFamilies = all
-				.Select(x => x.TypeCode)
-				.Distinct()
-				.OrderBy(x => x)
-				.ToList();
-
-			vm.AvailableFamilies = all
-				.Select(x => x.TypeCode)
-				.Distinct()
-				.OrderBy(x => x)
-				.ToList();
-
-			return View(vm);
-		}
+		#region Deactivate (individuel)
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(CdSetCreateVM vm)
+		public async Task<IActionResult> DeactivateConfirmed(
+			string id,
+			string key2,
+			string? returnUrl = null)
 		{
-			// Détection du bouton Save & Continue
-			bool saveAndContinue = Request.Form.ContainsKey("continue");
+			_logger.Information(
+				"CdSet DeactivateConfirmed {TypeCode}|{Code}",
+				id,
+				key2);
 
-			// Toujours recharger les familles
-			var all = await _unitOfWork.CdSetRepository.GetAllAsync();
-
-			if (!ModelState.IsValid)
-			{
-				TempData["ToastrError"] = GenericToastr.Error_InvalidForm;
-				return View(vm);
-			}
-
-			var finalType = vm.TypeCodeFinal?.Trim() ?? "";
-			var finalCode = vm.Code?.Trim() ?? "";
-
-			if (await _unitOfWork.CdSetRepository.ExistsAsync(finalType, finalCode))
-			{
-				TempData["ToastrError"] = CdSetMM.CdSetMM_Error_Duplicate;
-				return View(vm);
-			}
-
-			var entity = vm.ToEntity();
-			await _unitOfWork.CdSetRepository.AddAsync(entity);
-			await _unitOfWork.SaveChangesAsync();
-
-			// Message success
-			TempData["ToastrSuccess"] = string.Format(
-				CdSetToastr.Success_EntityCreated,
-				finalType,
-				finalCode
-			);
-
-			_logger.Information("CdSet créé : {TypeCode}|{Code}", entity.TypeCode, entity.Code);
-
-			// ---------- SAVE & CONTINUE ----------
-			if (saveAndContinue)
-			{
-				return RedirectToAction(nameof(Create), new { returnUrl = vm.ReturnUrl });
-			}
-
-			// ---------- SAVE NORMAL ----------
-			return Redirect(vm.ReturnUrl ?? Url.Action(nameof(Index))!);
-		}
-		#endregion
-
-
-		// =====================================================================
-		// DRD – Edit
-		// =====================================================================
-		#region Edit
-
-		[HttpGet]
-		public async Task<IActionResult> Edit(string id, string key2, string? returnUrl)
-		{
-			var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(id, key2);
+			var entity = await _cdSetService
+				.GetByTypeCodeAndCodeAsync(id, key2);
 
 			if (entity == null)
 			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.CdSet_NotFound,
+					id,
+					key2);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
 			}
 
-			var vm = new CdSetEditVM
-			{
-				TypeCode = entity.TypeCode,
-				Code = entity.Code,
-				DescriptionFr = entity.DescriptionFr,
-				DescriptionEn = entity.DescriptionEn,
-				IsActive = entity.IsActive,
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
+			await _cdSetService.DeactivateAsync(entity);
 
-			return View(vm);
+			TempData["ToastrSuccess"] = string.Format(
+				CdSetToastr.Success_EntityDeactivate,
+				entity.TypeCode,
+				entity.Code);
+
+			return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
 		}
+
+		#endregion
+
+
+		#region DeactivateFamily (famille complète)
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(CdSetEditVM vm)
+		public async Task<IActionResult> DeactivateFamilyConfirmed(
+			string typeCode,
+			string? returnUrl = null)
 		{
-			if (!ModelState.IsValid)
+			_logger.Information(
+				"CdSet DeactivateFamilyConfirmed {TypeCode}",
+				typeCode);
+
+			int affectedCount;
+
+			try
 			{
-				TempData["ToastrError"] = GenericToastr.Error_InvalidForm;
-				return View(vm);
+				affectedCount = await _cdSetService
+					.DeactivateFamilyAsync(typeCode);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(
+					ex,
+					"Erreur désactivation famille CdSet {TypeCode}",
+					typeCode);
+
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.DeactivateFamily_Error,
+					typeCode);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
 			}
 
+			if (affectedCount == 0)
+			{
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.DeactivateFamily_NotFound,
+					typeCode);
+			}
+			else
+			{
+				TempData["ToastrSuccess"] = string.Format(
+					CdSetToastr.DeactivateFamily_Success,
+					typeCode);
+			}
+
+			return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+		}
+
+		#endregion
+
+
+		#region ReactivateFamily (famille complète)
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ReactivateFamilyConfirmed(
+			string typeCode,
+			string? returnUrl = null)
+		{
+			_logger.Information(
+				"CdSet ReactivateFamilyConfirmed {TypeCode}",
+				typeCode);
+
+			int affectedCount;
+
+			try
+			{
+				affectedCount = await _cdSetService
+					.ReactivateFamilyAsync(typeCode);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(
+					ex,
+					"Erreur réactivation famille CdSet {TypeCode}",
+					typeCode);
+
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.ReactivateFamily_Error,
+					typeCode);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+
+			if (affectedCount == 0)
+			{
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.ReactivateFamily_NotFound,
+					typeCode);
+			}
+			else
+			{
+				TempData["ToastrSuccess"] = string.Format(
+					CdSetToastr.ReactivateFamily_Success,
+					typeCode);
+			}
+
+			return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+		}
+
+		#endregion
+
+
+		#region Delete (physique)
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(
+			string id,
+			string key2,
+			string? returnUrl = null)
+		{
 			var entity = await _unitOfWork.CdSetRepository
-				.GetByTypeCodeAndCodeAsync(vm.TypeCode, vm.Code);
+				.GetByTypeCodeAndCodeAsync(id, key2);
 
 			if (entity == null)
 			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
-			}
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.CdSet_NotFound,
+					id,
+					key2);
 
-			entity.ModifyFields(vm.DescriptionFr, vm.DescriptionEn, vm.IsActive);
-
-			await _unitOfWork.CdSetRepository.UpdateAsync(entity);
-			await _unitOfWork.SaveChangesAsync();
-
-			TempData["ToastrSuccess"] = string.Format(
-				CdSetToastr.Success_EntityUpdated,
-				vm.TypeCode,
-				vm.Code
-			);
-
-			_logger.Information("CdSet modifié : {TypeCode}|{Code}", vm.TypeCode, vm.Code);
-
-			// 🔒 RÈGLE FINALE : Edit retourne toujours à Index
-			return RedirectToAction(nameof(Index));
-		}
-		#endregion
-		// =====================================================================
-		// DRD – Details
-		// =====================================================================
-		#region Details
-
-		[HttpGet]
-		public async Task<IActionResult> Details(string id, string key2, string? returnUrl)
-		{
-			var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(id, key2);
-
-			if (entity == null)
-			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
-			}
-
-			var vm = new CdSetDetailsVM
-			{
-				TypeCode = entity.TypeCode,
-				Code = entity.Code,
-				DescriptionFr = entity.DescriptionFr,
-				DescriptionEn = entity.DescriptionEn,
-				IsActive = entity.IsActive,
-				CreationDate = entity.CreationDate,
-				ModificationDate = entity.ModificationDate,
-				CreatedBy = entity.CreatedBy,
-				UpdatedBy = entity.UpdatedBy,
-				ReturnUrl = returnUrl ?? Url.Action(nameof(Index))
-			};
-
-			return View(vm);
-		}
-
-		#endregion
-
-
-		// =====================================================================
-		// DRD – Delete
-		// =====================================================================
-		#region Delete
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(string entityId)
-		{
-			if (string.IsNullOrWhiteSpace(entityId))
-			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
-			}
-
-			var parts = entityId.Split('|');
-			if (parts.Length < 2)
-			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
-			}
-
-			string typeCode = parts[0];
-			string code = parts[1];
-
-			var entity = await _unitOfWork.CdSetRepository.GetByTypeCodeAndCodeAsync(typeCode, code);
-
-			if (entity == null)
-			{
-				TempData["ToastrError"] = GenericToastr.Error_NotFound;
-				return RedirectToAction(nameof(Index));
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
 			}
 
 			await _unitOfWork.CdSetRepository.RemoveAsync(entity);
 			await _unitOfWork.SaveChangesAsync();
 
-			TempData["ToastrSuccess"] = CdSetToastr.Success_EntityDeleted;
-			_logger.Information("CdSet supprimé : {TypeCode}|{Code}", typeCode, code);
+			TempData["ToastrSuccess"] = string.Format(
+				CdSetToastr.Success_EntityDeleted,
+				entity.TypeCode,
+				entity.Code);
 
-			return RedirectToAction(nameof(Index));
+			_logger.Information(
+				"CdSet supprimé : {TypeCode}|{Code}",
+				id,
+				key2);
+
+			return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+		}
+
+		#endregion
+
+
+		#region Metadata
+
+		[HttpGet]
+		public async Task<IActionResult> GetMetadata(string entityId)
+		{
+			if (string.IsNullOrWhiteSpace(entityId))
+				return BadRequest();
+
+			var parts = entityId.Split('|');
+			if (parts.Length != 2)
+				return BadRequest();
+
+			var entity = await _unitOfWork.CdSetRepository
+				.GetByTypeCodeAndCodeAsync(parts[0], parts[1]);
+
+			if (entity == null)
+				return NotFound();
+
+			var dto = entity.ToMetadataDto();
+
+			return PartialView("_SystemMetadataPartial", dto);
 		}
 
 		#endregion

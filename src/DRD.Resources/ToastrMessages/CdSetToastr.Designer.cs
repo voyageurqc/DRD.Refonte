@@ -61,11 +61,83 @@ namespace DRD.Resources.ToastrMessages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to L’élément CdSet « {0}  - {1} » n&apos;a pas été trouvé!.
+        /// </summary>
+        public static string CdSet_NotFound {
+            get {
+                return ResourceManager.GetString("CdSet_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible de désactiver la famille de codes « {0} »..
+        /// </summary>
+        public static string DeactivateFamily_Error {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aucun code actif trouvé pour la famille « {0} »..
+        /// </summary>
+        public static string DeactivateFamily_NotFound {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La famille de codes « {0} » a été désactivée avec succès..
+        /// </summary>
+        public static string DeactivateFamily_Success {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible de réactiver la famille de codes « {0} »..
+        /// </summary>
+        public static string ReactivateFamily_Error {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aucun code inactif trouvé pour la famille « {0} »..
+        /// </summary>
+        public static string ReactivateFamily_NotFound {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La famille de codes « {0} » a été réactivée avec succès..
+        /// </summary>
+        public static string ReactivateFamily_Success {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to L’élément CdSet « {0}  - {1} » a été créé avec succès..
         /// </summary>
         public static string Success_EntityCreated {
             get {
                 return ResourceManager.GetString("Success_EntityCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to L’élément CdSet « {0} -{1} » a été désactivé avec succès..
+        /// </summary>
+        public static string Success_EntityDeactivate {
+            get {
+                return ResourceManager.GetString("Success_EntityDeactivate", resourceCulture);
             }
         }
         

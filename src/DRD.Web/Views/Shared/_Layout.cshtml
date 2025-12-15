@@ -20,6 +20,7 @@ Fonctionnalité
     - Ressources .resx pour tout le texte visible.
 
 Modifications
+    2025-12-14  Correction entête : partial Razor (Metadata système)
     2025-12-11  Version DRD v10 finalisée (suppression using invalides, structure DRD).
     2025-12-06  Ajout footer DRD sticky avec logo, ©, version dynamique.
     2025-12-06  Intégration bilingue ressources Footer_*.
@@ -223,8 +224,10 @@ Modifications
 
     <!-- Toastr partial (génère les messages) -->
     <partial name="_Toastr" />
+    @await Html.PartialAsync("_ConfirmationModal")
 
     @RenderSection("Scripts", required: false)
+
 
 </body>
 </html>

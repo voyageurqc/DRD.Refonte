@@ -63,32 +63,34 @@ namespace DRD.Web.Models.Shared
 
         #region Callback JavaScript
         public string? DeleteModalSuccessCallback { get; set; }
-        #endregion
+		#endregion
 
-        #region Titres & messages localisés
-        public string DeactivateTitle =>
-            Popups.Confirm_Deactivate_Message_Entity
+		#region Titres & messages localisés
+
+		public string DeactivateTitle =>
+			_deactivateMessageTemplate
 				.Replace("{0}", EntityIdentifier)
-                .Replace("{1}", EntityName);
+				.Replace("{1}", EntityName);
 
-        public string DeleteTitle =>
-            Popups.Confirm_Delete_Message_Entity
+		public string DeleteTitle =>
+			_deleteMessageTemplate
 				.Replace("{0}", EntityIdentifier)
-                .Replace("{1}", EntityName);
+				.Replace("{1}", EntityName);
 
-        public string DeactivateMessage =>
-            _deactivateMessageTemplate
-                .Replace("{0}", EntityIdentifier)
-                .Replace("{1}", EntityName);
+		public string DeactivateMessage =>
+			_deactivateMessageTemplate
+				.Replace("{0}", EntityIdentifier)
+				.Replace("{1}", EntityName);
 
-        public string DeleteMessage =>
-            _deleteMessageTemplate
-                .Replace("{0}", EntityIdentifier)
-                .Replace("{1}", EntityName);
-        #endregion
+		public string DeleteMessage =>
+			_deleteMessageTemplate
+				.Replace("{0}", EntityIdentifier)
+				.Replace("{1}", EntityName);
 
-        #region Constructeurs
-        public EntityActionButtonsVM(
+		#endregion
+
+		#region Constructeurs
+		public EntityActionButtonsVM(
             string controllerName,
             string entityId,
             string entityName,

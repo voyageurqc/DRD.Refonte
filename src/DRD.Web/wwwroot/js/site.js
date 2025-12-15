@@ -14,13 +14,16 @@
 //     - Fournit des fonctions de callback génériques (ex: soumission de formulaire).
 //     - Gère l'initialisation automatique et globale des tables DataTables.
 //     - Fournit un système de validation universel pour les modales de sélection.
+//     - Gère l'affichage dynamique de la modale système de métadonnées (AJAX).
 //
 // 🛠️ Modifications :
+//     2025-12-14 : Ajout gestion globale de la modale système de métadonnées (chargement AJAX).
 //     2025-07-24 : Utilisation de la variable de configuration globale 'drdConfig'
 //                  pour le message d'erreur Toastr afin de supporter la localisation.
 //     2025-07-24 : Ajout de la validation universelle pour les modales de sélection.
 //     2025-07-24 : Mise à jour de l'en-tête pour conformité avec les standards.
 // ============================================================================
+
 
 // ============================================================================
 // FONCTION DE CALLBACK UNIVERSELLE
@@ -41,6 +44,89 @@ function submitFormById(formId) {
 }
 
 
+// ============================================================================
+// GESTION GLOBALE – MODALE MÉTADONNÉES
+// ----------------------------------------------------------------------------
+// Gère le chargement AJAX et l'affichage de la modale système de métadonnées
+// pour toutes les DataTables via le bouton .metadata-trigger
+// ============================================================================
+function initializeMetadataModal() {
+
+    document.addEventListener('click', function (event) {
+
+        const trigger = event.target.closest('.metadata-trigger');
+        if (!trigger) return;
+
+        event.preventDefault();
+
+        const entityId = trigger.getAttribute('data-entity-id');
+        if (!entityId) return;
+
+        fetch(`/CdSet/GetMetadata?entityId=${encodeURIComponent(entityId)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur chargement métadonnées');
+                }
+                return response.text();
+            })
+            .then(html => {
+
+                // Supprimer toute modale existante
+                const existingModal = document.getElementById('systemMetadataModal');
+                if (existingModal) {
+                    const existingInstance = bootstrap.Modal.getInstance(existingModal);
+                    if (existingInstance) {
+                        existingInstance.hide();
+                        existingInstance.dispose();
+                    }
+
+                    existingModal.remove();
+
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('padding-right');
+                    document.querySelectorAll('.modal-backdrop')
+                        .forEach(el => el.remove());
+                }
+
+                // Injecter la modale reçue
+                document.body.insertAdjacentHTML('beforeend', html);
+
+                // Ouvrir la modale Bootstrap
+                const modalEl = document.getElementById('systemMetadataModal');
+                const modal = new bootstrap.Modal(modalEl, {
+                    backdrop: true,
+                    keyboard: true,
+                    focus: true
+                });
+                modal.show();
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    const instance = bootstrap.Modal.getInstance(modalEl);
+                    if (instance) {
+                        instance.dispose();
+                    }
+
+                    modalEl.remove();
+
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('padding-right');
+                    document.querySelectorAll('.modal-backdrop')
+                        .forEach(el => el.remove());
+                }, { once: true });
+
+            })
+            .catch(error => {
+                console.error(error);
+                if (typeof toastr !== 'undefined' && typeof drdConfig !== 'undefined') {
+                    toastr.error(drdConfig.genericErrorMessage || 'Erreur');
+                }
+            });
+    });
+}
+
+
+// ============================================================================
+// INITIALISATION GLOBALE
+// ============================================================================
 document.addEventListener('DOMContentLoaded', function () {
 
     // ============================================================================
@@ -49,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmationModalEl = document.getElementById('confirmationModal');
     if (confirmationModalEl) {
         confirmationModalEl.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget; // Le bouton qui a cliqué
+            const button = event.relatedTarget;
 
             const title = button.getAttribute('data-modal-title');
             const message = button.getAttribute('data-modal-message');
@@ -75,12 +161,19 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton);
 
             newConfirmButton.addEventListener('click', function () {
+                console.log("CONFIRM CLICK");
+                console.log("Callback:", successCallbackName);
+
                 if (typeof window[successCallbackName] === 'function') {
                     const itemId = button.getAttribute('data-item-id');
+                    console.log("ItemId:", itemId);
+
+
                     const additionalItemId = button.getAttribute('data-additional-item-id');
 
                     if (additionalItemId) {
                         window[successCallbackName](itemId, additionalItemId);
+
                     } else {
                         window[successCallbackName](itemId);
                     }
@@ -91,38 +184,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
     // ============================================================================
     // INITIALISATION GLOBALE DE DATATABLES
     // ----------------------------------------------------------------------------
     if (typeof jQuery !== 'undefined' && jQuery.fn.DataTable && typeof drdConfig !== 'undefined') {
-        const languageUrl = drdConfig.dataTablesLangUrlBase + (drdConfig.culture.startsWith('fr') ? 'fr-FR.json' : 'en-GB.json');
+        const languageUrl =
+            drdConfig.dataTablesLangUrlBase +
+            (drdConfig.culture.startsWith('fr') ? 'fr-FR.json' : 'en-GB.json');
 
         jQuery('.datatable-bilingual').DataTable({
-            language: {
-                url: languageUrl
-            },
+            language: { url: languageUrl },
             paging: true,
             pageLength: 10,
             autoWidth: true,
             responsive: true,
-
-
             columnDefs: [
-                // Désactiver l'ordonnancement UNIQUEMENT sur la dernière colonne (Actions)
                 { targets: -1, orderable: false }
-                // Les autres colonnes (y compris Activité) sont triables par défaut.
-            ], 
-            "initComplete": function (settings, json) {
-                // Recalculer immédiatement après le rendu initial
-                this.api().columns.adjust().draw();
+            ],
+            initComplete: function () {
                 const tableApi = this.api();
-
-                // Écouteur pour le redimensionnement de la fenêtre (correction de réactivité)
+                tableApi.columns.adjust().draw();
                 $(window).on('resize', function () {
-                    tableApi.columns.adjust().draw(false); 
-                });            } 
-        }); 
+                    tableApi.columns.adjust().draw(false);
+                });
+            }
+        });
     }
+
+
     // ============================================================================
     // VALIDATION UNIVERSELLE POUR LES MODALES DE SÉLECTION
     // ----------------------------------------------------------------------------
@@ -135,10 +225,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dropdown && errorDiv) {
             form.addEventListener('submit', function (event) {
                 if (dropdown.value === "") {
-                    event.preventDefault(); // Bloque la soumission
-                    errorDiv.style.display = 'block'; // Affiche l'erreur
+                    event.preventDefault();
+                    errorDiv.style.display = 'block';
                 } else {
-                    errorDiv.style.display = 'none'; // Cache l'erreur
+                    errorDiv.style.display = 'none';
                 }
             });
 
@@ -149,5 +239,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+
+    // ============================================================================
+    // INITIALISATION MÉTADONNÉES
+    // ----------------------------------------------------------------------------
+    initializeMetadataModal();
 
 });

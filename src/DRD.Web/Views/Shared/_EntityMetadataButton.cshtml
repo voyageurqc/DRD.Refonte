@@ -1,0 +1,38 @@
+﻿@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _EntityMetadataButton.cshtml
+Type                           Razor Partial View
+Classe                         Composant UI réutilisable
+Emplacement                    Views/Shared
+Entités concernées             EntityMetadataDto
+Créé le                        2025-12-13
+
+Description
+    Bouton standard DRD pour l’affichage des métadonnées système d’une entité.
+    Utilisé dans les tableaux Index (DataTables) et les vues Edit / Details.
+
+Fonctionnalité
+    - Affiche un bouton ℹ️ / base de données
+    - Déclenche la modale _SystemMetadataPartial
+    - Transmet l’identifiant d’entité (clé fonctionnelle)
+
+Modifications
+    2025-12-13    Création du composant MetadataButton réutilisable.
+===============================================================================
+*@
+
+@using static DRD.Resources.Buttons.Buttons
+
+@model string   
+@* entityId : ex "TypeCode|Code" *@
+
+<a href="javascript:void(0);"
+   class="btn btn-info btn-sm btn-3d metadata-trigger"
+   title="@Button_Metadata"
+   data-bs-toggle="modal"
+   data-bs-target="#systemMetadataModal"
+   data-entity-id="@Model">
+
+    <i class="bi bi-database"></i>
+</a>

@@ -19,16 +19,23 @@
 //       via ApplyConfigurationsFromAssembly.
 //
 // Modifications
+//     2025-12-15    Ajout de la surcharge SaveChangesAsync dans ApplicationDbContext
+//					 afin de centraliser la mise à jour automatique des métadonnées d’audit
+//					 (CreationDate, CreatedBy, ModificationDate, UpdatedBy).
 //     2025-12-09    Ajustements DRD (résumés des régions, validation CdSet).
 //     2025-12-02    Création initiale (clean start .NET 10, BD DRDv10).
 // ============================================================================
 
+using DRD.Application.Common.Interfaces;
+using DRD.Domain.Common;
 using DRD.Domain.Entities.GrpClient;
 using DRD.Domain.Entities.GrpSystemTables;
 using DRD.Domain.Entities.GrpWebMessage;
 using DRD.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
 
 namespace DRD.Infrastructure.Data
 {
@@ -37,22 +44,27 @@ namespace DRD.Infrastructure.Data
     /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        #region DRD – Constructeurs
-        /// <summary>
-        /// Initialise une nouvelle instance du contexte de base de données DRD.
-        /// </summary>
-        /// <param name="options">Options de configuration du contexte.</param>
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-        #endregion
+		#region DRD – Constructeurs
+		/// <summary>
+		/// Initialise une nouvelle instance du contexte de base de données DRD.
+		/// </summary>
+		/// <param name="options">Options de configuration du contexte.</param>
+		private readonly ICurrentUserService _currentUserService;
 
-        #region DRD – DbSet Domain
-        /// <summary>
-        /// Jeu d'entités pour les clients maîtres DRD.
-        /// </summary>
-        public DbSet<Client> Clients { get; set; } = null!;
+		public ApplicationDbContext(
+			DbContextOptions<ApplicationDbContext> options,
+			ICurrentUserService currentUserService)
+			: base(options)
+		{
+			_currentUserService = currentUserService;
+		}
+		#endregion
+
+		#region DRD – DbSet Domain
+		/// <summary>
+		/// Jeu d'entités pour les clients maîtres DRD.
+		/// </summary>
+		public DbSet<Client> Clients { get; set; } = null!;
 
         /// <summary>
         /// Jeu d'entités pour les détails DRD associés aux clients.
@@ -115,16 +127,53 @@ namespace DRD.Infrastructure.Data
         /// Jeu d'entités pour les droits d'accès par utilisateur et par vue.
         /// </summary>
         public DbSet<UserViewAccess> UserViewAccesses { get; set; } = null!;
-        #endregion
+		#endregion
+		#region DRD – Audit & SaveChanges
+		/// <summary>
+		/// Intercepte les sauvegardes EF Core afin de mettre à jour automatiquement
+		/// les champs de métadonnées (création / modification) pour toutes les entités
+		/// implémentant IAuditableEntity.
+		/// </summary>
+		public override async Task<int> SaveChangesAsync(
+			CancellationToken cancellationToken = default)
+		{
+			var now = DateTime.UtcNow;
 
-        #region DRD – Configuration EF Core
-        /// <summary>
-        /// Configure le modèle EF Core (mapping entités ↔ tables).
-        /// Applique automatiquement toutes les configurations présentes
-        /// dans l'assembly DRD.Infrastructure.
-        /// </summary>
-        /// <param name="modelBuilder">Constructeur de modèle EF Core.</param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+			// Valeur temporaire — sera remplacée par ICurrentUserService
+			var currentUser = _currentUserService?.UserName ?? "SYSTEM";
+
+			foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
+			{
+				if (entry.State == EntityState.Added)
+				{
+					entry.Entity.CreationDate = now;
+					entry.Entity.CreatedBy = currentUser;
+					entry.Entity.ModificationDate = now;
+					entry.Entity.UpdatedBy = currentUser;
+				}
+				else if (entry.State == EntityState.Modified)
+				{
+					entry.Entity.ModificationDate = now;
+					entry.Entity.UpdatedBy = currentUser;
+
+					// Protection DRD : jamais modifier la création
+					entry.Property(nameof(IAuditableEntity.CreationDate)).IsModified = false;
+					entry.Property(nameof(IAuditableEntity.CreatedBy)).IsModified = false;
+				}
+			}
+
+			return await base.SaveChangesAsync(cancellationToken);
+		}
+		#endregion
+
+		#region DRD – Configuration EF Core
+		/// <summary>
+		/// Configure le modèle EF Core (mapping entités ↔ tables).
+		/// Applique automatiquement toutes les configurations présentes
+		/// dans l'assembly DRD.Infrastructure.
+		/// </summary>
+		/// <param name="modelBuilder">Constructeur de modèle EF Core.</param>
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Appel obligatoire de la configuration Identity.
             base.OnModelCreating(modelBuilder);

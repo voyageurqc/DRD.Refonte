@@ -117,13 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CdSet_NotFound" xml:space="preserve">
+    <value>CdSet « {0} - {1}  &gt; Can not be found!</value>
+  </data>
   <data name="Success_EntityCreated" xml:space="preserve">
     <value>CdSet « {0} - {1}  &gt;has been successfully created.</value>
   </data>
   <data name="Success_EntityDeleted" xml:space="preserve">
     <value>CdSet « {0} - {1}  &gt; has been successfully deleted.</value>
   </data>
+  <data name="Success_EntityDeactivate" xml:space="preserve">
+    <value>CdSet « {0} - {1} ” &gt; has been successfully deactivated.</value>
+  </data>
   <data name="Success_EntityUpdated" xml:space="preserve">
     <value>CdSet « {0} - {1} ” &gt; has been successfully updated.</value>
+  </data>
+  <data name="DeactivateFamily_Success" xml:space="preserve">
+    <value>The code family “{0}” was successfully deactivated.</value>
+  </data>
+  <data name="DeactivateFamily_Error" xml:space="preserve">
+    <value>Unable to deactivate the code family “{0}”.</value>
+  </data>
+  <data name="DeactivateFamily_NotFound" xml:space="preserve">
+    <value>No active codes found for the “{0}” family.</value>
+  </data>
+  <data name="ReactivateFamily_Success" xml:space="preserve">
+    <value>The code family “{0}” was successfully reactivated.</value>
+  </data>
+  <data name="ReactivateFamily_Error" xml:space="preserve">
+    <value>Unable to reactivate the code family “{0}”.</value>
+  </data>
+  <data name="ReactivateFamily_NotFound" xml:space="preserve">
+    <value>No inactive codes found for the “{0}” family.</value>
   </data>
 </root>

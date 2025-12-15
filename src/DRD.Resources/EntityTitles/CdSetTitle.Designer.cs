@@ -88,11 +88,56 @@ namespace DRD.Resources.EntityTitles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code paramétrique.
+        ///   Looks up a localized string similar to Code Set.
         /// </summary>
         public static string CdSet_EntityName {
             get {
                 return ResourceManager.GetString("CdSet_EntityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Famille inactive.
+        /// </summary>
+        public static string CdSet_FamilyInactive_Badge {
+            get {
+                return ResourceManager.GetString("CdSet_FamilyInactive_Badge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Désactiver la famille.
+        /// </summary>
+        public static string DeactivateFamily_Button {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Désactivation d’une famille de codes.
+        /// </summary>
+        public static string DeactivateFamily_Title {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Désactiver tous les codes de cette famille.
+        /// </summary>
+        public static string DeactivateFamily_Tooltip {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cette famille est désactivée.
+        /// </summary>
+        public static string FamilyInactive_Tooltip {
+            get {
+                return ResourceManager.GetString("FamilyInactive_Tooltip", resourceCulture);
             }
         }
         
@@ -102,6 +147,33 @@ namespace DRD.Resources.EntityTitles {
         public static string Field_TypeCode_List_Title {
             get {
                 return ResourceManager.GetString("Field_TypeCode_List_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Réactiver la famille.
+        /// </summary>
+        public static string ReactivateFamily_Button {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Réactivation d’une famille de codes.
+        /// </summary>
+        public static string ReactivateFamily_Title {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Réactiver tous les codes de cette famille.
+        /// </summary>
+        public static string ReactivateFamily_Tooltip {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Tooltip", resourceCulture);
             }
         }
     }

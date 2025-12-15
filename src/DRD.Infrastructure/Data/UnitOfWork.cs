@@ -25,7 +25,7 @@
 
 using DRD.Application.Common.Interfaces;
 using DRD.Application.Common.Interfaces.Repositories;
-using DRD.Infrastructure.Data.Repositories.GrpSystemTables;
+using DRD.Infrastructure.Repositories.SystemTables;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;

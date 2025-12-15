@@ -19,9 +19,13 @@
 //     - Vérification d'existence.
 //     - Extraction de descriptions FR/EN.
 //     - Génération de dictionnaires clé-valeur.
-//     - (À venir) Génération de listes SelectListItem pour les formulaires.
+//     - Création, modification et désactivation.
+//     - Désactivation complète d’une famille (TypeCode).
+//     - Réactivation complète d’une famille (TypeCode).
 //
 // Modifications
+//     2025-12-15    Ajout ReactivateFamilyAsync (réactivation logique par TypeCode).
+//     2025-12-15    Ajout DeactivateFamilyAsync (désactivation logique par TypeCode).
 //     2025-12-07    Version DRD v10 finale, méthode SelectListItem commentée
 //                   temporairement jusqu'à l'intégration des composants UI.
 // ============================================================================
@@ -34,6 +38,8 @@ namespace DRD.Application.IServices.SystemTables
 {
 	public interface ICdSetService
 	{
+		#region Lecture
+
 		Task<IEnumerable<CdSet>> GetAllAsync();
 
 		Task<IEnumerable<CdSet>> GetByTypeCodeAsync(string typeCode);
@@ -42,11 +48,30 @@ namespace DRD.Application.IServices.SystemTables
 
 		Task<bool> ExistsAsync(string typeCode, string code);
 
-		Task<string> GetDescriptionAsync(string typeCode, string code, string? culture = null);
+		Task<string> GetDescriptionAsync(
+			string typeCode,
+			string code,
+			string? culture = null);
 
 		Task<Dictionary<string, string>> GetCdSetKeyValueListAsync(
 			string typeCode,
 			string? culture = null);
+
+		#endregion
+
+		#region Écriture / État
+
+		Task CreateAsync(CdSet entity);
+
+		Task UpdateAsync(CdSet entity);
+
+		Task DeactivateAsync(CdSet entity);
+
+		Task<int> DeactivateFamilyAsync(string typeCode);
+
+		Task<int> ReactivateFamilyAsync(string typeCode);
+
+		#endregion
 
 		// ❗ À réactiver lorsque les builders et dropdowns seront migrés en v10
 		/*

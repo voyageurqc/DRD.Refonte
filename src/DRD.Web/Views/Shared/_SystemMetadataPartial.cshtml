@@ -1,25 +1,31 @@
-﻿// ============================================================================
-// Projet                         DRD.Application
-// Nom du fichier                 EntityMetadataMapper.cs
-// Type                           Classe utilitaire (Mapper)
-// Classe                         Class
-// Emplacement                    Popup/Mappers
-// Entité(s) concernées           EntityMetadataDto, IAuditableEntity
-// Créé le                        2025-12-12
-//
-// Description
-//     Mapper responsable de convertir une entité auditable Domain en DTO
-//     EntityMetadataDto pour affichage dans les vues DRD (Details, Edit,
-//     modale _SystemMetadataPartial).
-//
-// Fonctionnalité
-//     - Extrait et mappe les dates et identifiants d’audit.
-//     - Mappe l’état actif et le niveau de sécurité DRD.
-//     - Prépare l’enrichissement futur des noms complets via services.
-//
-// Modifications
-//     2025-12-12    Création DRD v10 complète : header, XML, mappage intégral.
-// ============================================================================
+﻿@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _SystemMetadataPartial.cshtml
+Type                           Vue Razor (Partielle)
+Classe                         System Metadata Modal
+Emplacement                    Views/Shared
+Entités concernées             EntityMetadataDto
+Créé le                        2025-12-12
+
+Description
+    Vue partielle DRD responsable de l’affichage des métadonnées système
+    (audit) d’une entité dans une modale Bootstrap. Cette vue est utilisée
+    par les écrans Index, Edit et Details afin de fournir une information
+    contextuelle uniforme sur la création et la modification des données.
+
+Fonctionnalité
+    - Affiche les dates de création et de modification.
+    - Affiche les utilisateurs créateur et modificateur.
+    - Utilise les ressources bilingues DRD.
+    - S’affiche via une modale Bootstrap réutilisable.
+    - Consomme exclusivement un EntityMetadataDto préparé côté serveur.
+
+Modifications
+    2025-12-13    Correction complète de l’en-tête (alignement DRD v10).
+    2025-12-12    Version initiale DRD v10.
+===============================================================================
+*@
 
 @using System.Globalization
 @using DRD.Application.Popup.Models

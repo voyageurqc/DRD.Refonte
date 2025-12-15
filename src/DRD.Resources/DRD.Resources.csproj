@@ -36,11 +36,20 @@
 	  <Compile Update="Common\Common.Designer.cs">
 	    <DependentUpon>Common.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="EntityTitles\CdSetTitle.Designer.cs">
+	    <DependentUpon>CdSetTitle.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="EntityTitles\IdentityTitle.Designer.cs">
 	    <DependentUpon>IdentityTitle.resx</DependentUpon>
 	  </Compile>
 	  <Compile Update="Informations\Informations.Designer.cs">
 	    <DependentUpon>Informations.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="MessagesMetier\CdSet\CdSetMM.Designer.cs">
+	    <DependentUpon>CdSetMM.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Popups\Popups.Designer.cs">
+	    <DependentUpon>Popups.resx</DependentUpon>
 	  </Compile>
 	  <Compile Update="ToastrMessages\CdSetToastr.Designer.cs">
 	    <DependentUpon>CdSetToastr.resx</DependentUpon>

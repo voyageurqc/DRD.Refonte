@@ -76,6 +76,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	);
 });
 
+
 /// <summary>
 /// Configure Identity (ApplicationUser + Roles).
 /// </summary>
@@ -86,6 +87,10 @@ builder.Services
 	})
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+builder.Services.AddScoped<
+	Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>,
+	DRD.Infrastructure.Identity.ApplicationUserClaimsPrincipalFactory>();
+
 
 /// <summary>
 /// MVC, Razor Pages et Localisation.

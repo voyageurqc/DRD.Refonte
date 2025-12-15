@@ -27,13 +27,14 @@
 using DRD.Application.Common.Interfaces.Repositories;
 using DRD.Domain.Entities.GrpSystemTables;
 using DRD.Infrastructure.Data;
+using DRD.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DRD.Infrastructure.Data.Repositories.GrpSystemTables
+namespace DRD.Infrastructure.Repositories.SystemTables
 {
     /// <summary>
     /// Repository spécialisé pour la gestion des CdSet.
@@ -63,7 +64,6 @@ namespace DRD.Infrastructure.Data.Repositories.GrpSystemTables
             _logger.LogDebug("Récupération des CdSet pour TypeCode={TypeCode}", typeCode);
 
             return await _dbSet
-                .AsNoTracking()
                 .Where(e => e.TypeCode == typeCode && e.IsActive)
                 .ToListAsync();
         }

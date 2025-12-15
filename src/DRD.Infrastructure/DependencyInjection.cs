@@ -29,11 +29,9 @@
 using DRD.Application.Common.Interfaces;
 using DRD.Application.Common.Interfaces.Repositories;
 using DRD.Application.Common.Interfaces.Services;
-using DRD.Application.IServices.SystemTables;
-using DRD.Application.Services.SystemTables;
 using DRD.Infrastructure.Common.Services;
 using DRD.Infrastructure.Data;
-using DRD.Infrastructure.Data.Repositories.GrpSystemTables;
+using DRD.Infrastructure.Repositories.SystemTables;
 using DRD.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,7 +64,6 @@ namespace DRD.Infrastructure
 			// =========================
 			// Services techniques
 			// =========================
-			services.AddScoped<ICdSetService, CdSetService>();
 			services.AddScoped<ICurrentUserService, CurrentUserService>();
 			services.AddScoped<IUserService, UserService>();
 

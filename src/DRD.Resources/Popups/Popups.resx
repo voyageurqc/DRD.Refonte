@@ -147,4 +147,7 @@
   <data name="SystemInfoTitle" xml:space="preserve">
     <value>Information autogéré</value>
   </data>
+  <data name="Confirm_Title" xml:space="preserve">
+    <value>Confirmation requise</value>
+  </data>
 </root>

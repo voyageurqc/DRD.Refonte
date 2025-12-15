@@ -106,6 +106,15 @@ namespace DRD.Resources.Popups {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirmation requise.
+        /// </summary>
+        public static string Confirm_Title {
+            get {
+                return ResourceManager.GetString("Confirm_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Voulez-vous vraiment procéder à cette action ?.
         /// </summary>
         public static string ConfirmAction {

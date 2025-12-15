@@ -1,0 +1,74 @@
+﻿@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _ConfirmModal.cshtml
+Type                           Vue partielle (MVC)
+Classe                         Modale de confirmation universelle
+Emplacement                    Views/Shared/Partials
+Entités concernées             Toutes (Delete / Deactivate)
+Créé le                        2025-12-14
+
+Description
+    Modale de confirmation universelle DRD. Le titre, le message et le callback
+    sont injectés dynamiquement via JavaScript (site.js).
+
+Fonctionnalité
+    - Confirmation standardisée DRD
+    - Compatible Delete / Deactivate
+    - Callback JS générique (submitFormById)
+    - Localisation complète via Resources
+
+Modifications
+    2025-12-14    Réintégration de la modale universelle (parité v9).
+===============================================================================
+*@
+
+@using DRD.Resources
+@using static DRD.Resources.Common.Common
+@using static DRD.Resources.LabelNames.CdSetLN
+@using static DRD.Resources.Buttons.Buttons
+@using static DRD.Resources.Popups.Popups
+
+
+<div class="modal fade"
+     id="confirmationModal"
+     tabindex="-1"
+     aria-labelledby="confirmationModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="confirmationModalLabel"></h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="@Button_Close">
+                </button>
+            </div>
+
+            <div class="modal-body py-2"
+                 style="min-height:80px; word-break:break-word;">
+                <p></p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary btn-3d"
+                        data-bs-dismiss="modal">
+                    @Button_Cancel
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary btn-3d"
+                        data-modal-confirm>
+                    <i class="fa fa-check"></i> @Button_Confirm
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>

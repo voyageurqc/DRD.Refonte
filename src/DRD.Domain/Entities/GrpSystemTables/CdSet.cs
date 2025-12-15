@@ -145,6 +145,16 @@ namespace DRD.Domain.Entities.GrpSystemTables
 
 			ModificationDate = DateTime.UtcNow;
 		}
+		public void Update(
+			string descriptionFr,
+			string? descriptionEn,
+			bool isActive)
+				{
+					DescriptionFr = descriptionFr;
+					DescriptionEn = descriptionEn;
+					IsActive = isActive;
+				}
+
 
 		#endregion
 	}

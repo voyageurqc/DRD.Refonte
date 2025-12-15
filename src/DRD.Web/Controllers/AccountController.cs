@@ -102,7 +102,8 @@ namespace DRD.Web.Controllers
 			var result = await _signInManager.PasswordSignInAsync(
 				user,
 				model.Password,
-				model.RememberMe,
+				//model.RememberMe,
+				false,
 				lockoutOnFailure: false);
 
 			if (result.Succeeded)

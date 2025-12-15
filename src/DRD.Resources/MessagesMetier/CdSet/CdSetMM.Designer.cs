@@ -115,6 +115,33 @@ namespace DRD.Resources.MessagesMetier.CdSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ⚠️ Cette action désactivera tous les codes de la famille « {0} ».
+        ///Les codes ne seront plus disponibles à l’utilisation,
+        ///mais l’historique sera conservé.
+        ///
+        ///Voulez-vous continuer ?
+        ///.
+        /// </summary>
+        public static string DeactivateFamily_Confirm {
+            get {
+                return ResourceManager.GetString("DeactivateFamily_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⚠️ Cette action réactivera tous les codes de la famille « {0} ».
+        ///Les codes redeviendront disponibles à l’utilisation.
+        ///
+        ///Voulez-vous continuer ?
+        ///.
+        /// </summary>
+        public static string ReactivateFamily_Confirm {
+            get {
+                return ResourceManager.GetString("ReactivateFamily_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ce Champs est requis.
         /// </summary>
         public static string Validation_NewFamilyRequired {
