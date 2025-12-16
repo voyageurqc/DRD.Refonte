@@ -68,23 +68,26 @@ namespace DRD.Infrastructure.Repositories.SystemTables
                 .ToListAsync();
         }
 
-        /// <inheritdoc />
-        public async Task<CdSet?> GetByTypeCodeAndCodeAsync(string typeCode, string code)
-        {
-            if (string.IsNullOrWhiteSpace(typeCode))
-                throw new ArgumentNullException(nameof(typeCode));
-            if (string.IsNullOrWhiteSpace(code))
-                throw new ArgumentNullException(nameof(code));
+		/// <inheritdoc />
+		public async Task<CdSet?> GetByTypeCodeAndCodeAsync(string typeCode, string code)
+		{
+			if (string.IsNullOrWhiteSpace(typeCode))
+				throw new ArgumentNullException(nameof(typeCode));
+			if (string.IsNullOrWhiteSpace(code))
+				throw new ArgumentNullException(nameof(code));
 
-            _logger.LogDebug(
-                "Récupération d'un CdSet pour TypeCode={TypeCode}, Code={Code}",
-                typeCode, code);
+			_logger.LogDebug(
+				"Récupération CdSet (case-insensitive) TypeCode={TypeCode}, Code={Code}",
+				typeCode, code);
 
-            return await _dbSet.FindAsync(typeCode, code);
-        }
+			return await _dbSet
+				.FirstOrDefaultAsync(x =>
+					x.TypeCode.ToUpper() == typeCode.ToUpper() &&
+					x.Code.ToUpper() == code.ToUpper());
+		}
 
-        /// <inheritdoc />
-        public async Task<bool> ExistsAsync(string typeCode, string code)
+		/// <inheritdoc />
+		public async Task<bool> ExistsAsync(string typeCode, string code)
         {
             if (string.IsNullOrWhiteSpace(typeCode))
                 throw new ArgumentNullException(nameof(typeCode));

@@ -12,13 +12,14 @@
 //     utilisé dans les vues Details/Edit et la modale _SystemMetadataPartial.
 //
 // Fonctionnalité
-//     - Extrait les dates et identifiants de création/modification.
-//     - Mappe IsActive et SecurityLevel si disponibles.
-//     - Prépare la structure pour un futur enrichissement (noms complets).
+//     - Mappe les informations d’audit (dates, identifiants techniques).
+//     - Mappe les valeurs d’affichage déjà résolues côté service.
+//     - Ne contient aucune logique de résolution utilisateur.
 //
 // Modifications
-//     2025-12-12    Version DRD v10 complète : header, XML, mappage intégral,
-//                   ajout TODO pour récupération des noms utilisateurs.
+//     2025-12-16    Suppression du TODO ; clarification des responsabilités.
+//                   Le mapper reçoit des valeurs déjà prêtes à afficher
+//                   (AXE 1 – Métadonnées).
 // ============================================================================
 
 using DRD.Application.Popup.Models;
@@ -34,34 +35,35 @@ namespace DRD.Application.Popup.Mappers
 	{
 		/// <summary>
 		/// Convertit l'entité auditable en DTO contenant les métadonnées système.
+		/// Les valeurs d'affichage utilisateur doivent déjà être résolues.
 		/// </summary>
 		/// <param name="entity">Entité auditable source.</param>
+		/// <param name="createdByName">Nom complet du créateur.</param>
+		/// <param name="createdByDisplay">Valeur prête à afficher pour le créateur.</param>
+		/// <param name="updatedByName">Nom complet du modificateur.</param>
+		/// <param name="updatedByDisplay">Valeur prête à afficher pour le modificateur.</param>
 		/// <returns>DTO prêt pour affichage dans la modale système.</returns>
-		public static EntityMetadataDto ToMetadataDto(this IAuditableEntity entity)
+		public static EntityMetadataDto ToMetadataDto(
+			this IAuditableEntity entity,
+			string? createdByName,
+			string? createdByDisplay,
+			string? updatedByName,
+			string? updatedByDisplay)
 		{
-			var dto = new EntityMetadataDto
+			return new EntityMetadataDto
 			{
 				CreationDate = entity.CreationDate,
 				CreatedBy = entity.CreatedBy,
+				CreatedByName = createdByName,
+				CreatedByDisplay = createdByDisplay,
+
 				ModificationDate = entity.ModificationDate,
 				UpdatedBy = entity.UpdatedBy,
+				UpdatedByName = updatedByName,
+				UpdatedByDisplay = updatedByDisplay,
 
-				// DRD v10 — valeurs additionnelles
-				IsActive = entity.IsActive,
+				IsActive = entity.IsActive
 			};
-
-			// ==================================================================
-			// TODO DRD — Récupérer les noms complets CreatedByName/UpdatedByName
-			//
-			// Requiert :
-			// - ICurrentUserService
-			// - Ou UserRepository.GetUserNameById(...)
-			//
-			// dto.CreatedByName = ...
-			// dto.UpdatedByName = ...
-			// ==================================================================
-
-			return dto;
 		}
 	}
 }

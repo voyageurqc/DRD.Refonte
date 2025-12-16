@@ -35,6 +35,9 @@ using DRD.Infrastructure.Repositories.SystemTables;
 using DRD.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using DRD.Application.Popup.Services.Metadata;
+using DRD.Infrastructure.Services.Metadata;
+
 
 namespace DRD.Infrastructure
 {
@@ -66,6 +69,8 @@ namespace DRD.Infrastructure
 			// =========================
 			services.AddScoped<ICurrentUserService, CurrentUserService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IMetadataDisplayService, MetadataDisplayService>();
+
 
 			return services;
 		}

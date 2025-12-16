@@ -32,6 +32,7 @@ Modifications
     2025-12-07    Version initiale DRD v10.
 ============================================================================ *@
 
+@using DRD.Resources.MessagesMetier.CdSet
 @using DRD.Web.Models.GrpSystemTables.CdSetVM
 @model CdSetCreateVM
 
@@ -75,12 +76,14 @@ Modifications
         </button>
 
         @* CANCEL *@
-        <a href="@Model.ReturnUrl"
-           class="btn btn-secondary btn-circle btn-3d"
-           title="@Button_Back">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-
+        @await Html.PartialAsync(
+        "_ReturnButton",
+                new DRD.Web.Models.Shared.Navigation.ReturnButtonVM
+                {
+                    ReturnUrl = Model.ReturnUrl,
+                    ControllerName = "CdSet"
+                }
+                )
     </div>
 </div>
 @* ============================================================================
@@ -192,7 +195,99 @@ Modifications
             }
 
             familySelect.addEventListener("change", updateFamilyUI);
-            updateFamilyUI(); // état initial au chargement
+            updateFamilyUI();
         });
+    </script>
+
+    <script>
+        (function () {
+
+            const familySelect = document.getElementById("familySelect");
+            const newFamilyInput = document.getElementById("NewFamily");
+            const codeInput = document.getElementById("Code");
+            const validationSpan = document.querySelector('[data-valmsg-for="Code"]');
+            const form = document.getElementById("cdsetForm");
+
+            let isDuplicate = false;
+
+            function resolveTypeCode() {
+                if (familySelect.value && familySelect.value.trim() !== "") {
+                    return familySelect.value.trim().toUpperCase();
+                }
+
+                if (newFamilyInput && newFamilyInput.value.trim() !== "") {
+                    return newFamilyInput.value.trim().toUpperCase();
+                }
+
+                return "";
+            }
+
+            async function checkDuplicate() {
+
+                const typeCode = resolveTypeCode();
+                const code = codeInput.value.trim().toUpperCase();
+
+                if (!typeCode || !code) {
+                    clearError();
+                    return;
+                }
+
+                const url =
+                    `@Url.Action("CheckCodeExists", "CdSet")` +
+                    `?typeCode=${encodeURIComponent(typeCode)}` +
+                    `&code=${encodeURIComponent(code)}`;
+
+                try {
+                    const response = await fetch(url);
+                    const exists = await response.json();
+
+                    if (exists === true) {
+                        showError();
+                        isDuplicate = true;
+                    } else {
+                        clearError();
+                        isDuplicate = false;
+                    }
+                } catch {
+                    clearError();
+                    isDuplicate = false;
+                }
+            }
+
+            function showError() {
+                if (!validationSpan) return;
+
+                validationSpan.innerHTML = "@CdSetMM_Error_Duplicate";
+                validationSpan.classList.remove("field-validation-valid");
+                validationSpan.classList.add("field-validation-error");
+
+                codeInput.focus();
+                codeInput.select();
+            }
+
+            function clearError() {
+                if (!validationSpan) return;
+
+                validationSpan.innerHTML = "";
+                validationSpan.classList.remove("field-validation-error");
+                validationSpan.classList.add("field-validation-valid");
+            }
+
+            // 🔹 Déclencheurs UX DRD
+            familySelect?.addEventListener("change", checkDuplicate);
+            newFamilyInput?.addEventListener("blur", checkDuplicate);
+            codeInput?.addEventListener("blur", checkDuplicate);
+            codeInput?.addEventListener("keyup", checkDuplicate);
+
+            // 🔹 Sécurité finale
+            form?.addEventListener("submit", function (e) {
+                if (isDuplicate) {
+                    e.preventDefault();
+                    codeInput.focus();
+                    codeInput.select();
+                }
+            });
+
+        })();
     </script>
 }

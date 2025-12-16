@@ -41,9 +41,9 @@
     <Folder Include="Helpers\" />
     <Folder Include="Models\GrpClient\ClientVM\" />
     <Folder Include="Models\GrpWebMessage\" />
-    <Folder Include="Models\Shared\" />
     <Folder Include="Views\CdSet\" />
     <Folder Include="Views\Shared\components\ClientSelectionModal\" />
+    <Folder Include="Views\Shared\components\Navigation\" />
     <Folder Include="wwwroot\lib\datatables\i18n\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
     <Folder Include="wwwroot\lib\fontawesome\webfonts\" />

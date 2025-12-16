@@ -121,7 +121,7 @@
     <value>Cette opération enfreint une règle métier propre au module CdSet.</value>
   </data>
   <data name="CdSetMM_Error_Duplicate" xml:space="preserve">
-    <value>Un CdSet avec cette clé existe déjà.</value>
+    <value>Un Code avec cette clé existe déjà.</value>
   </data>
   <data name="CdSetMM_Error_InUse" xml:space="preserve">
     <value>Impossible de supprimer cet élément CdSet, car il est actuellement utilisé.</value>

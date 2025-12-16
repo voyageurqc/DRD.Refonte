@@ -26,6 +26,7 @@
 //     - Utilisation ICdSetService + Serilog + Toastr
 //
 // Modifications
+//     2025-12-16    Ajout validation AJAX CheckCodeExists
 //     2025-12-15    Ajout ReactivateFamilyConfirmed (réactivation par TypeCode)
 //     2025-12-15    Ajout DeactivateFamilyConfirmed (désactivation par TypeCode)
 //     2025-12-14    Ajustement Create/Edit pour audit via CdSetService
@@ -35,11 +36,13 @@
 using DRD.Application.Common.Interfaces;
 using DRD.Application.IServices.SystemTables;
 using DRD.Application.Popup.Mappers;
+using DRD.Application.Popup.Services.Metadata;
 using DRD.Resources.MessagesMetier.CdSet;
 using DRD.Resources.ToastrMessages;
 using DRD.Web.Models.GrpSystemTables.CdSetVM;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DRD.Web.Controllers.GrpSystemTables
 {
@@ -50,13 +53,17 @@ namespace DRD.Web.Controllers.GrpSystemTables
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ICdSetService _cdSetService;
 		private readonly Serilog.ILogger _logger;
+		private readonly IMetadataDisplayService _metadataDisplayService;
+
 
 		public CdSetController(
 			IUnitOfWork unitOfWork,
-			ICdSetService cdSetService)
+			ICdSetService cdSetService,
+			IMetadataDisplayService metadataDisplayService)
 		{
 			_unitOfWork = unitOfWork;
 			_cdSetService = cdSetService;
+			_metadataDisplayService = metadataDisplayService;
 			_logger = Log.ForContext<CdSetController>();
 		}
 
@@ -116,6 +123,333 @@ namespace DRD.Web.Controllers.GrpSystemTables
 				SearchQuery = search,
 				CurrentUrl = Request.Path + Request.QueryString,
 				ReferrerUrl = Request.Headers["Referer"].ToString()
+			};
+
+			return View(vm);
+		}
+
+		#endregion
+
+		#region Create
+
+		/// <summary>
+		/// Affiche l’écran de création d’un CdSet.
+		/// </summary>
+		/// <param name="returnUrl">URL de retour vers l’écran appelant.</param>
+		[HttpGet]
+		public async Task<IActionResult> Create(string? returnUrl = null)
+		{
+			_logger.Information("CdSet - Create (GET)");
+
+			// Préparer les familles existantes
+			var families = await _unitOfWork.CdSetRepository.GetAllAsync();
+			var availableFamilies = families
+				.Select(x => x.TypeCode)
+				.Distinct()
+				.OrderBy(x => x)
+				.ToList();
+
+			var vm = new CdSetCreateVM
+			{
+				AvailableFamilies = availableFamilies,
+				ReturnUrl = returnUrl
+			};
+
+			return View(vm);
+		}
+
+		/// <summary>
+		/// Traite la création d’un CdSet.
+		/// </summary>
+		/// <param name="vm">ViewModel de création.</param>
+		/// <param name="returnUrl">URL de retour vers l’écran appelant.</param>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(CdSetCreateVM vm, string? returnUrl = null)
+		{
+			// Détection du bouton Save & Continue
+			bool saveAndContinue = Request.Form.ContainsKey("continue");
+			_logger.Information(
+				"CdSet - Create (POST) - TypeCode={TypeCode}, Code={Code}",
+				vm.TypeCodeFinal,
+				vm.Code);
+
+			if (!ModelState.IsValid)
+			{
+				// Recharger les familles en cas d’erreur
+				var families = await _unitOfWork.CdSetRepository.GetAllAsync();
+				vm.AvailableFamilies = families
+					.Select(x => x.TypeCode)
+					.Distinct()
+					.OrderBy(x => x)
+					.ToList();
+
+				vm.ReturnUrl = returnUrl;
+				return View(vm);
+			}
+			// ===============================
+			// Validation métier : Code existant
+			// ===============================
+			if (await _cdSetService.ExistsAsync(vm.TypeCodeFinal, vm.Code))
+			{
+				ModelState.AddModelError(
+					nameof(vm.Code),
+					string.Format(
+						CdSetMM.CdSetMM_Error_Duplicate,
+						vm.TypeCodeFinal)
+				);
+
+				// Recharger les familles avant retour vue
+				var families = await _unitOfWork.CdSetRepository.GetAllAsync();
+				vm.AvailableFamilies = families
+					.Select(x => x.TypeCode)
+					.Distinct()
+					.OrderBy(x => x)
+					.ToList();
+
+				vm.ReturnUrl = returnUrl;
+				return View(vm);
+			}
+
+			try
+			{
+				await _cdSetService.CreateAsync(vm.ToEntity());
+
+				TempData["ToastrSuccess"] = string.Format(
+					CdSetToastr.Success_EntityCreated,
+					vm.TypeCodeFinal,
+					vm.Code);
+
+				// ⭐ CAS SAVE & CONTINUE
+				if (saveAndContinue)
+				{
+					return RedirectToAction(nameof(Create), new { returnUrl = vm.ReturnUrl });
+				}
+				// ⭐ CAS SAVE
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(
+					ex,
+					"Erreur lors de la création CdSet {TypeCode}|{Code}",
+					vm.TypeCodeFinal,
+					vm.Code);
+
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.Create_Error,
+					vm.TypeCodeFinal,
+					vm.Code);
+
+
+				// Recharger les familles avant retour vue
+				var families = await _unitOfWork.CdSetRepository.GetAllAsync();
+				vm.AvailableFamilies = families
+					.Select(x => x.TypeCode)
+					.Distinct()
+					.OrderBy(x => x)
+					.ToList();
+
+				vm.ReturnUrl = returnUrl;
+				return View(vm);
+			}
+		}
+
+		#endregion
+		#region Validation (AJAX)
+
+		/// <summary>
+		/// Vérifie si un Code existe déjà pour une famille donnée (validation anticipée).
+		/// Utilisé par l’écran Create via appel AJAX.
+		/// </summary>
+		/// <param name="typeCode">Famille (TypeCode)</param>
+		/// <param name="code">Code saisi</param>
+		/// <returns>true si la combinaison existe déjà</returns>
+		[HttpGet]
+		public async Task<IActionResult> CheckCodeExists(string typeCode, string code)
+		{
+			_logger.Information(
+				"CdSet - CheckCodeExists (AJAX) {TypeCode}|{Code}",
+				typeCode,
+				code);
+
+			if (string.IsNullOrWhiteSpace(typeCode) || string.IsNullOrWhiteSpace(code))
+				return Json(false);
+
+			// 🔒 Normalisation DRD (clé fonctionnelle)
+			typeCode = typeCode.Trim().ToUpperInvariant();
+			code = code.Trim().ToUpperInvariant();
+
+			var exists = await _cdSetService.ExistsAsync(typeCode, code);
+			return Json(exists);
+		}
+
+		#endregion
+
+		#region Edit
+
+		/// <summary>
+		/// Affiche l’écran d’édition d’un CdSet existant.
+		/// </summary>
+		/// <param name="id">TypeCode (clé composite).</param>
+		/// <param name="key2">Code (clé composite).</param>
+		/// <param name="returnUrl">URL de retour vers l’écran appelant.</param>
+		[HttpGet]
+		public async Task<IActionResult> Edit(
+			string id,
+			string key2,
+			string? returnUrl = null)
+		{
+			_logger.Information(
+				"CdSet - Edit (GET) {TypeCode}|{Code}",
+				id,
+				key2);
+
+			var entity = await _cdSetService
+				.GetByTypeCodeAndCodeAsync(id, key2);
+
+			if (entity == null)
+			{
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.CdSet_NotFound,
+					id,
+					key2);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+
+			var vm = new CdSetEditVM
+			{
+				TypeCode = entity.TypeCode,
+				Code = entity.Code,
+				DescriptionFr = entity.DescriptionFr,
+				DescriptionEn = entity.DescriptionEn,
+				IsActive = entity.IsActive,
+				ReturnUrl = returnUrl
+			};
+
+			return View(vm);
+		}
+		/// <summary>
+		/// Traite la modification d’un CdSet existant.
+		/// </summary>
+		/// <param name="vm">ViewModel d’édition.</param>
+		/// <param name="returnUrl">URL de retour vers l’écran appelant.</param>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(
+			CdSetEditVM vm,
+			string? returnUrl = null)
+		{
+			_logger.Information(
+				"CdSet - Edit (POST) {TypeCode}|{Code}",
+				vm.TypeCode,
+				vm.Code);
+
+			if (!ModelState.IsValid)
+			{
+				vm.ReturnUrl = returnUrl;
+				return View(vm);
+			}
+
+			var entity = await _cdSetService
+				.GetByTypeCodeAndCodeAsync(vm.TypeCode, vm.Code);
+
+			if (entity == null)
+			{
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.CdSet_NotFound,
+					vm.TypeCode,
+					vm.Code);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+
+			try
+			{
+				entity.SetDescriptions(
+					vm.DescriptionFr?.Trim() ?? string.Empty,
+					vm.DescriptionEn?.Trim());
+
+				entity.IsActive = vm.IsActive;
+
+				await _cdSetService.UpdateAsync(entity);
+
+				TempData["ToastrSuccess"] = string.Format(
+					CdSetToastr.Success_EntityUpdated,
+					vm.TypeCode,
+					vm.Code);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(
+					ex,
+					"Erreur lors de la modification CdSet {TypeCode}|{Code}",
+					vm.TypeCode,
+					vm.Code);
+
+
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.Edit_Error,
+					vm.TypeCode,
+					vm.Code);
+
+				vm.ReturnUrl = returnUrl;
+				return View(vm);
+			}
+		}
+
+		#endregion
+		#region Details
+
+		/// <summary>
+		/// Affiche les détails d’un CdSet en lecture seule.
+		/// </summary>
+		/// <param name="id">TypeCode (clé composite).</param>
+		/// <param name="key2">Code (clé composite).</param>
+		/// <param name="returnUrl">URL de retour vers l’écran appelant.</param>
+		[HttpGet]
+		public async Task<IActionResult> Details(
+			string id,
+			string key2,
+			string? returnUrl = null)
+		{
+			_logger.Information(
+				"CdSet - Details (GET) {TypeCode}|{Code}",
+				id,
+				key2);
+
+			var entity = await _cdSetService
+				.GetByTypeCodeAndCodeAsync(id, key2);
+
+			if (entity == null)
+			{
+				TempData["ToastrError"] = string.Format(
+					CdSetToastr.CdSet_NotFound,
+					id,
+					key2);
+
+				return Redirect(returnUrl ?? Url.Action(nameof(Index))!);
+			}
+
+			var vm = new CdSetDetailsVM
+			{
+				TypeCode = entity.TypeCode,
+				Code = entity.Code,
+				DescriptionFr = entity.DescriptionFr,
+				DescriptionEn = entity.DescriptionEn,
+				IsActive = entity.IsActive,
+
+				// Audit
+				CreationDate = entity.CreationDate,
+				CreatedBy = entity.CreatedBy,
+				ModificationDate = entity.ModificationDate,
+				UpdatedBy = entity.UpdatedBy,
+
+				// Navigation
+				ReturnUrl = returnUrl
 			};
 
 			return View(vm);
@@ -327,11 +661,11 @@ namespace DRD.Web.Controllers.GrpSystemTables
 			if (entity == null)
 				return NotFound();
 
-			var dto = entity.ToMetadataDto();
-
+			var dto = await _metadataDisplayService.BuildAsync(entity);
 			return PartialView("_SystemMetadataPartial", dto);
 		}
 
 		#endregion
 	}
 }
+

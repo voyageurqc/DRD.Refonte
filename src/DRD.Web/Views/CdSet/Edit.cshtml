@@ -62,11 +62,14 @@ Modifications
         </button>
 
         @* BACK *@
-        <a href="@returnUrl"
-           class="btn btn-secondary btn-circle btn-3d"
-           title="@Button_Back">
-            <i class="fas fa-arrow-left"></i>
-        </a>
+        @await Html.PartialAsync(
+        "_ReturnButton",
+                new DRD.Web.Models.Shared.Navigation.ReturnButtonVM
+                {
+                    ReturnUrl = Model.ReturnUrl,
+                    ControllerName = "CdSet"
+                }
+                )
 
         @* METADATA *@
         @if (metadata != null)

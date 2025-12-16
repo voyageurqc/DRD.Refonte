@@ -26,6 +26,24 @@
 // ============================================================================
 */
 
+/* ===============================
+   DRD – Validation erreurs inline
+   =============================== */
+
+/* ===============================
+   DRD – Validation inline (soft)
+   =============================== */
+
+.field-validation-error {
+    color: red; /* rouge atténué */
+    background-color: #fdecea; /* rose très clair */
+    border-left: 4px solid #dc3545; /* accent visuel DRD */
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    display: block; /* meilleure lisibilité */
+    margin-top: 0.25rem;
+}
 /* Style personnalisé pour le Popover d'Alerte */
 .popover-orange {
     --bs-popover-bg: #ffc107;

@@ -70,7 +70,7 @@ namespace DRD.Resources.MessagesMetier.CdSet {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Un CdSet avec cette clé existe déjà..
+        ///   Looks up a localized string similar to Un Code avec cette clé existe déjà..
         /// </summary>
         public static string CdSetMM_Error_Duplicate {
             get {

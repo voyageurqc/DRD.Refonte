@@ -222,7 +222,15 @@ namespace DRD.Application.Services.SystemTables
 			=> await _cdSetRepository.GetByTypeCodeAndCodeAsync(typeCode, code);
 
 		public async Task<bool> ExistsAsync(string typeCode, string code)
-			=> await GetByTypeCodeAndCodeAsync(typeCode, code) != null;
+		{
+			if (string.IsNullOrWhiteSpace(typeCode) || string.IsNullOrWhiteSpace(code))
+				return false;
+
+			typeCode = typeCode.Trim().ToUpperInvariant();
+			code = code.Trim().ToUpperInvariant();
+
+			return await GetByTypeCodeAndCodeAsync(typeCode, code) != null;
+		}
 
 		public async Task<string> GetDescriptionAsync(
 			string typeCode,

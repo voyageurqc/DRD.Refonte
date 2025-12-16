@@ -70,6 +70,15 @@ namespace DRD.Resources.ToastrMessages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erreur lors de la création CdSet {0} - {1}.
+        /// </summary>
+        public static string Create_Error {
+            get {
+                return ResourceManager.GetString("Create_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Impossible de désactiver la famille de codes « {0} »..
         /// </summary>
         public static string DeactivateFamily_Error {
@@ -93,6 +102,15 @@ namespace DRD.Resources.ToastrMessages {
         public static string DeactivateFamily_Success {
             get {
                 return ResourceManager.GetString("DeactivateFamily_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erreur lors de la mise à jour CdSet {0} - {1}.
+        /// </summary>
+        public static string Edit_Error {
+            get {
+                return ResourceManager.GetString("Edit_Error", resourceCulture);
             }
         }
         

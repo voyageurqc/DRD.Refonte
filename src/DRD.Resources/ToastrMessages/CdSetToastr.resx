@@ -150,4 +150,10 @@
   <data name="ReactivateFamily_NotFound" xml:space="preserve">
     <value>Aucun code inactif trouvé pour la famille « {0} ».</value>
   </data>
+  <data name="Create_Error" xml:space="preserve">
+    <value>Erreur lors de la création CdSet {0} - {1}</value>
+  </data>
+  <data name="Edit_Error" xml:space="preserve">
+    <value>Erreur lors de la mise à jour CdSet {0} - {1}</value>
+  </data>
 </root>

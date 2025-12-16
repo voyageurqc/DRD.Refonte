@@ -122,7 +122,7 @@
 </value>
   </data>
   <data name="CdSetMM_Error_Duplicate" xml:space="preserve">
-    <value>A CdSet with this key already exists.</value>
+    <value>A Code with this key already exists.</value>
   </data>
   <data name="CdSetMM_Error_InUse" xml:space="preserve">
     <value>This CdSet entry cannot be deleted because it is currently in use.

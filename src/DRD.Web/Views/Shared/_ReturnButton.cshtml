@@ -1,0 +1,36 @@
+﻿@model DRD.Web.Models.Shared.Navigation.ReturnButtonVM
+
+@*
+===============================================================================
+Projet                         DRD.Web
+Nom du fichier                 _ReturnButton.cshtml
+Type de fichier                Razor Partial View
+Classe                         Navigation
+Emplacement                    Views/Shared/Components/Navigation
+Entités concernées             Navigation DRD (ReturnUrl)
+Créé le                        2025-12-16
+
+Description
+    Partial DRD standardisé affichant le bouton Retour.
+    Centralise la logique de navigation de retour pour tous les écrans
+    Create / Edit / Details, sans dépendance au Referer HTTP.
+
+Fonctionnalité
+    - Utilise ReturnUrl explicite si fourni.
+    - Fallback vers Index du contrôleur cible.
+    - Bouton DRD standard (style, icône, ressource bilingue).
+
+Modifications
+    2025-12-16    Création initiale du bouton Retour DRD centralisé.
+===============================================================================
+*@
+
+@using DRD.Resources.Buttons
+
+<a href="@(string.IsNullOrWhiteSpace(Model.ReturnUrl)
+               ? Url.Action("Index", Model.ControllerName)
+               : Model.ReturnUrl)"
+   class="btn btn-secondary btn-circle btn-3d"
+   title="@Buttons.Button_Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
