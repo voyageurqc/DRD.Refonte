@@ -21,23 +21,33 @@
 //     - Activer AuthorizeFilter global (sécurité).
 //     - Configurer le pipeline HTTP DRD.
 //     - Démarrer et journaliser l’application.
+//     - Forcer un login à chaque lancement de l’application.
 //
 // Modifications
+//     2025-12-16    Forçage login à chaque démarrage (rejet cookie existant).
 //     2025-12-11    Version DRD v10 complète (SQL Server + Identity + Serilog).
 //     2025-12-10    Correction DI Identity (ApplicationDbContext manquant).
 //     2025-12-03    Régions DRD + résumés.
 //     2025-12-02    Création initiale DRD v10.
 // ============================================================================
 
-using DRD.Application;              
-using DRD.Infrastructure;           
+using DRD.Application;
+using DRD.Infrastructure;
 using DRD.Infrastructure.Data;
 using DRD.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Globalization;
+
+/// <summary>
+/// Horodatage du démarrage de l’application.
+/// Utilisé pour invalider tout cookie d’authentification
+/// émis avant ce démarrage.
+/// </summary>
+var appStartTime = DateTimeOffset.UtcNow;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +86,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	);
 });
 
-
 /// <summary>
 /// Configure Identity (ApplicationUser + Roles).
 /// </summary>
@@ -87,10 +96,37 @@ builder.Services
 	})
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+
 builder.Services.AddScoped<
 	Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>,
-	DRD.Infrastructure.Identity.ApplicationUserClaimsPrincipalFactory>();
+	ApplicationUserClaimsPrincipalFactory>();
 
+/// <summary>
+/// Configure le cookie d’authentification Identity.
+/// Force un login à chaque redémarrage de l’application.
+/// </summary>
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.Cookie.Name = "DRD.Auth";
+	options.Cookie.HttpOnly = true;
+
+	options.Events.OnValidatePrincipal = context =>
+	{
+		// Si le cookie a été émis AVANT le dernier démarrage de l’application
+		// alors il est rejeté et l’utilisateur est déconnecté.
+		if (context.Properties.IssuedUtc < appStartTime)
+		{
+			context.RejectPrincipal();
+			return context.HttpContext.SignOutAsync(
+				IdentityConstants.ApplicationScheme);
+		}
+
+		return Task.CompletedTask;
+	};
+
+	options.LoginPath = "/Account/Login";
+	options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 /// <summary>
 /// MVC, Razor Pages et Localisation.
@@ -103,7 +139,7 @@ builder.Services.AddRazorPages();
 
 /// <summary>
 /// Enregistre les services Application et Infrastructure DRD v10.
-/// IMPORTANT : Ces lignes doivent être AVANT builder.Build() !!!
+/// IMPORTANT : Ces lignes doivent être AVANT builder.Build().
 /// </summary>
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -138,8 +174,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 // ============================================================================
 #region Pipeline
 
-var app = builder.Build();   // ← À partir d’ici, les services deviennent READ-ONLY
-							 // ← Donc plus aucun builder.Services.AddXxx() possible
+var app = builder.Build();
 
 /// <summary>
 /// Active la localisation.
@@ -178,7 +213,10 @@ app.MapRazorPages();
 /// <summary>
 /// Démarre l’application.
 /// </summary>
-Log.Information("DRD v10 — Application démarrée à {UtcTime}", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
+Log.Information(
+	"DRD v10 — Application démarrée à {UtcTime}",
+	DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
+
 app.Run();
 
 #endregion
